@@ -1,22 +1,42 @@
-# ===== 数据与隐私保护（绝不进仓库）=====
-# 原始 PDF（手动下载样本）
-raw_files/
-# 真实采集数据体系（山东等，本地原样保留）
-shandong_reports/
-# 真实数据解析报告输出（含真实主体明细）
-reports/
-# 任何 PDF / 扫描件
-*.pdf
-*.PDF
+# ===== 真实数据（公开披露，入库）=====
+# raw_files/          — 手动下载的公开披露样本 PDF（上海/成都/湖州/新浪），已入库
+# shandong_reports/   — 山东城投公开披露采集体系：raw/<城市>/<公司>/*.pdf、raw_cninfo/、采集脚本、进度 JSON，已入库
+#
+# 注意：以上均为「公开披露」资料（发行人定期/永续/募集说明书等），不含任何私密或涉密数据。
+# 私密/涉密数据一律不入库（见下方「密钥与配置」与「本地环境」段）。
 
-# ===== 真实数据目录（如未来建立）=====
+# 真实数据解析报告输出（含真实主体明细）— 由 scripts/parse_report.py 再生，不入库
+reports/
+
+# ===== 真实数据目录（如未来建立，含私密数据则排除）=====
 data/real/
 
-# ===== 本地环境 / 工具 =====
-.workbuddy/
+# ===== 排除：调试 / 临时产物（非数据，保持仓库清晰）=====
 __pycache__/
 *.pyc
 *.pyo
+# 调试截图（一次性产物）
+**/*_screenshot.png
+**/debug_screenshot.png
+**/chinamoney_screenshot.png
+# 调试页面 / 临时抓取的 HTML 夹具
+shandong_reports/debug_*.html
+shandong_reports/debug_page.html
+shandong_reports/chinamoney_debug.html
+shandong_reports/qwjsn_*.html
+shandong_reports/search_*.html
+shandong_reports/search_result.html
+shandong_reports/homepage.html
+shandong_reports/mainhead.html
+# 测试用 PDF 样本
+shandong_reports/test_cninfo.pdf
+# 第三方站点抓取的 JS 资源（非本项目代码/数据，仅为采集调试脚手架）
+shandong_reports/cm-basic.js
+shandong_reports/jquery-ui-1.10.4.custom.min.js
+shandong_reports/jquery.flexslider-min.js
+
+# ===== 本地环境 / 工具 =====
+.workbuddy/
 .venv/
 venv/
 env/

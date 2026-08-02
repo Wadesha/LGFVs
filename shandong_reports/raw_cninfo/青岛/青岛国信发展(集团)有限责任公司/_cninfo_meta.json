@@ -1,0 +1,32 @@
+{
+  "company": "青岛国信发展(集团)有限责任公司",
+  "city": "青岛",
+  "search_time": "2026-05-16T10:16:27.089065",
+  "documents": [
+    {
+      "ann_id": "1213602901",
+      "title": "17青信Y1：青岛国信发展（集团）有限责任公司2022年跟踪评级报告",
+      "date": "2022-06-02",
+      "doc_type": "评级报告",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2022-06-02/1213602901.PDF",
+      "source": "cninfo"
+    },
+    {
+      "ann_id": "1205362933",
+      "title": "18青信Y2：青岛国信发展（集团）有限责任公司2018年面向合格投资者公开发行可续期公司债券（第二期）募集说明书摘要",
+      "date": "2018-08-31",
+      "doc_type": "募集说明书摘要",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2018-08-31/1205362933.PDF",
+      "source": "cninfo"
+    },
+    {
+      "ann_id": "1205362932",
+      "title": "18青信Y2：青岛国信发展（集团）有限责任公司2018年面向合格投资者公开发行可续期公司债券（第二期）募集说明书",
+      "date": "2018-08-31",
+      "doc_type": "募集说明书",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2018-08-31/1205362932.PDF",
+      "source": "cninfo"
+    }
+  ],
+  "downloaded": 3
+}

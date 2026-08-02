@@ -1,0 +1,32 @@
+{
+  "company": "潍坊市投资集团有限公司",
+  "city": "潍坊",
+  "search_time": "2026-05-16T10:43:34.878821",
+  "documents": [
+    {
+      "ann_id": "1224043348",
+      "title": "25潍投05：潍坊市投资集团有限公司2025年面向专业投资者公开发行公司债券（第三期）募集说明书摘要",
+      "date": "2025-06-30",
+      "doc_type": "募集说明书摘要",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2025-06-30/1224043348.PDF",
+      "source": "cninfo"
+    },
+    {
+      "ann_id": "1224043350",
+      "title": "25潍投05：潍坊市投资集团有限公司2025年面向专业投资者公开发行公司债券（第三期）募集说明书",
+      "date": "2025-06-30",
+      "doc_type": "募集说明书",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2025-06-30/1224043350.PDF",
+      "source": "cninfo"
+    },
+    {
+      "ann_id": "1224043356",
+      "title": "25潍投05：潍坊市投资集团有限公司主体长期信用评级报告",
+      "date": "2025-06-30",
+      "doc_type": "评级报告",
+      "pdf_url": "https://static.cninfo.com.cn/finalpage/2025-06-30/1224043356.PDF",
+      "source": "cninfo"
+    }
+  ],
+  "downloaded": 3
+}

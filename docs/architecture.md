@@ -10,8 +10,8 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1. 数据采集层（原始文件，本地保存，不进仓库）                       │
-│     raw_files/        样本 PDF（上海/成都/湖州/券商，手动下载）       │
+│  1. 数据采集层（原始文件，公开披露，已入库）                         │
+│     raw_files/        样本 PDF（上海/成都/湖州/新浪，手动下载）       │
 │     shandong_reports/ 山东全量城投采集体系（爬虫 + 按城市归类 PDF）   │
 └───────────────────────────────┬─────────────────────────────────┘
                                  │  pdfplumber / 爬虫解析
@@ -76,10 +76,13 @@ LGFVs/
 │   └── mock/                  # 模拟数据（合成，可复现，进仓库）
 │       ├── chengtou_mock.json #   8 家主体 × 5 年结构化数据
 │       └── generate_mock_data.py  # 生成脚本（python generate_mock_data.py）
-└── .gitignore                 # 保护原始/获取/隐私数据
+├── raw_files/                 # 【真实·公开披露】样本 PDF（已入库）
+├── shandong_reports/          # 【真实·公开披露】山东城投采集体系（已入库）
+└── .gitignore                 # 保护调试产物/私密数据，真实公开数据入库
 ```
 
-> 本地另有 `raw_files/`、`shandong_reports/`、`reports/`，均被 `.gitignore` 排除，**绝不进入仓库**。
+> 仓库现已包含**公开披露**真实数据：`raw_files/`（样本 PDF）与 `shandong_reports/`（山东采集体系）。
+> 二者均为发行人对外公开资料；调试产物与私密 / 涉密数据仍被 `.gitignore` 排除。
 
 ---
 
@@ -95,10 +98,11 @@ LGFVs/
 
 | 类型 | 位置 | 是否进仓库 |
 |------|------|-----------|
-| 原始 PDF（手动下载样本） | `raw_files/` | ❌ 本地 |
-| 真实采集数据（山东体系） | `shandong_reports/` | ❌ 本地 |
-| 真实数据解析报告 | `reports/` | ❌ 本地（gitignore） |
+| 样本 PDF（公开披露） | `raw_files/` | ✅ 进仓库 |
+| 真实采集数据（山东·公开披露） | `shandong_reports/` | ✅ 进仓库 |
 | 合成模拟数据 | `data/mock/` | ✅ 进仓库 |
-| 展示看板 | `index.html` | ✅ 进仓库（仅含模拟数据） |
+| 展示看板（仅模拟数据） | `index.html` | ✅ 进仓库 |
+| 真实数据解析报告（可再生） | `reports/` | ❌ 本地（gitignore） |
+| 私密 / 涉密 / 凭证数据 | 任意 | ❌ 绝不入库 |
 
-未经显式确认，任何原始 / 获取 / 隐私数据均不上传。详见 `docs/methodology.md` 与 `README.md` 的"数据保护声明"。
+公开披露的 `raw_files/` 与 `shandong_reports/` 已于 2026-08-02 经用户确认入库；私密 / 涉密 / 凭证数据一律不入库。详见 `docs/methodology.md` 与 `README.md` 的"数据保护声明"。

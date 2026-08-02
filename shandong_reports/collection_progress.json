@@ -1,0 +1,26 @@
+{
+  "completed": [
+    {
+      "name": "济南城市投资集团有限公司",
+      "city": "济南",
+      "total": 0,
+      "bond_docs": 0,
+      "downloaded": 0,
+      "time": "2026-05-15T21:15:40.048670"
+    },
+    {
+      "name": "济南城市建设集团有限公司",
+      "city": "济南",
+      "total": 0,
+      "bond_docs": 0,
+      "downloaded": 0,
+      "time": "2026-05-15T21:15:40.193519"
+    }
+  ],
+  "failed": {},
+  "stats": {
+    "total": 0,
+    "found": 0,
+    "downloaded": 0
+  }
+}
