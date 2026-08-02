@@ -1,0 +1,41 @@
+# ===== 数据与隐私保护（绝不进仓库）=====
+# 原始 PDF（手动下载样本）
+raw_files/
+# 真实采集数据体系（山东等，本地原样保留）
+shandong_reports/
+# 真实数据解析报告输出（含真实主体明细）
+reports/
+# 任何 PDF / 扫描件
+*.pdf
+*.PDF
+
+# ===== 真实数据目录（如未来建立）=====
+data/real/
+
+# ===== 本地环境 / 工具 =====
+.workbuddy/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# ===== 密钥与配置（强制排除）=====
+.env
+.env.*
+*.token
+*.secret
+credentials.json
+config.local.json
+# 兜底：任何疑似令牌字符串不入库（人工复核）
+ghp_*
+
+# ===== 编辑器 / 系统 =====
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# ===== 产物（可选，由脚本再生）=====
+# 注意：index.html 与 data/mock/chengtou_mock.json 是仓库内容，勿在此排除
