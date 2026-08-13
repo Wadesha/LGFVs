@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>闲置资产深度分析 · 场景分类 · 案例 · 财务模型</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f0f4f8; color:#1e293b; line-height:1.7; }
+  .wrap { max-width:1100px; margin:0 auto; padding:20px 16px 60px; }
+
+  .hero { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); color:#fff; border-radius:20px; padding:40px 30px; text-align:center; margin-bottom:24px; }
+  .hero h1 { font-size:28px; font-weight:800; }
+  .hero .sub { font-size:14px; opacity:.8; margin-top:8px; }
+  .hero .tag { display:inline-block; margin-top:14px; background:rgba(255,255,255,.12); padding:5px 18px; border-radius:20px; font-size:13px; }
+
+  .card { background:#fff; border-radius:16px; padding:24px 28px; margin-bottom:20px; box-shadow:0 2px 12px rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.03); }
+  .card h2 { font-size:20px; color:#0f3460; margin-bottom:12px; display:flex; align-items:center; gap:10px; border-bottom:2px solid #eef2f7; padding-bottom:10px; }
+  .card h2 .badge { font-size:12px; background:#dbeafe; color:#1e40af; padding:2px 12px; border-radius:12px; font-weight:600; }
+  .card h3 { font-size:16px; color:#1e293b; margin:16px 0 8px; display:flex; align-items:center; gap:8px; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media (max-width:800px){ .grid2,.grid3{grid-template-columns:1fr;} }
+
+  /* 场景卡片 */
+  .scene-card { background:#f8fafc; border-radius:12px; padding:16px 18px; border:1px solid #e2e8f0; }
+  .scene-card .icon { font-size:28px; margin-bottom:6px; }
+  .scene-card h4 { font-size:15px; color:#0f3460; margin-bottom:4px; }
+  .scene-card .desc { font-size:13px; color:#475569; }
+  .scene-card .impact { font-size:12px; margin-top:8px; padding:6px 10px; border-radius:8px; }
+  .scene-card .impact.high { background:#fee2e2; color:#991b1b; }
+  .scene-card .impact.mid { background:#fef3c7; color:#92400e; }
+  .scene-card .impact.low { background:#dcfce7; color:#166534; }
+
+  /* 案例卡片 */
+  .case-card { background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; }
+  .case-card .case-head { padding:14px 18px; font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .case-card .case-body { padding:0 18px 14px; font-size:13px; color:#475569; }
+  .case-card .case-body table { width:100%; border-collapse:collapse; font-size:12px; margin:8px 0; }
+  .case-card .case-body td, .case-card .case-body th { padding:5px 8px; border-bottom:1px solid #e2e8f0; text-align:right; }
+  .case-card .case-body th { text-align:left; color:#64748b; font-weight:600; }
+  .case-card .case-body td:first-child { text-align:left; }
+  .case-card .case-foot { padding:8px 18px 12px; font-size:12px; color:#64748b; border-top:1px solid #e2e8f0; }
+
+  /* 财务模型表格 */
+  .model-table { width:100%; border-collapse:collapse; font-size:13px; margin:12px 0; }
+  .model-table th { background:#f1f5f9; padding:8px 10px; text-align:center; border-bottom:2px solid #cbd5e1; font-weight:600; color:#1e293b; }
+  .model-table td { padding:7px 10px; text-align:center; border-bottom:1px solid #f1f5f9; }
+  .model-table tr:hover td { background:#fafbff; }
+  .model-table .val-up { color:#dc2626; font-weight:700; }
+  .model-table .val-down { color:#16a34a; font-weight:700; }
+  .model-table .val-warn { color:#d97706; font-weight:700; }
+  .model-table .left { text-align:left; }
+  .model-table .highlight-row { background:#fef2f2; }
+
+  /* 公式展示 */
+  .formula { background:#f1f5f9; border-radius:10px; padding:14px 18px; font-family:"Courier New",monospace; font-size:14px; margin:10px 0; border-left:4px solid #3b82f6; }
+  .formula .label { font-family:"PingFang SC",sans-serif; font-size:12px; color:#64748b; margin-bottom:4px; }
+
+  /* 敏感性分析 */
+  .sensitivity { display:flex; flex-direction:column; gap:8px; margin:12px 0; }
+  .sen-row { display:flex; align-items:center; gap:10px; font-size:13px; }
+  .sen-row .sen-label { width:80px; text-align:right; flex-shrink:0; color:#475569; }
+  .sen-row .sen-track { flex:1; height:22px; background:#f1f5f9; border-radius:6px; overflow:hidden; display:flex; }
+  .sen-row .sen-track .seg { height:100%; transition:width .3s; }
+  .sen-row .sen-val { width:50px; text-align:right; font-weight:700; flex-shrink:0; }
+
+  .tag { display:inline-block; padding:2px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+  .tag-red { background:#fee2e2; color:#991b1b; }
+  .tag-yellow { background:#fef3c7; color:#92400e; }
+  .tag-green { background:#dcfce7; color:#166534; }
+  .tag-blue { background:#dbeafe; color:#1e40af; }
+
+  .insight { background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:14px 18px; margin:12px 0; font-size:13px; color:#1e40af; }
+  .insight strong { color:#1e3a5f; }
+
+  .foot { text-align:center; color:#94a3b8; font-size:12px; margin-top:30px; padding-top:16px; border-top:1px solid #e2e8f0; }
+
+  /* 图表区域 */
+  .chart-box { width:100%; margin:12px 0; }
+  .chart-box svg { display:block; width:100%; }
+
+  .nav-tabs { display:flex; gap:4px; margin-bottom:18px; flex-wrap:wrap; }
+  .nav-tab { padding:8px 20px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; border:none; background:#e2e8f0; color:#64748b; }
+  .nav-tab.active { background:#0f3460; color:#fff; }
+  .nav-tab:hover:not(.active) { background:#cbd5e1; }
+
+  .section { display:none; }
+  .section.active { display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>闲置资产深度分析框架</h1>
+    <div class="sub">场景分类 · 实际案例 · 财务模型 · 完整分析体系</div>
+    <div class="tag">城投公司 / LGFV 资产运营效率评估</div>
+  </div>
+
+  <!-- Tab 导航 -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('scenes')">📂 场景分类</button>
+    <button class="nav-tab" onclick="switchTab('cases')">📋 实际案例</button>
+    <button class="nav-tab" onclick="switchTab('model')">📐 财务模型</button>
+  </div>
+
+  <!-- ========== 第一部分：场景分类 ========== -->
+  <div id="tab-scenes" class="section active">
+
+    <div class="card">
+      <h2>📂 闲置资产六大场景分类 <span class="badge">分类体系</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:14px;">
+        城投公司的闲置资产并非单一形态，根据资产类型和闲置原因，可分为以下六大类。
+        每种场景对财务状况的影响程度不同，需要区别对待。
+      </p>
+      <div class="grid3">
+        <div class="scene-card">
+          <div class="icon">🏞️</div>
+          <h4>闲置土地</h4>
+          <div class="desc">已收储但未开发或未出让的土地，长期趴在账上无法变现。</div>
+          <div class="impact high">🔴 影响程度：高 · 资金沉淀严重</div>
+        </div>
+        <div class="scene-card">
+          <div class="icon">🏢</div>
+          <h4>空置房产</h4>
+          <div class="desc">建好的商业楼宇、保障房、商铺等出租率低或根本租不出去。</div>
+          <div class="impact high">🔴 影响程度：高 · 无法产生租金收益</div>
+        </div>
+        <div class="scene-card">
+          <div class="icon">🏭</div>
+          <h4>未运营设施</h4>
+          <div class="desc">污水处理厂、产业园、停车场等建好了但未投入运营的设施。</div>
+          <div class="impact mid">🟡 影响程度：中 · 运营后可改善</div>
+        </div>
+        <div class="scene-card">
+          <div class="icon">🚧</div>
+          <h4>在建停工</h4>
+          <div class="desc">因资金链断裂、规划变更等原因停工的在建工程（烂尾）。</div>
+          <div class="impact high">🔴 影响程度：高 · 减值风险极大</div>
+        </div>
+        <div class="scene-card">
+          <div class="icon">📊</div>
+          <h4>低效股权</h4>
+          <div class="desc">参股或控股的子公司长期亏损或不分红，投资无法收回。</div>
+          <div class="impact mid">🟡 影响程度：中 · 需长期跟踪</div>
+        </div>
+        <div class="scene-card">
+          <div class="icon">⚙️</div>
+          <h4>闲置设备</h4>
+          <div class="desc">采购了但未安装使用的大型设备，或技术淘汰的设备。</div>
+          <div class="impact low">🟢 影响程度：低 · 金额通常较小</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 各场景对财务报表的影响</h2>
+      <div class="chart-box" id="sceneImpactChart"></div>
+      <div class="insight">
+        <strong>核心发现：</strong> 闲置土地和在建停工是城投公司最危险的闲置资产类型。
+        它们不仅占用大量资金，还会产生持续的利息支出，且减值风险最高。
+        空置房产虽然影响程度高，但通过降价出租或改造仍有可能盘活。
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 第二部分：实际案例 ========== -->
+  <div id="tab-cases" class="section">
+
+    <div class="card">
+      <h2>📋 实际案例分析 <span class="badge">基于模拟数据</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:14px;">
+        以下是基于模拟数据生成的 4 个典型案例，展示了不同评级、不同场景下城投公司的闲置资产表现。
+        每个案例都包含 5 年财务数据和闲置资产构成分析。
+      </p>
+    </div>
+
+    <div id="caseCards"></div>
+  </div>
+
+  <!-- ========== 第三部分：财务模型 ========== -->
+  <div id="tab-model" class="section">
+
+    <div class="card">
+      <h2>📐 闲置资产财务影响模型 <span class="badge">定量分析</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        闲置资产如何影响城投公司的财务指标？以下模型展示了一条完整的传导链条。
+      </p>
+
+      <h3>🔗 传导机制</h3>
+      <div class="formula">
+        <div class="label">闲置资产 ↑</div>
+        ① 总资产虚增 → 资产负债率表面降低（假象）<br>
+        ② 资产减值损失 ↑ → 净利润 ↓ → ROE ↓<br>
+        ③ 无法产生经营现金流 → 经营现金流 ↓<br>
+        ④ 维护成本 + 利息支出 → EBITDA 利息保障倍数 ↓<br>
+        ⑤ 资产流动性差 → 速动比率 ↓<br>
+        <div class="label" style="margin-top:8px;">→ 最终结果：信用评级下调风险 ↑↑</div>
+      </div>
+
+      <h3>📊 闲置资产率对关键指标的冲击</h3>
+      <div class="chart-box" id="impactChart"></div>
+
+      <h3>📋 不同闲置率下的财务表现模拟</h3>
+      <p style="font-size:12px;color:#64748b;margin-bottom:8px;">
+        假设一家总资产 1000 亿、负债率 60% 的城投公司，不同闲置资产率对财务指标的影响：
+      </p>
+      <table class="model-table" id="simTable"></table>
+    </div>
+
+    <div class="card">
+      <h2>📈 敏感性分析 <span class="badge">闲置率 vs 关键指标</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        当闲置资产率从 0% 逐步上升到 40%，各项财务指标的变化趋势：
+      </p>
+      <div class="chart-box" id="sensitivityChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>🔄 盘活路径与效果预测</h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        针对不同类型的闲置资产，有不同的盘活策略。以下是各策略的预期效果：
+      </p>
+      <div class="grid3">
+        <div class="scene-card">
+          <h4>🏞️ 闲置土地</h4>
+          <div class="desc">盘活策略：政府回收补偿、土地性质变更、合作开发</div>
+          <div class="impact mid" style="margin-top:6px;">预期回收率：60%-80% · 周期 1-3 年</div>
+        </div>
+        <div class="scene-card">
+          <h4>🏢 空置房产</h4>
+          <div class="desc">盘活策略：降价出租、改造成保障性租赁住房、资产证券化(REITs)</div>
+          <div class="impact mid" style="margin-top:6px;">预期回收率：40%-70% · 周期 0.5-2 年</div>
+        </div>
+        <div class="scene-card">
+          <h4>🚧 在建停工</h4>
+          <div class="desc">盘活策略：引入战略投资者、政府接管、资产剥离</div>
+          <div class="impact high" style="margin-top:6px;">预期回收率：20%-50% · 周期 2-5 年</div>
+        </div>
+      </div>
+      <div class="insight" style="margin-top:12px;">
+        <strong>关键结论：</strong> 闲置资产盘活越早越主动。3% 以内的闲置率属于正常经营波动；
+        5%-15% 需要关注；超过 15% 必须采取行动；超过 30% 则面临严重的信用风险。
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    闲置资产深度分析框架 · 基于公开披露数据整理 · 模拟数据仅用于演示
+  </div>
+</div>
+
+<script>
+// ================ 数据 ================
+const SCENE_DATA = [
+  {name:'闲置土地', impact:'高', score:9, color:'#dc2626', desc:'资金沉淀、减值风险'},
+  {name:'空置房产', impact:'高', score:8, color:'#dc2626', desc:'无租金收益、维护成本'},
+  {name:'未运营设施', impact:'中', score:5, color:'#d97706', desc:'运营后可改善'},
+  {name:'在建停工', impact:'高', score:9, color:'#dc2626', desc:'减值风险极大'},
+  {name:'低效股权', impact:'中', score:4, color:'#d97706', desc:'需长期跟踪'},
+  {name:'闲置设备', impact:'低', score:2, color:'#16a34a', desc:'金额通常较小'},
+];
+
+const CASES = [
+  {
+    id:'case1', name:'沪城投', rating:'AAA', city:'上海', color:'#15803d',
+    scene:'闲置土地为主',
+    summary:'AAA 级主体，整体资产质量高，闲置率低（~6%），主要是部分早期收储土地未开发。',
+    series:[
+      {year:2020, total_assets:3466, idle_assets:197.9, idle_rate:5.71, revenue:251.1, net_profit:37.2, roe:2.43, op_cf:54.5, al:55.88},
+      {year:2021, total_assets:3663.9, idle_assets:159.9, idle_rate:4.36, revenue:232.5, net_profit:42.91, roe:2.72, op_cf:148.7, al:56.87},
+      {year:2022, total_assets:3946.8, idle_assets:328.3, idle_rate:8.32, revenue:349.0, net_profit:40.36, roe:2.31, op_cf:118.1, al:55.80},
+      {year:2023, total_assets:4257.3, idle_assets:481.4, idle_rate:11.31, revenue:380.1, net_profit:79.62, roe:4.11, op_cf:37.6, al:54.54},
+      {year:2024, total_assets:4564.3, idle_assets:276.3, idle_rate:6.05, revenue:346.0, net_profit:99.4, roe:4.72, op_cf:166.1, al:53.90},
+    ],
+    analysis:'2023年闲置率短暂上升后，2024年已明显改善，说明公司在主动盘活资产。整体风险可控。'
+  },
+  {
+    id:'case2', name:'滨海建投', rating:'AA+', city:'天津', color:'#2563eb',
+    scene:'空置房产 + 在建停工',
+    summary:'AA+ 主体，闲置率较高（~11%），主要是部分产业园区空置和个别在建项目停工。',
+    series:[
+      {year:2020, total_assets:1218, idle_assets:354.9, idle_rate:29.14, revenue:163.9, net_profit:6.78, roe:1.34, op_cf:93.1, al:58.56},
+      {year:2021, total_assets:1293.4, idle_assets:149.0, idle_rate:11.52, revenue:194.8, net_profit:17.98, roe:3.47, op_cf:6.9, al:59.92},
+      {year:2022, total_assets:1397.9, idle_assets:264.4, idle_rate:18.91, revenue:157.9, net_profit:10.23, roe:1.77, op_cf:23.3, al:58.57},
+      {year:2023, total_assets:1458.1, idle_assets:205.0, idle_rate:14.06, revenue:203.4, net_profit:23.08, roe:3.9, op_cf:109.6, al:59.46},
+      {year:2024, total_assets:1507, idle_assets:875.7, idle_rate:58.11, revenue:349.8, net_profit:15.42, roe:2.44, op_cf:-3.6, al:58.11},
+    ],
+    analysis:'2024年闲置资产率飙升到 58%，情况严重恶化。需要关注是否存在大规模资产减值风险。'
+  },
+  {
+    id:'case3', name:'星城发展', rating:'AA', city:'长沙', color:'#d97706',
+    scene:'在建停工 + 低效股权',
+    summary:'AA 级主体，闲置率处于较高水平（~15-20%），有多个在建项目进度滞后。',
+    series:[
+      {year:2020, total_assets:749, idle_assets:134.0, idle_rate:17.89, revenue:77.0, net_profit:6.37, roe:2.66, op_cf:-26.1, al:68.10},
+      {year:2021, total_assets:814.6, idle_assets:159.5, idle_rate:19.58, revenue:168.5, net_profit:2.89, roe:1.15, op_cf:-65.6, al:69.19},
+      {year:2022, total_assets:870.2, idle_assets:149.1, idle_rate:17.13, revenue:150.0, net_profit:5.33, roe:2.09, op_cf:-89.5, al:70.64},
+      {year:2023, total_assets:954, idle_assets:142.5, idle_rate:14.94, revenue:116.5, net_profit:6.46, roe:2.28, op_cf:-62.1, al:70.25},
+      {year:2024, total_assets:1005.8, idle_assets:196.5, idle_rate:19.54, revenue:165.4, net_profit:8.09, roe:2.61, op_cf:-36.5, al:69.16},
+    ],
+    analysis:'连续5年经营现金流为负，闲置率居高不下，资产负债率接近70%警戒线，风险较大。'
+  },
+  {
+    id:'case4', name:'金城建发', rating:'AA-', city:'兰州', color:'#dc2626',
+    scene:'全面闲置 · 多重风险',
+    summary:'AA- 级主体，财务状况最差，闲置率极高（~30%+），几乎每种场景都存在。',
+    series:[
+      {year:2020, total_assets:399, idle_assets:119.1, idle_rate:29.85, revenue:96.2, net_profit:1.79, roe:1.58, op_cf:-11.1, al:71.62},
+      {year:2021, total_assets:411.8, idle_assets:130.5, idle_rate:31.69, revenue:64.7, net_profit:1.36, roe:1.19, op_cf:-59.6, al:72.27},
+      {year:2022, total_assets:448.2, idle_assets:146.2, idle_rate:32.62, revenue:90.2, net_profit:1.44, roe:1.11, op_cf:3.0, al:71.16},
+      {year:2023, total_assets:485.8, idle_assets:155.8, idle_rate:32.07, revenue:88.1, net_profit:1.42, roe:1.0, op_cf:-49.3, al:70.63},
+      {year:2024, total_assets:530.8, idle_assets:178.9, idle_rate:33.70, revenue:128.8, net_profit:0.5, roe:0.32, op_cf:-13.3, al:70.35},
+    ],
+    analysis:'闲置率超过30%，ROE几乎为零，经营现金流持续为负，资产负债率超70%。所有风险指标同时亮红灯，属于高风险主体。'
+  }
+];
+
+// ================ 工具函数 ================
+const fmt = (n,d=1)=> Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const svg = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
+const COLORS = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2'];
+
+// ================ Tab 切换 ================
+function switchTab(name){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.nav-tab')[['scenes','cases','model'].indexOf(name)].classList.add('active');
+  // 重新绘制
+  if(name==='scenes') drawSceneImpact();
+  if(name==='cases') renderCases();
+  if(name==='model'){ drawImpactChart(); drawSimTable(); drawSensitivity(); }
+}
+
+// ================ 场景影响图 ================
+function drawSceneImpact(){
+  const W=700,H=300, pad={l:90,r:30,t:20,b:36};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  let s=svg(W,H);
+  SCENE_DATA.forEach((d,i)=>{
+    const bh = (d.score/10)*ih;
+    const x = pad.l + i*(iw/SCENE_DATA.length) + (iw/SCENE_DATA.length-50)/2;
+    const y = pad.t + ih - bh;
+    s+=`<rect x="${x}" y="${y}" width="50" height="${bh}" rx="6" fill="${d.color}" opacity="0.85"/>`;
+    s+=`<text x="${x+25}" y="${y-8}" text-anchor="middle" font-size="13" font-weight="700" fill="${d.color}">${d.score}</text>`;
+    s+=`<text x="${x+25}" y="${H-pad.b+14}" text-anchor="middle" font-size="11" fill="#374151">${d.name}</text>`;
+  });
+  s+=`<text x="${pad.l-8}" y="${pad.t+ih/2}" text-anchor="middle" font-size="11" fill="#64748b" transform="rotate(-90,${pad.l-8},${pad.t+ih/2})">影响程度评分</text>`;
+  s+='</svg>';
+  document.getElementById('sceneImpactChart').innerHTML=s;
+}
+
+// ================ 案例渲染 ================
+function renderCases(){
+  document.getElementById('caseCards').innerHTML = CASES.map(c=>{
+    const last = c.series[c.series.length-1];
+    const trendUp = c.series[c.series.length-1].idle_rate > c.series[0].idle_rate;
+    // 趋势图
+    const W=320,H=150, p={l:36,r:8,t:10,b:24};
+    const iw=W-p.l-p.r, ih=H-p.t-p.b;
+    const vals = c.series.map(s=>s.idle_rate);
+    let mn=Math.min(...vals), mx=Math.max(...vals);
+    mn = Math.max(0,mn-2); mx += 5;
+    const x=i=> p.l + iw*i/(c.series.length-1);
+    const y=v=> p.t + ih - ih*(v-mn)/(mx-mn);
+    let chart = svg(W,H);
+    for(let g=0;g<=3;g++){ const val=mn+(mx-mn)*g/3, yy=y(val);
+      chart+=`<line x1="${p.l}" y1="${yy.toFixed(1)}" x2="${W-p.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
+      chart+=`<text x="${p.l-4}" y="${yy+3}" text-anchor="end" font-size="8" fill="#9ca3af">${val.toFixed(0)}%</text>`;
+    }
+    c.series.forEach((s,i)=>{
+      chart+=`<circle cx="${x(i).toFixed(1)}" cy="${y(s.idle_rate).toFixed(1)}" r="2.5" fill="${c.color}"/>`;
+      if(i>0) chart+=`<line x1="${x(i-1).toFixed(1)}" y1="${y(c.series[i-1].idle_rate).toFixed(1)}" x2="${x(i).toFixed(1)}" y2="${y(s.idle_rate).toFixed(1)}" stroke="${c.color}" stroke-width="1.5"/>`;
+    });
+    c.series.forEach((s,i)=> chart+=`<text x="${x(i)}" y="${H-4}" text-anchor="middle" font-size="7" fill="#9ca3af">${s.year}</text>`);
+    chart+='</svg>';
+
+    // 财务表
+    const finRows = c.series.map(s=>`<tr><td>${s.year}</td><td>${fmt(s.total_assets,0)}</td><td>${fmt(s.idle_assets,1)}</td><td class="${s.idle_rate>15?'val-up':(s.idle_rate>5?'val-warn':'val-down')}">${s.idle_rate.toFixed(1)}%</td><td>${fmt(s.revenue,1)}</td><td>${fmt(s.net_profit,2)}</td><td>${s.roe.toFixed(2)}%</td><td class="${s.op_cf<0?'val-up':'val-down'}">${fmt(s.op_cf,1)}</td></tr>`).join('');
+
+    return `<div class="case-card" style="margin-bottom:18px;border-left:4px solid ${c.color}">
+      <div class="case-head" style="background:${c.color}08">
+        <span style="color:${c.color}">${c.name}</span>
+        <span class="tag ${c.rating==='AAA'?'tag-green':(c.rating==='AA+'?'tag-blue':(c.rating==='AA'?'tag-yellow':'tag-red'))}">${c.rating}</span>
+        <span style="font-size:12px;color:#64748b;font-weight:400">${c.city} · ${c.scene}</span>
+      </div>
+      <div class="case-body">
+        <p style="margin-bottom:8px">${c.summary}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">闲置率趋势</div>
+            ${chart}
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>年份</th><th>总资产</th><th>闲置资产</th><th>闲置率</th><th>营收</th><th>净利</th><th>ROE</th><th>经营CF</th></tr></thead>
+              <tbody>${finRows}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="case-foot">📌 分析：${c.analysis}</div>
+    </div>`;
+  }).join('');
+}
+
+// ================ 财务模型图 ================
+function drawImpactChart(){
+  const W=700,H=320, pad={l:58,r:18,t:16,b:36};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  // 模拟不同闲置率对 ROE 和经营现金流的影响
+  const rates = [0,5,10,15,20,25,30,35,40];
+  const baseROE = 4.5, baseOCF = 100;
+  const roeImpact = rates.map(r=> baseROE * (1 - r/100 * 1.8));
+  const ocfImpact = rates.map(r=> baseOCF * (1 - r/100 * 2.2));
+  const maxV = Math.max(4.5, ...roeImpact, ...ocfImpact.map(v=>v/20));
+  let s=svg(W,H);
+  const x=i=> pad.l + iw*i/(rates.length-1);
+  const y=v=> pad.t + ih - ih*(v/maxV);
+  for(let g=0;g<=4;g++){ const val=maxV*g/4, yy=y(val);
+    s+=`<line x1="${pad.l}" y1="${yy.toFixed(1)}" x2="${W-pad.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
+    s+=`<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="9" fill="#9ca3af">${val.toFixed(1)}</text>`;
+  }
+  rates.forEach((r,i)=>{
+    s+=`<text x="${x(i)}" y="${H-pad.b+16}" text-anchor="middle" font-size="9" fill="#9ca3af">${r}%</text>`;
+  });
+  s+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="#64748b">闲置资产率 →</text>`;
+  // ROE 线
+  let d1=''; roeImpact.forEach((v,i)=>{ d1 += (i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1); });
+  s+=`<path d="${d1}" fill="none" stroke="#dc2626" stroke-width="2.5"/>`;
+  roeImpact.forEach((v,i)=> s+=`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="#dc2626"/>`);
+  s+=`<text x="${x(rates.length-1)+8}" y="${y(roeImpact[roeImpact.length-1])+4}" font-size="11" fill="#dc2626" font-weight="600">ROE (%)</text>`;
+  // 经营现金流线 (除以20缩放)
+  let d2=''; ocfImpact.forEach((v,i)=>{ d2 += (i?'L':'M')+x(i).toFixed(1)+','+y(v/20).toFixed(1); });
+  s+=`<path d="${d2}" fill="none" stroke="#2563eb" stroke-width="2.5"/>`;
+  ocfImpact.forEach((v,i)=> s+=`<circle cx="${x(i).toFixed(1)}" cy="${y(v/20).toFixed(1)}" r="3" fill="#2563eb"/>`);
+  s+=`<text x="${x(rates.length-1)+8}" y="${y(ocfImpact[ocfImpact.length-1]/20)-4}" font-size="11" fill="#2563eb" font-weight="600">经营现金流 (缩放)</text>`;
+  s+='</svg>';
+  document.getElementById('impactChart').innerHTML=s;
+}
+
+// ================ 模拟表 ================
+function drawSimTable(){
+  const rates = [0,5,10,15,20,25,30,35,40];
+  const base = {assets:1000, al:60, revenue:200, netProfit:15, roe:3.75, ocf:80, ebitda:25};
+  const rows = rates.map(r=>{
+    const idleAssets = base.assets * r/100;
+    const effectiveAssets = base.assets - idleAssets;
+    const al = (base.assets * base.al/100) / effectiveAssets * 100;
+    const roe = base.roe * (1 - r/100 * 1.8);
+    const ocf = base.ocf * (1 - r/100 * 2.2);
+    const ebitda = base.ebitda * (1 - r/100 * 1.5);
+    const ebitdaInterest = base.ebitda * (1 - r/100 * 1.5) / (base.assets * base.al/100 * 0.04);
+    const cls = r>15?'highlight-row':'';
+    return `<tr class="${cls}">
+      <td><b>${r}%</b></td>
+      <td>${fmt(idleAssets,0)}</td>
+      <td class="${r>15?'val-up':''}">${al.toFixed(1)}%</td>
+      <td class="${r>15?'val-up':(r>5?'val-warn':'val-down')}">${roe.toFixed(2)}%</td>
+      <td class="${ocf<0?'val-up':(ocf<40?'val-warn':'val-down')}">${fmt(ocf,1)}</td>
+      <td class="${ebitdaInterest<1.5?'val-up':(ebitdaInterest<2.5?'val-warn':'val-down')}">${ebitdaInterest.toFixed(2)}x</td>
+      <td style="font-size:12px;color:#64748b">${r<=5?'🟢 健康':(r<=15?'🟡 关注':(r<=30?'🔴 警戒':'⛔ 高危'))}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('simTable').innerHTML = `<thead><tr><th>闲置率</th><th>闲置资产(亿)</th><th>实际负债率</th><th>ROE</th><th>经营现金流</th><th>EBITDA利保</th><th>状态</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ================ 敏感性分析 ================
+function drawSensitivity(){
+  const W=700,H=300, pad={l:58,r:18,t:16,b:36};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const rates = [0,5,10,15,20,25,30,35,40];
+  // 标准化为 0-1
+  const normalized = {
+    roe: rates.map(r=> 1 - r/100 * 1.8),
+    ocf: rates.map(r=> 1 - r/100 * 2.2),
+    ebitda: rates.map(r=> 1 - r/100 * 1.5),
+    al: rates.map(r=> 1 + r/100 * 0.3),
+  };
+  let s=svg(W,H);
+  const x=i=> pad.l + iw*i/(rates.length-1);
+  const y=v=> pad.t + ih - ih*v;
+  for(let g=0;g<=4;g++){ const val=g/4, yy=y(val);
+    s+=`<line x1="${pad.l}" y1="${yy.toFixed(1)}" x2="${W-pad.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
+    s+=`<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="9" fill="#9ca3af">${(val*100).toFixed(0)}%</text>`;
+  }
+  rates.forEach((r,i)=> s+=`<text x="${x(i)}" y="${H-pad.b+16}" text-anchor="middle" font-size="9" fill="#9ca3af">${r}%</text>`);
+  s+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="#64748b">闲置资产率 →</text>`;
+  const lines = [
+    {key:'roe', color:'#dc2626', label:'ROE'},
+    {key:'ocf', color:'#2563eb', label:'经营现金流'},
+    {key:'ebitda', color:'#16a34a', label:'EBITDA'},
+    {key:'al', color:'#d97706', label:'实际负债率(逆)'},
+  ];
+  lines.forEach(ln=>{
+    const vals = normalized[ln.key];
+    let d=''; vals.forEach((v,i)=>{ d += (i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1); });
+    s+=`<path d="${d}" fill="none" stroke="${ln.color}" stroke-width="2" stroke-dasharray="${ln.key==='al'?'4,3':'none'}"/>`;
+    s+=`<text x="${x(rates.length-1)+6}" y="${y(vals[vals.length-1])+4}" font-size="10" fill="${ln.color}" font-weight="600">${ln.label}</text>`;
+  });
+  // 0.85 警戒线
+  const warnY = y(0.85);
+  s+=`<line x1="${pad.l}" y1="${warnY}" x2="${W-pad.r}" y2="${warnY}" stroke="#dc2626" stroke-dasharray="6,3" stroke-width="1" opacity="0.5"/>`;
+  s+=`<text x="${W-pad.r-60}" y="${warnY-4}" font-size="9" fill="#dc2626" opacity="0.6">85% 基准线</text>`;
+  s+='</svg>';
+  document.getElementById('sensitivityChart').innerHTML=s;
+}
+
+// ================ 初始化 ================
+drawSceneImpact();
+renderCases();
+drawImpactChart();
+drawSimTable();
+drawSensitivity();
+</script>
+</body>
+</html>
