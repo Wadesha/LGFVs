@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>城投项目前期融资策划全流程指南 · 超高层写字楼 · 产业园 · 商业综合体</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f8fafc; color:#1e293b; line-height:1.7; }
+  .wrap { max-width:1120px; margin:0 auto; padding:20px 16px 60px; }
+
+  .hero { background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f3460 100%); color:#fff; border-radius:20px; padding:40px 30px; text-align:center; margin-bottom:24px; }
+  .hero h1 { font-size:28px; font-weight:800; letter-spacing:1px; }
+  .hero .sub { font-size:14px; opacity:.7; margin-top:8px; max-width:700px; margin-left:auto; margin-right:auto; }
+  .hero .tags { display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap; }
+  .hero .tags span { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); padding:4px 16px; border-radius:20px; font-size:12px; }
+
+  .card { background:#fff; border-radius:16px; padding:24px 28px; margin-bottom:20px; box-shadow:0 2px 12px rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.03); }
+  .card h2 { font-size:20px; color:#0f3460; margin-bottom:12px; display:flex; align-items:center; gap:10px; border-bottom:2px solid #eef2f7; padding-bottom:10px; }
+  .card h2 .badge { font-size:11px; background:#dbeafe; color:#1e40af; padding:2px 12px; border-radius:12px; font-weight:600; }
+  .card h3 { font-size:16px; color:#1e293b; margin:16px 0 8px; display:flex; align-items:center; gap:8px; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  .grid4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
+  @media (max-width:800px){ .grid2,.grid3,.grid4{grid-template-columns:1fr;} }
+
+  .highlight-box { background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:14px 18px; margin:12px 0; }
+  .highlight-box.danger { background:#fef2f2; border-color:#fecaca; }
+  .highlight-box.warn { background:#fffbeb; border-color:#fde68a; }
+  .highlight-box.green { background:#f0fdf4; border-color:#86efac; }
+
+  .num { font-variant-numeric:tabular-nums; }
+  .big { font-size:24px; font-weight:800; }
+  .red { color:#dc2626; } .green { color:#16a34a; } .yellow { color:#d97706; } .blue { color:#2563eb; }
+
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:12px 0; }
+  th { background:#f1f5f9; padding:8px 10px; text-align:center; border-bottom:2px solid #cbd5e1; font-weight:600; color:#1e293b; }
+  td { padding:7px 10px; text-align:center; border-bottom:1px solid #f1f5f9; }
+  tr:hover td { background:#fafbff; }
+  .left { text-align:left; }
+  .highlight-row { background:#fef2f2; }
+
+  .tag { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+  .tag-red { background:#fee2e2; color:#991b1b; }
+  .tag-yellow { background:#fef3c7; color:#92400e; }
+  .tag-green { background:#dcfce7; color:#166534; }
+  .tag-blue { background:#dbeafe; color:#1e40af; }
+
+  .insight { background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:14px 18px; margin:12px 0; font-size:13px; color:#1e40af; }
+  .insight strong { color:#1e3a5f; }
+
+  .step { display:flex; gap:14px; margin-bottom:12px; align-items:flex-start; }
+  .step-num { flex-shrink:0; width:32px; height:32px; border-radius:50%; background:#0f3460; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; }
+  .step-body { flex:1; }
+  .step-body h4 { font-size:14px; color:#0f3460; margin-bottom:3px; }
+  .step-body p { font-size:13px; color:#475569; }
+
+  .flow-row { display:flex; align-items:center; gap:8px; overflow-x:auto; padding:8px 0; }
+  .flow-node { flex-shrink:0; background:#f1f5f9; border-radius:10px; padding:12px 16px; text-align:center; min-width:110px; border:1px solid #e2e8f0; }
+  .flow-node .fn { font-size:11px; font-weight:700; color:#0f3460; }
+  .flow-node .fd { font-size:10px; color:#64748b; margin-top:3px; }
+  .flow-arrow { flex-shrink:0; color:#94a3b8; font-size:18px; }
+
+  .chart-box { margin:12px 0; }
+  .chart-box svg { display:block; width:100%; }
+
+  .foot { text-align:center; color:#94a3b8; font-size:12px; margin-top:30px; padding-top:16px; border-top:1px solid #e2e8f0; }
+
+  .nav-tabs { display:flex; gap:4px; margin-bottom:18px; flex-wrap:wrap; }
+  .nav-tab { padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; border:none; background:#e2e8f0; color:#64748b; }
+  .nav-tab.active { background:#0f3460; color:#fff; }
+  .nav-tab:hover:not(.active) { background:#cbd5e1; }
+
+  .section { display:none; }
+  .section.active { display:block; }
+
+  .compare-card { background:#f8fafc; border-radius:12px; padding:16px 18px; border:1px solid #e2e8f0; }
+  .compare-card h4 { font-size:14px; margin-bottom:6px; }
+  .compare-card .stat { font-size:24px; font-weight:800; color:#0f3460; }
+  .compare-card .stat-desc { font-size:12px; color:#64748b; }
+  .compare-card ul { font-size:12px; color:#475569; padding-left:14px; line-height:1.8; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>🏗️ 城投项目前期融资策划全流程指南</h1>
+    <div class="sub">超高层写字楼 · 产业园 · 商业综合体 — 从拿地前策划到融资落地的完整操作手册<br>基于2025-2026年最新政策环境</div>
+    <div class="tags">
+      <span>P+F+EPC+O</span><span>专项债</span><span>REITs</span><span>CMBS</span><span>资金拼盘</span><span>前期策划</span>
+    </div>
+  </div>
+
+  <!-- Tab 导航 -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('overview')">📊 全景对比</button>
+    <button class="nav-tab" onclick="switchTab('tower')">🏢 超高层写字楼</button>
+    <button class="nav-tab" onclick="switchTab('park')">🏭 产业园</button>
+    <button class="nav-tab" onclick="switchTab('mall')">🛍️ 商业综合体</button>
+    <button class="nav-tab" onclick="switchTab('process')">📋 全流程操作</button>
+  </div>
+
+  <!-- ========== Tab 1: 全景对比 ========== -->
+  <div id="tab-overview" class="section active">
+
+    <div class="card">
+      <h2>📊 三类项目核心特征对比</h2>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">三类项目在投资规模、回报周期、融资路径上差异巨大，前期策划必须"一项目一策"。</p>
+      <table id="compareTable"></table>
+    </div>
+
+    <div class="card">
+      <h2>💰 2026年可用的融资工具箱</h2>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">根据2025-2026年最新政策，城投公司可组合使用的融资渠道如下：</p>
+      <div class="grid3" id="toolbox"></div>
+    </div>
+
+    <div class="card">
+      <h2>🧩 资金拼盘设计原则</h2>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">
+        成功的项目融资不是靠单一渠道，而是"<strong>拼盘组合</strong>"。核心原则是<strong>公益性模块走财政/专项债，经营性模块走市场化融资</strong>。
+      </p>
+      <div class="highlight-box" style="font-size:13px;">
+        <strong>资金拼盘四层结构：</strong><br>
+        ① <strong>资本金层</strong>（20-30%）：自有资金 + 政府引导基金 + 战略投资者<br>
+        ② <strong>政策性资金层</strong>（20-40%）：专项债 + 超长期国债 + 中央预算内投资<br>
+        ③ <strong>债务融资层</strong>（30-50%）：银行贷款 + 债券发行 + 融资租赁<br>
+        ④ <strong>退出融资层</strong>（运营期）：CMBS + REITs + 类REITs
+      </div>
+      <div class="chart-box" id="capitalStackChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 前期策划核心流程（P+F+EPC+O）</h2>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">
+        <strong>"以终为始"</strong>——从运营目标和退出路径倒推前期的策划和融资方案：
+      </p>
+      <div class="flow-row">
+        <div class="flow-node" style="background:#dbeafe;border-color:#93c5fd;">
+          <div class="fn">P · 策划</div>
+          <div class="fd">市场调研+定位<br>商业模型+可研</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="background:#fef3c7;border-color:#fde68a;">
+          <div class="fn">F · 投融资</div>
+          <div class="fd">资金拼盘设计<br>政策资金申报</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="background:#dcfce7;border-color:#86efac;">
+          <div class="fn">EPC · 建设</div>
+          <div class="fd">设计施工一体化<br>成本工期控制</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="background:#fce7f3;border-color:#f9a8d4;">
+          <div class="fn">O · 运营</div>
+          <div class="fd">招商运营+资产<br>管理+REITs退出</div>
+        </div>
+      </div>
+      <div class="insight" style="margin-top:12px;">
+        <strong>关键：</strong> 融资方案必须在 <strong>P（策划）阶段</strong>就确定，而不是等图纸画完了再去找钱。银行的审批逻辑是"先看项目能不能赚钱，再看抵押物够不够"。前期策划的质量直接决定融资能否落地。
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Tab 2: 超高层写字楼 ========== -->
+  <div id="tab-tower" class="section">
+
+    <div class="card">
+      <h2>🏢 超高层写字楼 · 前期融资策划要点</h2>
+      <div class="grid2">
+        <div class="compare-card">
+          <h4>典型项目画像</h4>
+          <div class="stat">50-100亿</div>
+          <div class="stat-desc">单栋总投资</div>
+          <ul>
+            <li>建筑高度：200-400米</li>
+            <li>建筑面积：10-20万㎡</li>
+            <li>建设周期：4-6年</li>
+            <li>目标客群：金融/总部/专业服务</li>
+            <li>回本周期：15-20年（正常）</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>核心融资难点</h4>
+          <div class="stat red">30-50%</div>
+          <div class="stat-desc">二三线城市空置率</div>
+          <ul>
+            <li>投资大、周期长，资金沉淀严重</li>
+            <li>招商不确定性高，银行审贷严</li>
+            <li>退出渠道窄，整栋转让困难</li>
+            <li>估值波动大，抵押融资受限</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 前期策划阶段（拿地前）</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>市场需求论证</h4>
+          <p>完成写字楼市场供需分析，包括：现有存量、空置率、租金水平、未来供应量。<br>
+          <strong>关键指标：</strong> 目标区域空置率 < 20% 才建议启动，> 30% 必须重新评估。<br>
+          <strong>2026年趋势：</strong> 一线城市核心区写字楼出租率回升至85%以上，但二三线城市仍在30-50%空置率区间。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>招商预评估</h4>
+          <p>在拿地前就与潜在主力租户（如银行、国企总部、专业服务机构）签订<strong>意向书</strong>。<br>
+          <strong>实操要点：</strong> 银行审贷时要求预租率>30%才考虑放贷，>50%可获优惠利率。<br>
+          建议采用"<strong>定制开发</strong>"模式，让核心租户提前参与设计。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>融资方案设计</h4>
+          <p>采用"<strong>资本金+专项债+银行贷款+CMBS/REITs</strong>"四层结构：</p>
+          <div class="highlight-box" style="font-size:12px;margin-top:6px;">
+            <strong>推荐资金拼盘：</strong><br>
+            ① 自有资金/政府注资：20%（10-20亿）<br>
+            ② 政策性银行贷款（国开行/农发行）：30%（15-30亿），期限20-25年<br>
+            ③ 商业银行贷款：30%（15-30亿），期限10-15年<br>
+            ④ 项目收益债/CMBS：20%（10-20亿），运营期发行<br>
+            <strong style="color:#2563eb;">2026年新机遇：</strong> 商业办公设施已纳入REITs发行范围，一线城市核心区写字楼可提前按REITs标准设计。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>土地获取策略</h4>
+          <p>优先选择<strong>带条件出让</strong>的地块，如政府要求配建公共服务设施，可争取专项债支持。<br>
+          <strong>避免"地王"陷阱：</strong> 土地成本不应超过总投资的30%，否则后期融资压力极大。<br>
+          <strong>案例参考：</strong> 2026年5月华润70.45亿接手深圳世茂深港国际中心，政府收储后调规再出让，土地成本可控。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💰 融资渠道详细对比</h2>
+      <table id="towerFinanceTable"></table>
+    </div>
+
+    <div class="card">
+      <h2>📈 2026年最新政策利好</h2>
+      <div class="grid3">
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">📜 REITs扩容</strong><br>
+          2025年12月，国家发改委将<strong>商业办公设施</strong>纳入REITs发行范围，支持超大特大城市超甲级、甲级写字楼申报发行。<br>
+          <span style="font-size:11px;color:#64748b;">来源：发改委《基础设施REITs项目行业范围清单（2025年版）》</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">💰 CMBS回暖</strong><br>
+          2025年CMBS发行规模同比增长21%，城投公司发行占比达63%。<br>
+          <span style="font-size:11px;color:#64748b;">案例：西安浐灞商务中心CMBS 6.91亿，利率2.85%</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">🏛️ 专项债扩容</strong><br>
+          2026年专项债预计3.8万亿+，城中村改造、片区综合更新为核心方向，写字楼项目可配套申报。<br>
+          <span style="font-size:11px;color:#64748b;">来源：2026年政府工作报告</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Tab 3: 产业园 ========== -->
+  <div id="tab-park" class="section">
+
+    <div class="card">
+      <h2>🏭 产业园 · 前期融资策划要点</h2>
+      <div class="grid2">
+        <div class="compare-card">
+          <h4>典型项目画像</h4>
+          <div class="stat">10-30亿</div>
+          <div class="stat-desc">单园区总投资</div>
+          <ul>
+            <li>用地规模：50-300亩</li>
+            <li>建筑面积：10-50万㎡</li>
+            <li>建设周期：2-3年</li>
+            <li>产业方向：新一代信息技术/生物医药/高端制造</li>
+            <li>回本周期：8-12年</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>核心融资优势</h4>
+          <div class="stat green">最高</div>
+          <div class="stat-desc">政策支持力度</div>
+          <ul>
+            <li>专项债明确支持"产业园区基础设施"</li>
+            <li>可申报中央预算内投资（最高1亿）</li>
+            <li>政策性银行专项贷款（利率下浮）</li>
+            <li>产业园REITs已有多单成功发行</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 前期策划阶段（拿地前）</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>产业定位与招商前置</h4>
+          <p><strong>这是产业园最关键的环节。</strong> 产业园不是"盖房子出租"，而是"构建产业生态"。<br>
+          <strong>实操要点：</strong><br>
+          • 先确定2-3个主导产业方向，分析产业链缺口<br>
+          • 在拿地前对接≥3家意向龙头企业，签订<strong>入驻意向书</strong><br>
+          • 龙头企业入驻可带动上下游企业跟进，出租率有保障<br>
+          • 银行审贷时，有龙头企业入驻意向的园区通过率提高50%以上</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>资金拼盘设计（重点）</h4>
+          <p>产业园是<strong>"专项债+银行贷款"</strong>组合融资的最佳场景：</p>
+          <div class="highlight-box" style="font-size:12px;margin-top:6px;">
+            <strong>推荐资金拼盘：</strong><br>
+            ① <strong>专项债</strong>（30-40%）：覆盖园区道路、管网、标准化厂房等基础设施，收益来自租金和物业收入<br>
+            ② <strong>银行贷款</strong>（30-40%）：配套商业设施、研发中心等经营性资产，由租金收入覆盖本息<br>
+            ③ <strong>自有资金</strong>（20%）：土地购置和前期费用<br>
+            ④ <strong>产业引导基金</strong>（10%）：引入政府产业基金，降低自有资金压力<br>
+            <strong style="color:#2563eb;">2026年新政策：</strong> 专项债可作项目资本金（22个行业适用），产业园在列。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>运营模式设计</h4>
+          <p>产业园的运营模式直接影响融资可行性：</p>
+          <div style="font-size:13px;color:#475569;margin:6px 0;padding:10px 14px;background:#f1f5f9;border-radius:8px;">
+            <strong>三种主流模式：</strong><br>
+            • <strong>纯租赁</strong>：标准化厂房/研发楼出租，租金收入稳定但较低（适合专项债）<br>
+            • <strong>租售结合</strong>：部分出售回笼资金，部分持有收租（适合快速回本）<br>
+            • <strong>定制代建</strong>：按龙头企业需求定制厂房，建成后长期租赁或回购（现金流最稳）<br>
+            <strong>银行偏好：</strong> 纯租赁模式 > 租售结合 > 纯出售模式
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>REITs退出规划</h4>
+          <p>产业园是REITs最成熟的资产类型之一，前期策划就要考虑REITs退出条件：</p>
+          <div class="highlight-box" style="font-size:12px;margin-top:6px;background:#f0fdf4;border-color:#86efac;">
+            <strong>REITs发行的核心条件：</strong><br>
+            • 运营满3年，出租率稳定在85%以上<br>
+            • 现金流分派率≥4.0%（一线城市）或≥5.0%（二三线城市）<br>
+            • 资产权属清晰，无法律纠纷<br>
+            <strong>2026年进展：</strong> 深圳龙岗城投智慧家园REITs已报送国家发改委，西安高新高科产业园REITs已获深交所反馈。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💰 融资渠道详细对比</h2>
+      <table id="parkFinanceTable"></table>
+    </div>
+
+    <div class="card">
+      <h2>📈 2026年最新政策利好</h2>
+      <div class="grid3">
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">📜 专项债倾斜</strong><br>
+          2026年专项债重点支持<strong>产业园区基础设施</strong>，可用于标准化厂房、配套商业、研发中心等。<br>
+          <span style="font-size:11px;color:#64748b;">来源：财政部2026年专项债申报指南</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">🏦 政策性贷款</strong><br>
+          国开行/农发行对产业园项目提供<strong>20-25年期</strong>长期贷款，利率较LPR下浮10-20%。<br>
+          <span style="font-size:11px;color:#64748b;">重点支持：战略性新兴产业园区</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">🏗️ 产业债发行</strong><br>
+          城投转型为产业类主体后可发行<strong>产业债</strong>，期限5年为主，利率与城投债无显著差异。<br>
+          <span style="font-size:11px;color:#64748b;">案例：合肥产投、深投控等已成功发行</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Tab 4: 商业综合体 ========== -->
+  <div id="tab-mall" class="section">
+
+    <div class="card">
+      <h2>🛍️ 商业综合体 · 前期融资策划要点</h2>
+      <div class="grid2">
+        <div class="compare-card">
+          <h4>典型项目画像</h4>
+          <div class="stat">15-50亿</div>
+          <div class="stat-desc">单项目总投资</div>
+          <ul>
+            <li>总建筑面积：5-20万㎡</li>
+            <li>业态组合：购物中心+写字楼+公寓+酒店</li>
+            <li>建设周期：3-5年</li>
+            <li>核心客群：周边3公里居民+商务人群</li>
+            <li>回本周期：10-15年</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>核心融资难点</h4>
+          <div class="stat red">197万㎡</div>
+          <div class="stat-desc">全国烂尾商业体量（2025-2026）</div>
+          <ul>
+            <li>商业地产过剩，招商难度大</li>
+            <li>电商冲击，实体商业客流下滑</li>
+            <li>银行对纯商业项目审贷极严</li>
+            <li>售后返租模式风险高、已受限</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 前期策划阶段（拿地前）</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>市场可行性论证（最关键）</h4>
+          <p>商业综合体<strong>最忌"想当然"</strong>。必须做扎实的市场调研：<br>
+          <strong>五大核心问题：</strong><br>
+          • 周边3公里人口规模？消费能力？<br>
+          • 已有商业体量多少？空置率？<br>
+          • 目标客群的真实需求是什么？（不是"我觉得"而是"数据证明"）<br>
+          • 是否有差异化定位的空间？<br>
+          • 预期租金是否能覆盖运营成本和贷款利息？<br>
+          <strong>红线：</strong> 如果周边已有商业体空置率>20%，不建议再建新项目。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>主力店招商前置</h4>
+          <p>商业综合体的生命线是<strong>主力店</strong>。<br>
+          <strong>实操要点：</strong><br>
+          • 拿地前与华润万象生活、万达、龙湖天街等头部运营商签订<strong>轻资产委托管理协议</strong><br>
+          • 引入永辉、盒马等超市主力店，签约面积>5000㎡<br>
+          • 电影院、健身房等次主力店同步锁定<br>
+          <strong>银行审贷条件：</strong> 主力店签约率>50% 才考虑放贷</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>资金拼盘设计</h4>
+          <p>商业综合体融资难度最大，需要更复杂的结构：</p>
+          <div class="highlight-box" style="font-size:12px;margin-top:6px;">
+            <strong>推荐资金拼盘：</strong><br>
+            ① <strong>自有资金/政府注资</strong>：25-30%<br>
+            ② <strong>城市更新专项债</strong>（15-20%）：如果项目涉及老旧街区改造、城中村改造等<br>
+            ③ <strong>经营性物业贷款</strong>（30-40%）：银行最长15年，要求出租率>60%<br>
+            ④ <strong>CMBS/类REITs</strong>（10-15%）：运营稳定后发行<br>
+            ⑤ <strong>合作开发</strong>：引入华润、印力、龙湖等专业商管公司作为<strong>小股东</strong>（10-15%）<br>
+            <strong style="color:#2563eb;">2026年新趋势：</strong> 商业不动产REITs已受理17单，计划募资626亿元，商业综合体退出通道打开。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>风险防控设计</h4>
+          <p>商业综合体烂尾率最高，前期必须设计好退出机制：</p>
+          <div class="highlight-box danger" style="font-size:12px;margin-top:6px;">
+            <strong>必须避免的三大陷阱：</strong><br>
+            ❌ <strong>售后返租模式</strong>：已被多地禁止，且小业主返租体系极易崩盘（案例：杭州和睦里蓝钻天成）<br>
+            ❌ <strong>过度依赖住宅销售反哺</strong>：住宅市场下行时，商业部分会被拖垮<br>
+            ❌ <strong>定位过高脱离市场</strong>：二三线城市不适合做"奢侈品级"商业综合体<br>
+            <strong>安全做法：</strong> 分期开发，先建公寓/写字楼回笼资金，再建购物中心。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💰 融资渠道详细对比</h2>
+      <table id="mallFinanceTable"></table>
+    </div>
+
+    <div class="card">
+      <h2>📈 2026年最新政策利好</h2>
+      <div class="grid3">
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">📜 商业REITs开放</strong><br>
+          商业综合体已纳入REITs发行范围，2026年已受理17单，计划募资626亿元。<br>
+          <span style="font-size:11px;color:#64748b;">案例：汇添富上海地产商业REIT等</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">🏛️ 城市更新基金</strong><br>
+          多地设立城市更新基金，支持商业综合体盘活。深圳、上海、广州等已落地。<br>
+          <span style="font-size:11px;color:#64748b;">适合：老旧商场改造、片区更新</span>
+        </div>
+        <div class="highlight-box" style="font-size:13px;">
+          <strong style="color:#2563eb;">🤝 轻资产合作</strong><br>
+          华润、万达、龙湖等头部商管公司加速轻资产扩张，城投可提供资产、他们负责运营。<br>
+          <span style="font-size:11px;color:#64748b;">模式：城投出资产+商管公司输出品牌管理</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Tab 5: 全流程操作 ========== -->
+  <div id="tab-process" class="section">
+
+    <div class="card">
+      <h2>📋 从拿地到融资落地 · 全流程时间表</h2>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">
+        一个典型城投项目从策划到融资落地，通常需要 <strong>12-18个月</strong>。以下为关键节点：
+      </p>
+      <div class="chart-box" id="timelineChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 各阶段核心工作清单</h2>
+      <div id="checklist"></div>
+    </div>
+
+    <div class="card">
+      <h2>⚠️ 常见融资失败原因</h2>
+      <div class="grid2">
+        <div class="highlight-box danger" style="font-size:13px;">
+          <strong>🔴 银行拒贷 Top 5 原因</strong>
+          <ol style="padding-left:14px;margin-top:6px;line-height:1.8;">
+            <li>可行性研究数据不真实，收入预测过于乐观</li>
+            <li>项目合规性手续不全（缺环评、缺用地批文等）</li>
+            <li>资本金比例不足（银行要求≥20-30%）</li>
+            <li>项目自身现金流覆盖倍数<1.0</li>
+            <li>抵押物估值不足或权属不清</li>
+          </ol>
+        </div>
+        <div class="highlight-box danger" style="font-size:13px;">
+          <strong>🔴 专项债申报失败 Top 5 原因</strong>
+          <ol style="padding-left:14px;margin-top:6px;line-height:1.8;">
+            <li>收益与融资自平衡测算不达标（覆盖倍数<1.1）</li>
+            <li>项目未纳入国家重大建设项目库</li>
+            <li>前期手续不完备（可研、立项、用地等）</li>
+            <li>收益来源不合规（如土地出让金作为还款来源）</li>
+            <li>申报材料编制不规范，一案两书质量差</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💡 实操建议总结</h2>
+      <div class="grid2">
+        <div class="highlight-box green" style="font-size:13px;">
+          <strong>✅ 必须做好的 5 件事</strong>
+          <ol style="padding-left:14px;margin-top:6px;line-height:1.8;">
+            <li>拿地前完成<strong>招商预评估</strong>，拿到意向书再拿地</li>
+            <li>提前<strong>6-12个月</strong>启动专项债入库申报</li>
+            <li>资金拼盘<strong>多元化</strong>，不依赖单一渠道</li>
+            <li>可研报告<strong>实事求是</strong>，银行更看重真实性</li>
+            <li>一开始就考虑<strong>退出路径</strong>（REITs/CMBS/转让）</li>
+          </ol>
+        </div>
+        <div class="highlight-box danger" style="font-size:13px;">
+          <strong>❌ 千万不要做的 5 件事</strong>
+          <ol style="padding-left:14px;margin-top:6px;line-height:1.8;">
+            <li>不要为了上项目而<strong>虚报收入预测</strong></li>
+            <li>不要在没有招商意向的情况下<strong>盲目拿地</strong></li>
+            <li>不要<strong>单一依赖</strong>一种融资渠道</li>
+            <li>不要在合规手续<strong>不齐全</strong>的情况下开工</li>
+            <li>不要忽视<strong>运营能力</strong>——盖好不等于能赚钱</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📚 参考案例</h2>
+      <div class="grid2">
+        <div class="compare-card" style="border-left:4px solid #2563eb;">
+          <h4 style="color:#2563eb;">西安浐灞商务中心 CMBS</h4>
+          <div style="font-size:12px;color:#475569;">
+            <strong>项目类型：</strong> 写字楼<br>
+            <strong>融资规模：</strong> 6.91亿元<br>
+            <strong>发行利率：</strong> 2.85%/2.88%<br>
+            <strong>主体评级：</strong> AA（城投公司）<br>
+            <strong>成功关键：</strong> 标的物业入驻率高，含多家央企和总部机构，现金流稳定。西北地区AA级城投首单CMBS。
+          </div>
+        </div>
+        <div class="compare-card" style="border-left:4px solid #16a34a;">
+          <h4 style="color:#16a34a;">深圳龙岗城投智慧家园 REITs</h4>
+          <div style="font-size:12px;color:#475569;">
+            <strong>项目类型：</strong> 产业园<br>
+            <strong>申报进度：</strong> 已报送国家发改委（2026年）<br>
+            <strong>底层资产：</strong> 智慧家园产业园<br>
+            <strong>成功关键：</strong> 园区出租率高、运营稳定，符合REITs发行标准。城投公司通过REITs实现"投融管退"闭环。
+          </div>
+        </div>
+        <div class="compare-card" style="border-left:4px solid #d97706;">
+          <h4 style="color:#d97706;">华润置地接盘深港国际中心</h4>
+          <div style="font-size:12px;color:#475569;">
+            <strong>项目类型：</strong> 综合体（含超高层）<br>
+            <strong>交易金额：</strong> 70.45亿元<br>
+            <strong>盘活路径：</strong> 停工4年→政府收储→调规→华润接盘<br>
+            <strong>经验教训：</strong> 原开发商世茂因资金链断裂导致项目烂尾，最终由地方政府兜底+华润接盘。说明超高层项目风险极高，必须预留充足的资金安全垫。
+          </div>
+        </div>
+        <div class="compare-card" style="border-left:4px solid #7c3aed;">
+          <h4 style="color:#7c3aed;">荆州新城金融中心项目</h4>
+          <div style="font-size:12px;color:#475569;">
+            <strong>项目类型：</strong> 写字楼+商业综合体<br>
+            <strong>实施主体：</strong> 沙市城投（江汉明珠控股集团）<br>
+            <strong>开发模式：</strong> 全资子公司分批拿地，规划联城金汇中心+锦博威金汇中心两个项目<br>
+            <strong>特点：</strong> 三线城市CBD建设，定位金融+总部经济，需密切关注后续招商情况。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    城投项目前期融资策划全流程指南 · 基于2025-2026年公开政策与行业研究 · 仅供学习参考
+  </div>
+</div>
+
+<script>
+const fmt = (n,d=1)=> Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const svg = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
+
+// ================ Tab 切换 ================
+function switchTab(name){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.nav-tab')[['overview','tower','park','mall','process'].indexOf(name)].classList.add('active');
+  if(name==='overview'){ drawCompareTable(); drawToolbox(); drawCapitalStack(); }
+  if(name==='tower') drawTowerTable();
+  if(name==='park') drawParkTable();
+  if(name==='mall') drawMallTable();
+  if(name==='process'){ drawTimeline(); drawChecklist(); }
+}
+
+// ================ 对比表 ================
+function drawCompareTable(){
+  document.getElementById('compareTable').innerHTML = `<thead><tr><th>维度</th><th>🏢 超高层写字楼</th><th>🏭 产业园</th><th>🛍️ 商业综合体</th></tr></thead><tbody>
+    <tr><td class="left">总投资规模</td><td><b>50-100亿</b></td><td><b>10-30亿</b></td><td><b>15-50亿</b></td></tr>
+    <tr><td class="left">建设周期</td><td>4-6年</td><td>2-3年</td><td>3-5年</td></tr>
+    <tr><td class="left">回本周期</td><td>15-20年</td><td>8-12年</td><td>10-15年</td></tr>
+    <tr><td class="left">空置率风险</td><td class="red">高（30-50%）</td><td class="yellow">中（15-30%）</td><td class="red">高（20-40%）</td></tr>
+    <tr><td class="left">政策支持力度</td><td>中（REITs新开放）</td><td class="green">高（专项债+REITs成熟）</td><td>中（城市更新方向）</td></tr>
+    <tr><td class="left">银行审贷难度</td><td class="red">高</td><td class="green">低</td><td class="red">高</td></tr>
+    <tr><td class="left">可用的证券化工具</td><td>CMBS/REITs(新)</td><td>REITs(成熟)/ABS</td><td>CMBS/REITs(新)</td></tr>
+    <tr><td class="left">最适合的城投类型</td><td>AAA/AA+级大型城投</td><td>AA级及以上均可</td><td>AA+级及以上+有商管经验</td></tr>
+    <tr><td class="left">建议资金拼盘复杂度</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>`;
+}
+
+// ================ 工具箱 ================
+function drawToolbox(){
+  document.getElementById('toolbox').innerHTML = [
+    {icon:'🏛️', name:'地方政府专项债', desc:'2026年预计3.8万亿+，支持产业园区、城市更新、保障房等。期限5-30年，利率约2.5-3.5%。', rate:'适用：产业园 > 商业综合体 > 写字楼'},
+    {icon:'💰', name:'超长期特别国债', desc:'2026年1.3万亿，"两重""两新"方向。期限最长30年，利率显著低于市场。', rate:'适用：城市更新配套管网、片区基建'},
+    {icon:'🏦', name:'政策性银行贷款', desc:'国开行/农发行20-25年期，利率较LPR下浮10-20%。支持产业园、绿色建筑、城市更新。', rate:'适用：产业园 > 写字楼 > 综合体'},
+    {icon:'🏗️', name:'商业银行贷款', desc:'经营性物业贷最长15年，利率3.5-5.5%。要求出租率>60%，现金流覆盖>1.2x。', rate:'适用：三类项目均可，但条件严格'},
+    {icon:'📜', name:'REITs', desc:'2025年扩容至商业办公设施。2026年已受理17单/626亿。要求运营满3年、出租率>85%。', rate:'适用：产业园(成熟) > 写字楼(新) > 综合体(新)'},
+    {icon:'📊', name:'CMBS/类REITs', desc:'2025年发行规模同比增长21%，城投占63%。利率2.8-4.5%，发行门槛低于REITs。', rate:'适用：写字楼 > 综合体 > 产业园'},
+    {icon:'📈', name:'产业债/科创债', desc:'城投转型产业类主体后可发行，期限5年为主。募集资金可用于项目建设、补充流动性。', rate:'适用：产业园 > 综合体'},
+    {icon:'🤝', name:'合作开发/轻资产', desc:'引入华润、万达等头部商管公司，城投出资产、商管出品牌管理。降低资金压力。', rate:'适用：综合体 > 产业园'},
+    {icon:'🏛️', name:'中央预算内投资', desc:'2026年7550亿，其中750亿用于城市更新。单项最高1亿，中西部占比80%。', rate:'适用：公益性配套部分'},
+  ].map(t=>`
+    <div class="highlight-box" style="font-size:13px;padding:12px 14px;">
+      <strong>${t.icon} ${t.name}</strong>
+      <p style="color:#475569;margin:4px 0;">${t.desc}</p>
+      <span style="font-size:11px;color:#64748b;">${t.rate}</span>
+    </div>
+  `).join('');
+}
+
+// ================ 资金拼盘图 ================
+function drawCapitalStack(){
+  const W=650,H=280, layers=[
+    {label:'退出融资层', sub:'REITs / CMBS / 类REITs', pct:15, color:'#7c3aed', y:200},
+    {label:'债务融资层', sub:'银行贷款 / 债券 / 融资租赁', pct:35, color:'#2563eb', y:150},
+    {label:'政策性资金层', sub:'专项债 / 国债 / 预算内投资', pct:30, color:'#16a34a', y:100},
+    {label:'资本金层', sub:'自有资金 / 引导基金 / 战投', pct:20, color:'#d97706', y:50},
+  ];
+  let s=svg(W,H);
+  s+=`<text x="${W/2}" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">城投项目资金拼盘 · 四层结构</text>`;
+  layers.forEach(l=>{
+    const bw = 120 + l.pct * 4;
+    const x = (W-bw)/2;
+    s+=`<rect x="${x}" y="${l.y}" width="${bw}" height="42" rx="8" fill="${l.color}" opacity="0.85"/>`;
+    s+=`<text x="${W/2}" y="${l.y+20}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${l.label} ${l.pct}%</text>`;
+    s+=`<text x="${W/2}" y="${l.y+34}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.85)">${l.sub}</text>`;
+  });
+  s+='</svg>';
+  document.getElementById('capitalStackChart').innerHTML=s;
+}
+
+// ================ 写字楼融资表 ================
+function drawTowerTable(){
+  document.getElementById('towerFinanceTable').innerHTML = `<thead><tr><th>融资渠道</th><th>额度范围</th><th>期限</th><th>利率</th><th>条件要求</th><th>适合阶段</th></tr></thead><tbody>
+    <tr><td class="left">自有资金/政府注资</td><td>10-20亿</td><td>—</td><td>—</td><td>资本金≥20%</td><td>拿地前</td></tr>
+    <tr><td class="left">政策性银行贷款</td><td>15-30亿</td><td>20-25年</td><td>3.0-3.8%</td><td>项目符合政策导向</td><td>建设期</td></tr>
+    <tr><td class="left">商业银行贷款</td><td>15-30亿</td><td>10-15年</td><td>3.8-5.5%</td><td>预租率>30%</td><td>建设期</td></tr>
+    <tr><td class="left">CMBS</td><td>10-20亿</td><td>12-18年</td><td>2.8-4.0%</td><td>出租率>70%</td><td>运营期</td></tr>
+    <tr class="highlight-row"><td class="left">商业不动产REITs 🆕</td><td>10-30亿</td><td>永续</td><td>分派率4-5%</td><td>运营满3年+出租率>85%</td><td>成熟运营期</td></tr>
+    <tr><td class="left">项目收益债</td><td>5-10亿</td><td>5-7年</td><td>3.5-5.0%</td><td>项目收益覆盖>1.2x</td><td>建设期/运营期</td></tr>
+  </tbody>`;
+}
+
+// ================ 产业园融资表 ================
+function drawParkTable(){
+  document.getElementById('parkFinanceTable').innerHTML = `<thead><tr><th>融资渠道</th><th>额度范围</th><th>期限</th><th>利率</th><th>条件要求</th><th>适合阶段</th></tr></thead><tbody>
+    <tr class="highlight-row"><td class="left">地方政府专项债 🆕</td><td>3-10亿</td><td>10-30年</td><td>2.5-3.5%</td><td>收益覆盖>1.1x</td><td>建设期</td></tr>
+    <tr><td class="left">政策性银行贷款</td><td>3-10亿</td><td>20-25年</td><td>2.8-3.5%</td><td>产业方向符合政策</td><td>建设期</td></tr>
+    <tr><td class="left">商业银行贷款</td><td>3-8亿</td><td>10-15年</td><td>3.5-5.0%</td><td>意向入驻率>30%</td><td>建设期</td></tr>
+    <tr class="highlight-row"><td class="left">产业园REITs ✅</td><td>5-15亿</td><td>永续</td><td>分派率4-5%</td><td>运营满3年+出租率>85%</td><td>成熟运营期</td></tr>
+    <tr><td class="left">产业债/科创债</td><td>3-8亿</td><td>5年</td><td>3.0-4.5%</td><td>主体AA及以上</td><td>建设期/运营期</td></tr>
+    <tr><td class="left">产业引导基金</td><td>1-3亿</td><td>5-7年</td><td>—</td><td>产业方向匹配</td><td>拿地前</td></tr>
+  </tbody>`;
+}
+
+// ================ 商业综合体融资表 ================
+function drawMallTable(){
+  document.getElementById('mallFinanceTable').innerHTML = `<thead><tr><th>融资渠道</th><th>额度范围</th><th>期限</th><th>利率</th><th>条件要求</th><th>适合阶段</th></tr></thead><tbody>
+    <tr><td class="left">自有资金/合作方</td><td>5-15亿</td><td>—</td><td>—</td><td>资本金≥25%</td><td>拿地前</td></tr>
+    <tr><td class="left">城市更新专项债</td><td>3-8亿</td><td>10-30年</td><td>2.5-3.5%</td><td>涉及老旧改造/片区更新</td><td>建设期</td></tr>
+    <tr><td class="left">经营性物业贷款</td><td>5-15亿</td><td>10-15年</td><td>4.0-6.0%</td><td>主力店签约>50%</td><td>建设期/运营期</td></tr>
+    <tr class="highlight-row"><td class="left">商业不动产REITs 🆕</td><td>5-20亿</td><td>永续</td><td>分派率4.5-5.5%</td><td>运营满3年+出租率>85%</td><td>成熟运营期</td></tr>
+    <tr><td class="left">CMBS</td><td>5-15亿</td><td>12-18年</td><td>3.0-4.5%</td><td>出租率>70%</td><td>运营期</td></tr>
+    <tr><td class="left">轻资产合作</td><td>—</td><td>—</td><td>—</td><td>引入商管公司输出管理</td><td>全周期</td></tr>
+  </tbody>`;
+}
+
+// ================ 时间线 ================
+function drawTimeline(){
+  const W=750,H=260, phases=[
+    {label:'T-12至T-6月', title:'前期策划', tasks:'市场调研·可研·定位·商业模型', color:'#2563eb'},
+    {label:'T-6至T-3月', title:'政策资金申报', tasks:'专项债入库·国债申报·一案两书', color:'#16a34a'},
+    {label:'T-3至T-0月', title:'融资方案落地', tasks:'银行贷款审批·资本金到位·SPV设立', color:'#d97706'},
+    {label:'T+0至T+6月', title:'开工建设', tasks:'土地获取·四证办理·EPC招标', color:'#7c3aed'},
+    {label:'T+6至T+36月', title:'建设运营', tasks:'主体施工·招商预热·部分交付', color:'#0891b2'},
+    {label:'T+36月+', title:'资本运作', tasks:'REITs/CMBS退出·资产盘活', color:'#dc2626'},
+  ];
+  const barH=44, gap=10, startX=20, bw=(W-startX-20)/phases.length-gap;
+  let s=svg(W,H);
+  phases.forEach((p,i)=>{
+    const x=startX+i*(bw+gap);
+    s+=`<rect x="${x}" y="30" width="${bw}" height="${barH}" rx="6" fill="${p.color}" opacity="0.88"/>`;
+    s+=`<text x="${x+bw/2}" y="${30+barH/2+4}" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">${p.label}</text>`;
+    s+=`<text x="${x+bw/2}" y="96" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">${p.title}</text>`;
+    s+=`<text x="${x+bw/2}" y="112" text-anchor="middle" font-size="9" fill="#64748b">${p.tasks}</text>`;
+    if(i<phases.length-1){
+      const ax=x+bw+gap/2;
+      s+=`<line x1="${ax-4}" y1="52" x2="${ax+4}" y2="52" stroke="#cbd5e1" stroke-width="2"/>`;
+      s+=`<polygon points="${ax+4-3},49 ${ax+4},52 ${ax+4-3},55" fill="#cbd5e1"/>`;
+    }
+  });
+  s+=`<text x="${W/2}" y="150" text-anchor="middle" font-size="12" fill="#64748b">⏱️ 总周期：从策划到融资落地约 12-18 个月，到运营稳定约 36-60 个月</text>`;
+  s+=`<rect x="80" y="166" width="${W-160}" height="50" rx="10" fill="#f1f5f9"/>`;
+  s+=`<text x="${W/2}" y="184" text-anchor="middle" font-size="11" fill="#475569">关键提示：专项债申报周期最长（6-12个月），必须提前启动</text>`;
+  s+=`<text x="${W/2}" y="202" text-anchor="middle" font-size="11" fill="#475569">银行贷款审批相对较快（3-6个月），但前提是前期手续齐全</text>`;
+  s+='</svg>';
+  document.getElementById('timelineChart').innerHTML=s;
+}
+
+// ================ 检查清单 ================
+function drawChecklist(){
+  const stages = [
+    {name:'📋 拿地前阶段（T-12至T-6月）', items:[
+      '完成市场需求调研报告（空置率、租金、供需分析）',
+      '确定项目定位和商业模式（纯租赁/租售结合/定制代建）',
+      '招商预评估：与≥3家意向客户签订入驻意向书',
+      '编制可行性研究报告（含财务测算）',
+      '启动专项债入库申报（一案两书编制）',
+      '完成土地预审和规划条件对接',
+      '确定融资方案框架（资金拼盘设计）',
+    ]},
+    {name:'📋 拿地阶段（T-6至T-3月）', items:[
+      '参加土地招拍挂，签订土地出让合同',
+      '办理土地使用权证',
+      '完成项目立项审批（核准/备案）',
+      '完成环评、节能审查等合规手续',
+      '落实资本金到位（自有资金/政府注资/战投）',
+      '提交银行贷款申请材料',
+      '专项债申报入库（争取纳入财政部项目库）',
+    ]},
+    {name:'📋 建设启动阶段（T-3至T+0月）', items:[
+      '取得建设用地规划许可证',
+      '取得建设工程规划许可证',
+      '取得建筑工程施工许可证',
+      '完成EPC总包招标',
+      '银行贷款审批通过，签订贷款合同',
+      '专项债资金到位（如有）',
+      '设立SPV项目公司（风险隔离）',
+    ]},
+    {name:'📋 建设运营阶段（T+0至T+36月）', items:[
+      '主体结构施工（按节点控制进度）',
+      '招商工作全面启动',
+      '首批租户入驻（如有分期交付）',
+      '运营团队组建和培训',
+      '建立资产运营台账（出租率、租金、成本）',
+      '储备REITs/CMBS发行材料',
+      '每季度向银行/投资人报告运营情况',
+    ]},
+  ];
+  document.getElementById('checklist').innerHTML = stages.map(s=>`
+    <div style="margin-bottom:16px;">
+      <h3 style="font-size:15px;color:#0f3460;margin-bottom:6px;">${s.name}</h3>
+      <div style="background:#f8fafc;border-radius:10px;padding:10px 14px;border:1px solid #e2e8f0;">
+        <table style="font-size:12px;margin:0;">
+          <tbody>${s.items.map((item,i)=>`<tr><td style="width:30px;text-align:center;color:#94a3b8;">${i+1}</td><td class="left">${item}</td><td style="width:60px;"><span class="tag tag-yellow" style="cursor:pointer;">待完成</span></td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ================ 初始化 ================
+drawCompareTable();
+drawToolbox();
+drawCapitalStack();
+drawTowerTable();
+drawParkTable();
+drawMallTable();
+drawTimeline();
+drawChecklist();
+</script>
+</body>
+</html>
