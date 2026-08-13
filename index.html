@@ -3,211 +3,590 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>城投公司研究 · 模拟数据看板（Demo）</title>
+<title>城投 · 闲置资产 · 融资困局 —— 从底层逻辑讲起</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f4f6fb; color:#1f2937; line-height:1.6; }
-  .wrap { max-width:1080px; margin:0 auto; padding:24px 16px 48px; }
-  .header { background:linear-gradient(135deg,#0f2557 0%,#1d4ed8 100%); color:#fff; padding:28px 28px 24px; border-radius:14px; }
-  .header h1 { font-size:24px; font-weight:800; }
-  .header .sub { opacity:.85; font-size:13px; margin-top:6px; }
-  .badge { display:inline-block; margin-top:12px; background:rgba(255,255,255,.16); padding:4px 12px; border-radius:20px; font-size:12px; }
-  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:20px 0; }
-  .kpi { background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 2px 10px rgba(15,37,87,.06); border-left:4px solid #2563eb; }
-  .kpi .l { color:#6b7280; font-size:12px; }
-  .kpi .v { font-size:22px; font-weight:800; color:#0f2557; margin-top:4px; }
-  .kpi .s { font-size:11px; color:#9ca3af; margin-top:2px; }
-  .card { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 12px rgba(15,37,87,.06); margin-bottom:18px; }
-  .card h2 { font-size:16px; color:#0f2557; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
-  .card .desc { font-size:12px; color:#6b7280; margin-bottom:12px; }
-  .legend { display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:10px; font-size:12px; color:#374151; }
-  .legend span { display:inline-flex; align-items:center; gap:6px; }
-  .legend i { width:11px; height:11px; border-radius:3px; display:inline-block; }
-  table { width:100%; border-collapse:collapse; font-size:12.5px; }
-  th { background:#f3f5fb; text-align:left; padding:9px 10px; color:#4b5563; border-bottom:2px solid #e5e7eb; font-weight:600; }
-  td { padding:9px 10px; border-bottom:1px solid #f0f2f7; vertical-align:top; }
-  tr:hover td { background:#fafbff; }
-  .num { text-align:right; font-variant-numeric:tabular-nums; }
-  .pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700; }
-  .good { color:#15803d; font-weight:700; } .bad { color:#b91c1c; font-weight:700; } .warn { color:#b45309; font-weight:700; }
-  .foot { text-align:center; color:#9ca3af; font-size:12px; margin-top:24px; padding-top:16px; border-top:1px solid #e5e7eb; }
-  .note { background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; font-size:12px; padding:10px 14px; border-radius:10px; margin-bottom:18px; }
+  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#0a0a14; color:#94a3b8; line-height:1.9; }
+  .layout { display:flex; max-width:1200px; margin:0 auto; gap:0; }
+  .sidebar { width:220px; position:fixed; top:0; left:0; height:100vh; overflow-y:auto; background:#0d0d1a; border-right:1px solid rgba(99,102,241,.1); padding:28px 0; z-index:100; }
+  .sidebar .logo { padding:0 24px 20px; font-size:14px; font-weight:700; color:#a78bfa; border-bottom:1px solid rgba(99,102,241,.08); margin-bottom:12px; }
+  .sidebar a { display:block; padding:8px 24px; font-size:13px; color:#64748b; text-decoration:none; border-left:2px solid transparent; transition:all .15s; }
+  .sidebar a:hover { color:#a78bfa; background:rgba(99,102,241,.04); }
+  .sidebar a.active { color:#a78bfa; border-left-color:#6366f1; background:rgba(99,102,241,.06); }
+  .sidebar a.sub { padding-left:36px; font-size:12px; color:#475569; }
+  .main { margin-left:220px; padding:40px 48px 80px; max-width:760px; width:100%; }
+  @media(max-width:768px){ .sidebar{display:none;} .main{margin-left:0;padding:20px 16px 60px;} }
+
+  .hero { text-align:center; padding:60px 20px 48px; }
+  .hero h1 { font-size:28px; font-weight:800; color:#e2e8f0; letter-spacing:.5px; line-height:1.4; }
+  .hero .sub { font-size:14px; color:#64748b; margin-top:16px; }
+  .hero .quote { margin-top:32px; font-size:14px; color:#475569; font-style:italic; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.8; }
+
+  .chapter { margin-bottom:56px; scroll-margin-top:20px; }
+  .chapter-label { font-size:12px; color:#6366f1; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .chapter h2 { font-size:22px; color:#e2e8f0; margin-bottom:20px; font-weight:700; }
+  .chapter h3 { font-size:17px; color:#c4b5fd; margin:28px 0 12px; padding-left:14px; border-left:3px solid #6366f1; }
+  .chapter h4 { font-size:15px; color:#a5b4fc; margin:20px 0 8px; }
+  .chapter p { font-size:14px; color:#94a3b8; margin-bottom:14px; text-align:justify; }
+  .chapter p strong { color:#c4b5fd; }
+  .chapter p em { color:#fbbf24; font-style:normal; }
+  .chapter ul { padding-left:20px; margin:10px 0 18px; }
+  .chapter ul li { font-size:14px; color:#94a3b8; margin-bottom:8px; line-height:1.8; }
+  .chapter ul li strong { color:#c4b5fd; }
+  .chapter ol { padding-left:20px; margin:10px 0 18px; }
+  .chapter ol li { font-size:14px; color:#94a3b8; margin-bottom:8px; line-height:1.8; }
+
+  .callout { border-radius:12px; padding:16px 22px; margin:18px 0; font-size:14px; line-height:1.85; }
+  .callout.warn { background:rgba(220,38,38,.06); border:1px solid rgba(220,38,38,.15); color:#fca5a5; }
+  .callout.key { background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.15); color:#a5b4fc; }
+  .callout.danger { background:rgba(217,119,6,.06); border:1px solid rgba(217,119,6,.15); color:#fcd34d; }
+  .callout strong { color:#f8fafc; }
+
+  .flow { display:flex; align-items:stretch; gap:0; margin:20px 0; flex-wrap:wrap; }
+  .flow-step { flex:1; min-width:110px; background:#12121f; border:1px solid rgba(99,102,241,.15); border-radius:10px; padding:14px 10px; text-align:center; font-size:12px; }
+  .flow-step .step-num { font-size:10px; color:#6366f1; font-weight:700; margin-bottom:4px; }
+  .flow-step .step-text { color:#cbd5e1; font-size:12px; line-height:1.5; }
+  .flow-arrow { display:flex; align-items:center; color:#334155; padding:0 2px; font-size:16px; }
+  @media(max-width:640px){ .flow-step{min-width:100%;} .flow-arrow{transform:rotate(90deg);padding:6px 0;} }
+
+  .compare { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+  @media(max-width:640px){ .compare{grid-template-columns:1fr;} }
+  .compare-item { background:#12121f; border-radius:12px; padding:16px 18px; border:1px solid rgba(99,102,241,.1); }
+  .compare-item h4 { margin:0 0 8px; font-size:14px; }
+  .compare-item.good h4 { color:#34d399; }
+  .compare-item.bad h4 { color:#f87171; }
+  .compare-item p { font-size:13px; color:#94a3b8; margin:0; }
+
+  .scene-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+  @media(max-width:640px){ .scene-grid{grid-template-columns:1fr;} }
+  .scene-item { background:#12121f; border-radius:12px; padding:18px; border:1px solid rgba(99,102,241,.1); }
+  .scene-item h4 { font-size:15px; color:#e2e8f0; margin-bottom:6px; }
+  .scene-item .scene-cause { font-size:12px; color:#818cf8; margin-bottom:6px; }
+  .scene-item .scene-desc { font-size:13px; color:#94a3b8; }
+
+  .layer { border-left:3px solid; border-radius:0 12px 12px 0; padding:14px 20px; margin:12px 0; background:#12121f; }
+  .layer.l1 { border-color:#34d399; } .layer.l1 h4 { color:#34d399; }
+  .layer.l2 { border-color:#fbbf24; } .layer.l2 h4 { color:#fbbf24; }
+  .layer.l3 { border-color:#f87171; } .layer.l3 h4 { color:#f87171; }
+  .layer.l4 { border-color:#dc2626; } .layer.l4 h4 { color:#dc2626; }
+  .layer h4 { font-size:14px; margin-bottom:6px; }
+  .layer p { font-size:13px; color:#94a3b8; margin:0; }
+
+  .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(99,102,241,.15),transparent); margin:48px 0; }
+  .foot { text-align:center; color:#334155; font-size:12px; margin-top:48px; padding-top:24px; border-top:1px solid rgba(99,102,241,.08); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="header">
-    <h1>🏛️ 城投公司信用研究 · 模拟数据看板</h1>
-    <div class="sub">多主体 × 多年份分析框架演示 · 字段与真实披露 schema 对齐</div>
-    <div class="badge">⚠️ 全部为合成模拟数据，非真实披露</div>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="logo">城投 · 闲置资产<br>· 融资困局</div>
+    <a href="#ch0" class="active">序章</a>
+    <a href="#ch1">一、城投是什么</a>
+    <a href="#ch1a" class="sub">商业模式</a>
+    <a href="#ch1b" class="sub">钱从哪来到哪去</a>
+    <a href="#ch2">二、闲置资产</a>
+    <a href="#ch2a" class="sub">是什么</a>
+    <a href="#ch2b" class="sub">为什么会产生</a>
+    <a href="#ch2c" class="sub">六大场景</a>
+    <a href="#ch3">三、传导机制</a>
+    <a href="#ch3a" class="sub">六层传导</a>
+    <a href="#ch3b" class="sub">三重假象</a>
+    <a href="#ch3c" class="sub">为什么难逆转</a>
+    <a href="#ch4">四、与融资的关系</a>
+    <a href="#ch4a" class="sub">超高层写字楼</a>
+    <a href="#ch4b" class="sub">产业园</a>
+    <a href="#ch4c" class="sub">商业综合体</a>
+    <a href="#ch4d" class="sub">融资工具</a>
+    <a href="#ch5">五、评级冲击</a>
+    <a href="#ch5a" class="sub">五个维度</a>
+    <a href="#ch5b" class="sub">触发与连锁</a>
+    <a href="#ch6">六、怎么办</a>
+    <a href="#ch6a" class="sub">认知</a>
+    <a href="#ch6b" class="sub">四层处置</a>
+    <a href="#ch6c" class="sub">政府角色</a>
+    <a href="#ch7">七、常见问题</a>
+  </nav>
+
+  <div class="main">
+    <!-- 序章 -->
+    <div class="hero" id="ch0">
+      <h1>城投 · 闲置资产 · 融资困局</h1>
+      <div class="sub">从最底层开始，一步一步把这个主题讲清楚</div>
+      <div class="quote">"城投的资产负债表上，最危险的不是负债，而是那些看起来像资产、但其实不产生任何回报的东西。"</div>
+    </div>
+
+    <!-- 第一章 -->
+    <div class="chapter" id="ch1">
+      <div class="chapter-label">第一章</div>
+      <h2>城投公司到底是什么</h2>
+
+      <h3 id="ch1a">城投的商业模式</h3>
+      <p>要理解闲置资产，必须先理解城投公司本身。城投公司（地方政府融资平台）本质上是<strong>地方政府的"投资工具"</strong>。政府想修路、建桥、搞园区、开发新城，但财政预算不够，于是成立城投公司，以政府信用为背书去借钱，然后用借来的钱做基础设施建设。</p>
+      <p>这就决定了城投公司的三个根本特征：</p>
+      <ul>
+        <li><strong>投资决策是政府导向的</strong>——投什么、投多少，主要由政府规划决定，而不是市场回报决定</li>
+        <li><strong>资金来源是融资驱动的</strong>——自有资金很少，绝大部分靠借债，靠不断滚动融资维持</li>
+        <li><strong>回报逻辑是间接的</strong>——很多项目本身不赚钱（比如免费公路、公园），回报通过土地升值、税收增长等间接方式实现</li>
+      </ul>
+      <div class="callout key">
+        <strong>核心矛盾从这里开始：</strong>城投的投资逻辑是"政府导向 + 融资驱动"，而不是"市场需求 + 回报导向"。当这两种逻辑发生冲突时——政府让建的东西市场不需要，或者借来的钱投到了没有回报的项目——产生的结果就是<strong>闲置资产</strong>。
+      </div>
+
+      <h3 id="ch1b">钱从哪来，到哪去</h3>
+      <p>城投的资金循环可以简化为四步：</p>
+      <div class="flow">
+        <div class="flow-step"><div class="step-num">第一步</div><div class="step-text">借钱<br>发债/银行贷款</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第二步</div><div class="step-text">投资<br>基建/土地收储</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第三步</div><div class="step-text">运营<br>出租/出让/收费</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第四步</div><div class="step-text">还钱<br>用收入还本付息</div></div>
+      </div>
+      <p>这个循环能正常运转的前提是：<strong>第三步产生的收入，足够覆盖第四步的还本付息</strong>。如果第三步出了问题——资产建好了但不产生收入——整个循环就断了。借的钱要还，但资产不赚钱，只能靠借新债还旧债。<em>这就是闲置资产问题的起点。</em></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第二章 -->
+    <div class="chapter" id="ch2">
+      <div class="chapter-label">第二章</div>
+      <h2>闲置资产：城投的隐性黑洞</h2>
+
+      <h3 id="ch2a">闲置资产是什么</h3>
+      <p><strong>闲置资产</strong>是公司账面上记录为资产、但<strong>不产生经营收入、不产生现金流、也无法在合理时间内变现</strong>的资源。三个关键特征：</p>
+      <ul>
+        <li><strong>账面有价值</strong>——确实记在资产负债表上，可能是土地、房产、在建工程、设备、股权</li>
+        <li><strong>实际无产出</strong>——不产生租金、不产生运营收入、不分红、不提供服务</li>
+        <li><strong>处置有难度</strong>——不是今天想卖明天就能卖掉，往往需要数月甚至数年</li>
+      </ul>
+      <div class="callout danger">
+        <strong>最可怕的地方：</strong>闲置资产不是"不赚钱"这么简单。它在<strong>持续消耗现金</strong>——利息在算、折旧在提、维护费在花——但没有任何收入来抵补。它是一个"现金黑洞"。
+      </div>
+
+      <div class="compare">
+        <div class="compare-item good">
+          <h4>正常资产</h4>
+          <p>产生收入 → 产生现金流 → 覆盖资金成本 → 剩余回报归股东。资产在"工作"。</p>
+        </div>
+        <div class="compare-item bad">
+          <h4>闲置资产</h4>
+          <p>零收入 → 零现金流 → 但资金成本照样发生 → 净亏损。资产在"睡觉"，但钱还在花。</p>
+        </div>
+      </div>
+
+      <h3 id="ch2b">城投为什么会产生闲置资产</h3>
+      <p>这不是个别管理不善的问题，而是<strong>城投的商业模式决定的</strong>。根源在四个方面：</p>
+
+      <h4>根因一：政府指令与市场脱节</h4>
+      <p>城投很多项目不是"市场需要什么就建什么"，而是"政府规划什么就投什么"。当规划与实际需求不匹配时——比如产业园区建了但招商招不满、保障房建了但位置偏远没人租——资产就闲置了。<em>这不是经营失误，而是体制性错配。</em></p>
+
+      <h4>根因二：重建设、轻运营</h4>
+      <p>城投的考核长期以"投资完成额"为核心，建好了就算完成任务。但建好之后谁来运营？怎么招商？怎么收租金？这些问题在投资决策时往往没有想清楚。<strong>建设是有终点的，运营是没有终点的。</strong>很多资产闲置，就是因为"建的时候轰轰烈烈，建完之后无人问津"。</p>
+
+      <h4>根因三：土地财政的副产品</h4>
+      <p>城投大量收储土地，本意是等土地升值后出让获利。但当房地产市场下行、土地出让遇冷时，这些土地就"砸在手里"了。土地本身不产生收入，但收储时的拆迁补偿、利息支出一分不少。<em>土地财政的盛宴结束时，留下的就是大片闲置土地。</em></p>
+
+      <h4>根因四：融资驱动的资产膨胀</h4>
+      <p>城投为了发债融资，需要做大资产规模。于是不断收购、注入各种资产——有些是优质资产，但也有不少是<strong>为了凑数而注入的低效资产</strong>。资产膨胀了，但运营能力没有同步提升，闲置就产生了。</p>
+
+      <h3 id="ch2c">六种闲置场景</h3>
+      <p>闲置资产不是单一形态。根据资产类型和闲置原因，可以分成六类。它们看起来各不相同，但<strong>底层逻辑完全一样</strong>：花了钱、占了资源、不产生回报。</p>
+      <div class="scene-grid">
+        <div class="scene-item">
+          <h4>闲置土地</h4>
+          <div class="scene-cause">成因：收储后遇市场下行，无法出让</div>
+          <div class="scene-desc">城投代政府收储土地，本计划出让获利。房地产下行期土地流拍，地就"趴"在账上。拆迁补偿已付、利息在算，但零收入。最难处置，因为土地价值高度依赖市场周期。</div>
+        </div>
+        <div class="scene-item">
+          <h4>空置房产</h4>
+          <div class="scene-cause">成因：位置偏或定价高，出租率低</div>
+          <div class="scene-desc">建好的写字楼、商铺、保障房，因区位不佳、配套不足或定价过高导致出租率低。虽然"闲置"但仍有维护成本——物业、安保、折旧。相对容易盘活，但需要时间。</div>
+        </div>
+        <div class="scene-item">
+          <h4>未运营设施</h4>
+          <div class="scene-cause">成因：建成后缺乏运营能力或需求不足</div>
+          <div class="scene-desc">污水处理厂、停车场、产业园等已建成但未投入运营。根因往往是"重建设轻运营"——建的时候没想好谁来管。引入专业运营商后有望改善。</div>
+        </div>
+        <div class="scene-item">
+          <h4>在建停工</h4>
+          <div class="scene-cause">成因：资金链断裂、规划变更、政策调整</div>
+          <div class="scene-desc">最危险的一类。已投入大量资金但工程停工，既不能使用也不能产生收入。停工越久报废风险越高。复工需追加投资，不复工就是全部沉没。</div>
+        </div>
+        <div class="scene-item">
+          <h4>低效股权</h4>
+          <div class="scene-cause">成因：为做大资产规模而收购的劣质资产</div>
+          <div class="scene-desc">城投为扩张资产规模而参股或控股的子公司，长期亏损不分红。隐蔽性最强——出现在"长期股权投资"科目里，不仔细看以为在"投资"，实际在"烧钱"。</div>
+        </div>
+        <div class="scene-item">
+          <h4>闲置设备</h4>
+          <div class="scene-cause">成因：过度采购、技术淘汰、项目变更</div>
+          <div class="scene-desc">采购了但未安装使用的设备，或因技术更新被淘汰的设备。金额通常较小，对整体影响有限。更多反映采购管理的粗放。</div>
+        </div>
+      </div>
+
+      <h4>危险程度排序</h4>
+      <div class="layer l4">
+        <h4>最高危险：在建停工 / 闲置土地</h4>
+        <p>在建停工——已投入巨额资金但完全无法使用，停工越久报废概率越高，减值几乎不可避免。闲置土地——占资量最大，且价值完全依赖市场周期，下行期可能大幅缩水。两者都面临"处置即确认亏损"的困境。</p>
+      </div>
+      <div class="layer l3">
+        <h4>高危险：空置房产</h4>
+        <p>可以通过降价出租或改造来盘活，但维护成本持续发生。部分商业楼宇可能面临结构性空置——不是暂时的，而是永久性的供过于求。</p>
+      </div>
+      <div class="layer l2">
+        <h4>中等危险：未运营设施 / 低效股权</h4>
+        <p>未运营设施——只要找到合适的运营方，有恢复正常运营的可能。低效股权——虽然持续亏损，但可通过股权转让退出。</p>
+      </div>
+      <div class="layer l1">
+        <h4>较低危险：闲置设备</h4>
+        <p>金额小，处置相对简单。更多是管理效率问题，不构成实质性财务风险。</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第三章 -->
+    <div class="chapter" id="ch3">
+      <div class="chapter-label">第三章</div>
+      <h2>传导机制：闲置资产如何拖垮一家公司</h2>
+
+      <h3 id="ch3a">六层传导链</h3>
+      <p>假设城投花了一笔钱收储了一块地，但迟迟没有出让也没有开发。从这块地"闲置"的那一刻起，一条传导链就开始运转了。这不是理论推演，而是会计准则和市场规律共同决定的必然结果：</p>
+      <div class="flow">
+        <div class="flow-step"><div class="step-num">第1层</div><div class="step-text">资产入账<br>总资产虚增</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第2层</div><div class="step-text">零收入<br>但资金成本照付</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第3层</div><div class="step-text">资产减值<br>利润被侵蚀</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第4层</div><div class="step-text">现金流为负<br>靠借新还旧维持</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第5层</div><div class="step-text">评级下调<br>融资成本上升</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">第6层</div><div class="step-text">恶性循环<br>债务雪球</div></div>
+      </div>
+
+      <div class="layer l1">
+        <h4>第1层 · 资产入账——总资产虚增</h4>
+        <p>城投花钱收储土地、建设设施、收购股权，这些都记入资产端。资产规模变大了，看起来"更有实力"了。但如果这些资产不产生收入，资产规模的扩大只是<strong>虚胖</strong>。总资产变大，但有效资产（能产生收入的资产）并没有增加。</p>
+      </div>
+      <div class="layer l1">
+        <h4>第2层 · 零收入但资金成本照付</h4>
+        <p>这是最致命的一层。买地、建楼、收购的钱从哪来？大部分是借的。借钱就要付利息。资产闲置了，收入是零，但利息一分不少。还有维护成本——保安、物业、设备保养——都是现金支出。<em>资产在"睡觉"，但账单在"流汗"。</em></p>
+        <p>更隐蔽的是<strong>机会成本</strong>：这笔钱如果不投在闲置资产上，本可以投到能产生回报的项目里。这部分"本该赚到但没赚到"的钱，虽然不出现在报表上，但实实在在是损失。</p>
+      </div>
+      <div class="layer l2">
+        <h4>第3层 · 资产减值——利润被侵蚀</h4>
+        <p>会计准则要求：当资产的可收回金额低于账面价值时，必须计提减值准备。闲置资产长期不产生现金流，其"可收回金额"很可能低于账面价值。<strong>减值损失直接计入利润表，冲减当期利润。</strong></p>
+        <p>而且减值一旦计提，就不能转回——它是<strong>永久性的利润损失</strong>。即使公司其他业务在赚钱，闲置资产的减值也可以把利润全部吃掉，甚至导致亏损。</p>
+      </div>
+      <div class="layer l2">
+        <h4>第4层 · 经营现金流为负</h4>
+        <p>利润被减值侵蚀只是"账面"问题，更严重的是现金流。闲置资产不产生现金流入，但维护成本和利息支出是真实的现金流出。<strong>经营现金流持续为负</strong>意味着公司无法靠自身经营维持运转，必须依靠外部融资——也就是借新债还旧债。</p>
+        <p>一旦借不到新债，资金链就断了。闲置资产的本质风险不是"亏多少利润"，而是<strong>现金流失衡</strong>。</p>
+      </div>
+      <div class="layer l3">
+        <h4>第5层 · 评级下调与融资成本上升</h4>
+        <p>评级机构看什么？看资产质量、盈利能力、现金流、债务覆盖能力。闲置资产同时恶化这四个维度。当评级机构发现公司大量资产不产生收益、现金流持续为负、减值风险高时，<strong>下调评级几乎是必然的</strong>。</p>
+        <p>评级下调直接导致融资成本上升，利息支出增加，现金流进一步恶化——<strong>正反馈循环开始运转</strong>。</p>
+      </div>
+      <div class="layer l4">
+        <h4>第6层 · 恶性循环与债务雪球</h4>
+        <p>公司陷入死循环：资产闲置 → 现金流为负 → 靠借债维持 → 债务增加 → 利息增加 → 现金流更差 → 评级再下调 → 融资成本再升 → 需要借更多债……</p>
+        <p>这个循环会<strong>自我加速</strong>。每降一级评级，可用的融资工具就少一类，愿意放贷的机构就更少。最终可能到达一个临界点：<strong>新借的债连旧债的利息都覆盖不了</strong>，那时就是实质性违约。</p>
+      </div>
+      <div class="callout warn">
+        <strong>注意：</strong>这个过程不是线性恶化的，而是<strong>有一个拐点</strong>。在拐点之前，看起来只是"经营困难"；过了拐点，就是"偿债危机"。而闲置资产率，正是判断是否接近拐点的关键指标之一。
+      </div>
+
+      <h3 id="ch3b">三重假象：为什么闲置资产很难被发现</h3>
+      <p>闲置资产最狡猾的地方在于：<strong>它让报表看起来比实际更好</strong>。这听起来违反直觉——不赚钱的资产怎么会让报表更好看？但仔细分析会计逻辑就会发现，闲置资产至少制造了三重假象：</p>
+
+      <h4>假象一：资产规模虚增——"大而不强"</h4>
+      <p>闲置资产记在资产负债表上，总资产规模因此变大。但这个"大"是虚的。真正有意义的不是总资产规模，而是<strong>有效资产规模</strong>——即能产生收入的资产。</p>
+      <div class="callout danger">
+        <strong>为什么危险：</strong>银行和投资者经常用"总资产"作为授信和投资的基础指标。如果资产规模是虚增的，那么基于此计算的授信额度、债券发行额度都会被高估——公司借了超出实际承受能力的债。
+      </div>
+
+      <h4>假象二：资产负债率被低估——"隐性杠杆"</h4>
+      <p>资产负债率 = 总负债 / 总资产。闲置资产计入总资产，使分母变大，负债率看起来更低。但闲置资产不产生收入、难以变现，它实际上<em>不具备"偿还债务"的能力</em>。</p>
+      <p>真正有意义的指标是<strong>有效资产负债率</strong> = 总负债 / 有效资产。这个数字往往比报表上的负债率高得多。一家看起来负债率"安全"的城投，实际杠杆可能已经到了危险区间。闲置资产就像一个<strong>隐形的杠杆放大器</strong>。</p>
+
+      <h4>假象三：盈利能力被高估——"利润幻觉"</h4>
+      <p>这个假象出现在<strong>减值计提之前</strong>。闲置资产在入账初期，只要没有正式计提减值，它就不影响利润表。此时公司的利润看起来正常。但这是<strong>延迟确认的损失</strong>——闲置资产不产生收入却在消耗现金，这个损失是实实在在的，只是会计准则允许它在减值发生前"暂不确认"。</p>
+      <div class="callout key">
+        <strong>核心洞察：</strong>闲置资产对利润的侵蚀不是"均匀分布"的，而是<strong>延迟集中爆发</strong>的。在爆发前，利润看起来正常；爆发时，利润断崖式下跌。这种"突然变脸"比缓慢恶化更危险，因为它让投资者和债权人没有时间反应。
+      </div>
+
+      <h4>三个假象的叠加效应</h4>
+      <ul>
+        <li>资产虚大 → 负债率看起来低 → 似乎可以借更多债</li>
+        <li>利润暂未受冲击 → 评级机构暂时没动手 → 融资渠道暂时畅通</li>
+        <li>融资畅通 → 继续借钱投入新项目 → 可能产生新的闲置资产</li>
+        <li>闲置资产继续积累 → 减值风险继续累积 → 拐点越来越近</li>
+      </ul>
+      <div class="callout danger">
+        <strong>这就是为什么闲置资产被称为"隐性黑洞"：</strong>它不在报表上直接显示为风险，但它在暗中改变了报表数字的真实含义。你以为你在看一家健康的公司，实际上你在看一个经过"会计化妆"的病人。
+      </div>
+
+      <h3 id="ch3c">为什么这个过程很难逆转</h3>
+      <p>理论上，把闲置资产卖掉不就行了吗？现实中远没那么简单：</p>
+      <ul>
+        <li><strong>定价困难</strong>——闲置资产没有活跃的交易市场，很难公允定价。卖便宜了是国有资产流失，卖贵了没人买。</li>
+        <li><strong>程序复杂</strong>——国有资产处置需要评估、审批、挂牌、公示，周期动辄数月甚至一年以上。</li>
+        <li><strong>市场踩踏</strong>——当多个城投同时想卖同类资产时，价格会进一步下跌。</li>
+        <li><strong>账面亏损</strong>——如果售价低于账面价值，必须确认处置损失，直接冲击利润。管理层往往不愿意在任期内"暴露"亏损。</li>
+      </ul>
+      <p>所以现实中，很多城投的选择不是"及时处置"，而是"<strong>继续持有并祈祷情况好转</strong>"。结果就是闲置资产越积越多，风险越来越大。</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第四章 -->
+    <div class="chapter" id="ch4">
+      <div class="chapter-label">第四章</div>
+      <h2>闲置资产与融资的关系</h2>
+      <p>前面讲了闲置资产的传导机制，但城投的闲置资产不是抽象的——它往往以<strong>具体的项目形态</strong>存在。最常见的三种：超高层写字楼、产业园、商业综合体。这三类项目是城投闲置资产的"重灾区"，也是融资困局最集中的体现。</p>
+
+      <h3 id="ch4a">超高层写字楼</h3>
+      <p>超高层写字楼是城投闲置资产中最危险的一种。为什么？因为它同时具备三个致命特征：</p>
+      <ul>
+        <li><strong>投资规模巨大</strong>——一栋楼动辄占用城投公司大量资金，占总资产比例很高</li>
+        <li><strong>建设周期长</strong>——建设期间零收入，但资金成本全程在算</li>
+        <li><strong>空置风险高</strong>——二三线城市写字楼供过于求，建好后大量空置是常态</li>
+      </ul>
+      <p>超高层写字楼的融资逻辑是：<strong>用未来租金收入覆盖建设期借款的本息</strong>。但如果建成后空置率高，租金收入远低于预期，这个逻辑就彻底崩塌。不仅还不清建设期的债，还要继续借钱维持运营——物业、安保、能耗都是现金流出。</p>
+      <div class="callout warn">
+        <strong>一栋空置的超高层写字楼，本质上就是一个巨型闲置资产。</strong>它把城投的资金锁死在钢筋混凝土里，既不产生租金，又不好出售（整栋出售极其困难），还持续消耗维护成本和利息。这就是"一栋楼拖垮一个城投"的逻辑。
+      </div>
+
+      <h3 id="ch4b">产业园</h3>
+      <p>产业园是城投最常投的项目类型，也是闲置资产的高发区。产业园的逻辑是：建好厂房和配套设施 → 招商引资引入企业 → 收租金和服务费 → 覆盖投资成本。</p>
+      <p>问题出在哪？<strong>招商</strong>。很多产业园在建设时没有做充分的招商前置工作——先建后招，而不是先招后建。结果厂房建好了，但招不到足够的企业入驻，大量厂房和办公楼空置。</p>
+      <p>产业园相比超高层写字楼有一个优势：可以<strong>分期建设</strong>。建一部分、招一部分、再建一部分。如果前期招商不理想，可以暂停后续建设，损失相对可控。但如果一次性全部建完再招商，风险就和写字楼一样大。</p>
+      <div class="callout key">
+        <strong>产业园的核心教训：</strong>"建设可行性"不等于"运营可行性"。建产业园在工程上没有难度，但能不能招到企业、能不能持续运营，是市场问题，不是工程问题。城投的投资决策往往只论证了前者，忽略了后者。
+      </div>
+
+      <h3 id="ch4c">商业综合体</h3>
+      <p>商业综合体（购物中心 + 写字楼 + 酒店等）是三类项目中<strong>融资难度最大</strong>的。原因在于：</p>
+      <ul>
+        <li><strong>运营门槛极高</strong>——商业综合体的成功高度依赖专业的商业运营能力，而城投通常缺乏这种能力</li>
+        <li><strong>市场波动敏感</strong>——消费市场变化快，定位一旦失误很难调整</li>
+        <li><strong>退出渠道有限</strong>——商业综合体整栋出售极难，REITs 又要求稳定现金流</li>
+      </ul>
+      <p>很多城投建商业综合体时，往往依赖<strong>住宅部分的销售回款来反哺商业部分的运营</strong>。住宅卖得好，商业亏一点也能撑住。但一旦住宅市场下行，反哺断了，商业部分就成了纯粹的闲置资产——空置率高、运营亏损、卖不掉。</p>
+      <div class="callout danger">
+        <strong>必须避免的陷阱：</strong>① 售后返租（卖了商铺再返租统一运营，看似解决了销售问题，实际将风险转移给了散户投资者）；② 过度依赖住宅反哺（住宅和商业的周期高度同步，下行时一起跌）；③ 定位过高（二三线城市建高端商场，市场需求根本撑不起来）。
+      </div>
+
+      <h3 id="ch4d">融资工具与闲置资产的矛盾</h3>
+      <p>城投可用的融资工具很多——专项债、银行贷款、公司债、ABS/ABN、REITs、CMBS 等。但这些工具几乎都有一个共同要求：<strong>底层资产能产生稳定的现金流</strong>。</p>
+      <p>这恰恰是闲置资产最缺乏的。所以闲置资产越多的城投，能用的融资工具越少，融资成本越高。这是一个<strong>恶性筛选机制</strong>：资产质量好的城投，融资工具丰富、成本低；资产质量差的城投，融资工具受限、成本高。</p>
+      <div class="callout key">
+        <strong>REITs 的误区：</strong>很多人认为 REITs 可以解决闲置资产问题。但 REITs 要求底层资产有稳定现金流——闲置资产没有。REITs 是"退出工具"，不是"救活工具"。必须先把闲置资产盘活到能产生稳定现金流的程度，才有可能做 REITs 退出。
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第五章 -->
+    <div class="chapter" id="ch5">
+      <div class="chapter-label">第五章</div>
+      <h2>评级冲击：闲置资产如何触发降级</h2>
+
+      <h3 id="ch5a">评级机构在五个维度被恶化</h3>
+      <p>信用评级的本质是判断"能不能还钱"。评级机构看的是<strong>偿债能力</strong>，而闲置资产恰恰从多个维度同时削弱偿债能力：</p>
+
+      <div class="layer l2">
+        <h4>资产质量</h4>
+        <p>评级机构会分析资产构成，判断哪些是"有效资产"、哪些是"低效/无效资产"。闲置资产率越高，资产质量评分越低。当闲置率超过一定阈值，评级机构可能会将这部分资产从"可偿债资产"中剔除，相当于<strong>缩小了偿债安全垫</strong>。</p>
+      </div>
+      <div class="layer l3">
+        <h4>盈利能力</h4>
+        <p>闲置资产不产生收入，却通过减值侵蚀利润。ROE 和 ROA 被拉低。如果减值集中爆发，利润可能突然转亏。评级机构特别关注<strong>盈利的稳定性和可预测性</strong>，而闲置资产带来的减值恰恰是最不可预测的。</p>
+      </div>
+      <div class="layer l3">
+        <h4>现金流</h4>
+        <p>这是评级机构最看重的指标。<strong>利润可以"调节"，但现金流很难造假。</strong>闲置资产导致经营现金流持续为负或远低于利润，这种"利润与现金流背离"是评级机构重点警惕的信号。</p>
+      </div>
+      <div class="layer l4">
+        <h4>债务覆盖能力</h4>
+        <p>核心指标是 EBITDA / 利息支出（利息保障倍数）。闲置资产拉低 EBITDA，同时公司为了维持运转不得不增加借款，利息支出上升。分子变小、分母变大，保障倍数快速下降。当倍数低于某个水平，意味着<strong>连利息都还不起</strong>，必须靠借新债付利息——这就是"庞兹融资"的特征。</p>
+      </div>
+      <div class="layer l4">
+        <h4>流动性</h4>
+        <p>闲置资产变现困难，无法在短期内转化为现金。当短期债务到期时，公司可用的流动性主要来自现金储备和可快速变现的资产。闲置资产既不是现金也不好卖，<strong>恶化了流动性覆盖</strong>。</p>
+      </div>
+
+      <h3 id="ch5b">触发机制与连锁后果</h3>
+      <p>评级不会因为"有闲置资产"就直接下调，而是通过一系列<strong>触发事件</strong>：</p>
+      <ul>
+        <li><strong>大规模减值</strong>——公司集中计提资产减值，导致利润大幅下滑或转亏</li>
+        <li><strong>现金流持续恶化</strong>——连续多个季度经营现金流为负，且没有改善趋势</li>
+        <li><strong>再融资困难</strong>——债券发行失败或利率大幅攀升，市场已经"用脚投票"</li>
+        <li><strong>审计意见变化</strong>——审计师对资产价值出具保留意见</li>
+        <li><strong>负面舆情</strong>——媒体报道闲置资产问题，引发市场关注和质疑</li>
+      </ul>
+      <div class="callout warn">
+        <strong>关键理解：</strong>评级下调往往不是"渐进式"的，而是"阶跃式"的。在触发事件发生前，评级可能长期不变；一旦触发，可能一次性下调多个子级。这种阶跃式下调会导致融资成本突然大幅上升，<strong>加速危机爆发</strong>。
+      </div>
+      <p>评级下调触发一系列实质性连锁反应：</p>
+      <div class="flow">
+        <div class="flow-step"><div class="step-num">后果1</div><div class="step-text">融资成本<br>直接上升</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">后果2</div><div class="step-text">机构投资者<br>被迫减持</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">后果3</div><div class="step-text">可融资工具<br>减少</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">后果4</div><div class="step-text">再融资<br>更加困难</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-num">后果5</div><div class="step-text">交叉违约<br>风险上升</div></div>
+      </div>
+      <p>其中<strong>交叉违约</strong>最危险：部分债务合同中包含"评级触发条款"——如果评级降至特定水平以下，债权人有权要求提前偿还。这可能导致<strong>原本没到期的债务突然集中到期</strong>，引发流动性危机。</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第六章 -->
+    <div class="chapter" id="ch6">
+      <div class="chapter-label">第六章</div>
+      <h2>怎么办：从认知到行动</h2>
+
+      <h3 id="ch6a">认知层面：先承认问题</h3>
+      <p>处置闲置资产最大的障碍不是技术问题，而是<strong>认知和意愿问题</strong>。管理层往往不愿承认资产闲置：</p>
+      <ul>
+        <li><strong>承认闲置 = 承认决策失误</strong>——很多闲置资产是前任领导的项目，现任不愿"揭盖子"</li>
+        <li><strong>处置就确认亏损</strong>——卖出价低于账面价值就要确认损失，冲击当期利润</li>
+        <li><strong>担心国有资产流失</strong>——低价出售可能被追究责任，不如"先放着"</li>
+        <li><strong>寄希望于市场好转</strong>——"等房地产市场回暖，地就能卖了"</li>
+      </ul>
+      <div class="callout danger">
+        <strong>但现实是：</strong>闲置资产不会因为不处置就自动变好。相反，时间越久，减值风险越大、资金成本累计越多、处置难度也越大。<em>"拖"是最差的选择。</em>
+      </div>
+
+      <h3 id="ch6b">操作层面：四层递进</h3>
+
+      <h4>第一层：止血——停止产生新的闲置</h4>
+      <p>在处置存量之前，首先要<strong>控制增量</strong>：</p>
+      <ul>
+        <li>暂停缺乏明确运营方案的新项目投资</li>
+        <li>新项目必须进行"运营可行性论证"，不能只论证"建设可行性"</li>
+        <li>把"资产使用率"纳入投资决策和绩效考核</li>
+        <li>建立资产全生命周期管理机制，从"建完即交接"变为"建完即运营"</li>
+      </ul>
+
+      <h4>第二层：盘活——让闲置资产"动起来"</h4>
+      <p>对于有盘活可能的资产，优先选择盘活而非出售：</p>
+      <ul>
+        <li><strong>空置房产</strong>→ 降价出租、改造为保障性租赁住房、引入专业运营方</li>
+        <li><strong>未运营设施</strong>→ 引入第三方运营商（PPP/委托运营）、调整运营模式</li>
+        <li><strong>低效股权</strong>→ 推动子公司混改、引入战略投资者、股权转让</li>
+        <li><strong>闲置土地</strong>→ 与政府协商变更土地用途、合作开发、政府有偿回收</li>
+      </ul>
+
+      <h4>第三层：处置——卖掉无法盘活的资产</h4>
+      <p>对于确实无法盘活的资产，果断处置，即使要确认损失：</p>
+      <ul>
+        <li><strong>在建停工</strong>→ 引入战略投资者接盘、资产打包出售给 AMC、政府接管</li>
+        <li><strong>闲置土地</strong>→ 政府有偿回收（最优先渠道）、土地置换</li>
+        <li><strong>闲置设备</strong>→ 二手市场出售、报废处理</li>
+      </ul>
+      <div class="callout key">
+        <strong>核心原则：</strong>处置闲置资产的损失，本质上是<strong>确认已经发生的损失</strong>，而不是"制造新的损失"。钱在资产闲置的那一刻就已经亏了，只是没有在账面上确认。拖延不处置，只会让损失更大。
+      </div>
+
+      <h4>第四层：制度——防止问题再次发生</h4>
+      <ul>
+        <li>建立<strong>资产使用率月报制度</strong>——每月统计每项资产的使用/出租/运营情况</li>
+        <li>将<strong>资产运营效率纳入管理层考核</strong>——不只看投资完成额，还要看资产使用率</li>
+        <li>新项目投资决策中增加<strong>"运营退出方案"必填项</strong>——没有运营方案不批</li>
+        <li>建立<strong>闲置资产预警机制</strong>——闲置率超过阈值自动触发评估和处置程序</li>
+      </ul>
+
+      <p><strong>处置的节奏：越早越好。</strong>越早处置，资产状况越好，市场可能还有买家，定价更接近账面价值。越晚处置，资产老化、市场下行、买家更少，损失更大。拖到最后，可能被迫在危机中"甩卖"，甚至无人接盘。</p>
+
+      <h3 id="ch6c">政府的角色：能救什么，救不了什么</h3>
+      <p>城投与政府的特殊关系意味着危机时刻可以获得外部支持，但支持不是无限的：</p>
+      <div class="compare">
+        <div class="compare-item good">
+          <h4>可以期待政府支持的</h4>
+          <p>闲置土地由政府有偿回收、优质资产注入稀释闲置率、财政补贴覆盖部分减值、协调银行展期降息、推动区域平台整合。</p>
+        </div>
+        <div class="compare-item bad">
+          <h4>政府也救不了的</h4>
+          <p>闲置规模远超财政承受能力、区域整体信用已受损、闲置资产完全没有市场价值、公司治理问题严重无法执行处置方案。</p>
+        </div>
+      </div>
+      <div class="callout warn">
+        <strong>重要认知：</strong>政府支持能"争取时间"，但不能"消除问题"。如果闲置资产的根本原因——投资逻辑与市场逻辑脱节——不解决，即使靠政府支持度过了当前危机，未来还会产生新的闲置资产。<em>外部输血代替不了内部造血。</em>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 第七章 -->
+    <div class="chapter" id="ch7">
+      <div class="chapter-label">第七章</div>
+      <h2>常见问题</h2>
+
+      <h4>闲置资产和不良资产是一回事吗？</h4>
+      <p>不完全一样。闲置资产强调"不产生收入"的状态，它可能还没有被正式认定为不良。不良资产通常已经发生了减值或违约。但如果不及时处置，闲置资产<strong>会演变为不良资产</strong>。可以把闲置资产理解为"准不良资产"——它还没有正式"暴雷"，但暴雷只是时间问题。</p>
+
+      <h4>为什么不在报表上直接标注"闲置资产"？</h4>
+      <p>因为会计准则没有"闲置资产"这个科目。资产按性质分类（存货、固定资产、在建工程等），不按"是否闲置"分类。要识别闲置资产，需要<strong>结合附注信息、资产明细和运营数据</strong>来分析。这正是为什么闲置资产是"隐性"的——它不在报表的显眼位置，需要深入分析才能发现。</p>
+
+      <h4>闲置资产率多少算"危险"？</h4>
+      <p>没有绝对标准，取决于资产类型、公司规模和行业特点。但一般来说：很低的水平属于正常经营波动；中等水平需要关注，说明资产运营效率存在问题；较高水平属于警戒区间，需要启动处置程序；很高水平属于高危，公司可能已经丧失自我修复能力。<em>但更重要的是趋势——闲置率在持续上升，比当前的水平更危险。</em></p>
+
+      <h4>闲置资产和"僵尸企业"有什么关系？</h4>
+      <p>当一个城投的资产中大部分是闲置的，且自身无法产生足够的现金流来覆盖债务，它就具有了"僵尸企业"的特征——<strong>靠借新还旧维持生存，没有自我造血能力</strong>。区别在于，城投背后有政府信用，所以能比普通企业更长时间地维持"僵尸状态"。但这不意味着风险不存在，只是风险被延迟了。</p>
+
+      <h4>REITs 能解决闲置资产问题吗？</h4>
+      <p>REITs 是盘活闲置资产的有效工具之一，但不是万能药。REITs 要求底层资产<strong>有稳定的现金流</strong>——这恰恰是闲置资产最缺乏的。REITs 更适合"已运营但效率不高"的资产，而不是"完全闲置"的资产。<em>REITs 是"退出工具"，不是"救活工具"。</em></p>
+
+      <h4>普通投资者怎么判断一家城投是否有闲置资产问题？</h4>
+      <p>看以下几个信号：① 总资产很大但营业收入很小（资产周转率极低）；② 经营现金流持续低于净利润甚至为负（利润与现金流背离）；③ 资产减值损失突然大幅增加；④ 在建工程占总资产比例异常高且长期不转固；⑤ 存货（土地）占总资产比例高且周转极慢；⑥ 审计报告中出现"保留意见"或"强调事项段"。如果同时出现多个信号，闲置资产问题的可能性就很大。</p>
+
+      <h4>闲置资产问题和地方政府隐性债务是什么关系？</h4>
+      <p>两者是<strong>一体两面</strong>。城投举债建设的资产如果闲置，意味着这笔债务对应的资产不产生回报——债务没有对应的偿债来源。从这个角度看，闲置资产问题越严重，隐性债务的风险就越大。<em>解决闲置资产问题，本质上也是在化解隐性债务风险。</em></p>
+
+      <h4>超高层写字楼、产业园、商业综合体，哪个风险最大？</h4>
+      <p>各有各的风险。超高层写字楼——投资规模最大、整栋出售最难、二三线城市空置率最高，<strong>一旦空置就是最重的包袱</strong>。商业综合体——运营门槛最高、退出渠道最少，<strong>最考验运营能力</strong>。产业园——相对最可控，因为可以分期建设、分期招商，<strong>但如果一次性建完再招商，风险和前两者一样大</strong>。共同点是：三类项目的闲置风险，根源都在"重建设轻运营"。</p>
+    </div>
+
+    <div class="foot">
+      城投 · 闲置资产 · 融资困局 —— 从底层逻辑讲起<br>
+      所有内容基于公开信息和会计逻辑分析 · 不构成投资建议
+    </div>
   </div>
-
-  <div class="note" id="note"></div>
-
-  <div class="kpis" id="kpis"></div>
-
-  <div class="card">
-    <h2>📊 主体评级分布</h2>
-    <div class="desc">纳入样本的主体信用等级构成（AAA / AA+ / AA / AA-）。</div>
-    <div id="chartRating"></div>
-  </div>
-
-  <div class="card">
-    <h2>📉 最新年份资产负债率对比</h2>
-    <div class="desc">条形越靠右杠杆越高；&lt;55% 绿 / 55–70% 橙 / &gt;70% 红（警戒）。</div>
-    <div id="chartLeverage"></div>
-  </div>
-
-  <div class="card">
-    <h2>📈 ROE 趋势（2020–2024）</h2>
-    <div class="desc">净资产收益率年度走势，反映盈利能力的演变。</div>
-    <div id="chartRoe"></div>
-    <div class="legend" id="legendRoe"></div>
-  </div>
-
-  <div class="card">
-    <h2>💰 总资产规模趋势（2020–2024）</h2>
-    <div class="desc">资产体量年度增长，体现平台扩张节奏。</div>
-    <div id="chartAssets"></div>
-    <div class="legend" id="legendAssets"></div>
-  </div>
-
-  <div class="card">
-    <h2>🚩 风险预警汇总（最新年份）</h2>
-    <div class="desc">关键偿债与盈利指标 + 触发的风险标签。</div>
-    <div style="overflow-x:auto;"><table id="riskTable"></table></div>
-  </div>
-
-  <div class="foot" id="foot"></div>
 </div>
 
 <script>
-const DATA = {"meta": {"note": "合成模拟数据，非真实披露；仅用于演示本项目分析框架。", "seed": 20260802, "generated_at": "2026-08-02", "years": [2020, 2021, 2022, 2023, 2024], "entity_count": 8, "source": "data/mock/generate_mock_data.py"}, "entities": [{"id": "sh", "short_name": "沪城投", "full_name": "上海示范城投(集团)有限公司", "province": "上海市", "city": "上海市", "rating": "AAA", "industry": "城市基础设施建设与公用事业", "series": [{"year": 2020, "total_assets": 3466.0, "total_liabilities": 1936.8, "asset_liability_ratio": 55.88, "operating_revenue": 251.1, "net_profit": 37.2, "roe": 2.43, "ebitda_interest": 5.33, "op_cf": 54.5, "current_ratio": 1.46, "quick_ratio": 0.52}, {"year": 2021, "total_assets": 3663.9, "total_liabilities": 2083.7, "asset_liability_ratio": 56.87, "operating_revenue": 232.5, "net_profit": 42.91, "roe": 2.72, "ebitda_interest": 3.28, "op_cf": 148.7, "current_ratio": 1.47, "quick_ratio": 0.85}, {"year": 2022, "total_assets": 3946.8, "total_liabilities": 2202.3, "asset_liability_ratio": 55.8, "operating_revenue": 349.0, "net_profit": 40.36, "roe": 2.31, "ebitda_interest": 3.66, "op_cf": 118.1, "current_ratio": 1.51, "quick_ratio": 0.73}, {"year": 2023, "total_assets": 4257.3, "total_liabilities": 2321.9, "asset_liability_ratio": 54.54, "operating_revenue": 380.1, "net_profit": 79.62, "roe": 4.11, "ebitda_interest": 3.74, "op_cf": 37.6, "current_ratio": 1.52, "quick_ratio": 0.74}, {"year": 2024, "total_assets": 4564.3, "total_liabilities": 2460.1, "asset_liability_ratio": 53.9, "operating_revenue": 346.0, "net_profit": 99.4, "roe": 4.72, "ebitda_interest": 3.5, "op_cf": 166.1, "current_ratio": 1.41, "quick_ratio": 0.57}], "risk_flags": ["速动比率<0.6，资产流动性弱"]}, {"id": "cd", "short_name": "蓉城建设", "full_name": "成都城市建设投资集团有限责任公司", "province": "四川省", "city": "成都市", "rating": "AAA", "industry": "城市基础设施与运营", "series": [{"year": 2020, "total_assets": 3014.0, "total_liabilities": 1679.1, "asset_liability_ratio": 55.71, "operating_revenue": 341.4, "net_profit": 54.31, "roe": 4.07, "ebitda_interest": 4.81, "op_cf": 161.8, "current_ratio": 1.42, "quick_ratio": 0.54}, {"year": 2021, "total_assets": 3169.6, "total_liabilities": 1801.0, "asset_liability_ratio": 56.82, "operating_revenue": 339.0, "net_profit": 38.35, "roe": 2.8, "ebitda_interest": 6.1, "op_cf": 51.2, "current_ratio": 1.31, "quick_ratio": 0.77}, {"year": 2022, "total_assets": 3361.2, "total_liabilities": 1939.1, "asset_liability_ratio": 57.69, "operating_revenue": 257.8, "net_profit": 40.14, "roe": 2.82, "ebitda_interest": 6.06, "op_cf": 156.8, "current_ratio": 1.31, "quick_ratio": 0.63}, {"year": 2023, "total_assets": 3574.6, "total_liabilities": 2099.7, "asset_liability_ratio": 58.74, "operating_revenue": 350.2, "net_profit": 43.25, "roe": 2.93, "ebitda_interest": 3.5, "op_cf": 133.3, "current_ratio": 1.39, "quick_ratio": 0.45}, {"year": 2024, "total_assets": 3844.7, "total_liabilities": 2270.7, "asset_liability_ratio": 59.06, "operating_revenue": 320.7, "net_profit": 75.86, "roe": 4.82, "ebitda_interest": 5.72, "op_cf": 73.8, "current_ratio": 1.35, "quick_ratio": 0.52}], "risk_flags": ["速动比率<0.6，资产流动性弱"]}, {"id": "gz", "short_name": "穗城建设", "full_name": "广州城投集团有限公司", "province": "广东省", "city": "广州市", "rating": "AAA", "industry": "城市基建与土地开发", "series": [{"year": 2020, "total_assets": 3402.0, "total_liabilities": 1980.6, "asset_liability_ratio": 58.22, "operating_revenue": 398.9, "net_profit": 50.99, "roe": 3.59, "ebitda_interest": 4.04, "op_cf": 149.2, "current_ratio": 1.88, "quick_ratio": 0.7}, {"year": 2021, "total_assets": 3563.0, "total_liabilities": 2037.3, "asset_liability_ratio": 57.18, "operating_revenue": 300.0, "net_profit": 59.55, "roe": 3.9, "ebitda_interest": 3.63, "op_cf": 64.8, "current_ratio": 1.99, "quick_ratio": 1.17}, {"year": 2022, "total_assets": 3781.3, "total_liabilities": 2193.1, "asset_liability_ratio": 58.0, "operating_revenue": 271.3, "net_profit": 42.6, "roe": 2.68, "ebitda_interest": 3.08, "op_cf": 170.6, "current_ratio": 2.04, "quick_ratio": 0.93}, {"year": 2023, "total_assets": 4000.7, "total_liabilities": 2298.8, "asset_liability_ratio": 57.46, "operating_revenue": 289.8, "net_profit": 51.77, "roe": 3.04, "ebitda_interest": 5.1, "op_cf": 140.7, "current_ratio": 2.09, "quick_ratio": 0.88}, {"year": 2024, "total_assets": 4392.0, "total_liabilities": 2572.0, "asset_liability_ratio": 58.56, "operating_revenue": 450.9, "net_profit": 69.69, "roe": 3.83, "ebitda_interest": 5.5, "op_cf": 153.7, "current_ratio": 2.15, "quick_ratio": 1.09}], "risk_flags": ["各项指标处于健康区间"]}, {"id": "wh", "short_name": "江城投资", "full_name": "武汉城市发展投资集团有限责任公司", "province": "湖北省", "city": "武汉市", "rating": "AA+", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 1726.0, "total_liabilities": 1095.1, "asset_liability_ratio": 63.45, "operating_revenue": 244.9, "net_profit": 13.81, "roe": 2.19, "ebitda_interest": 2.03, "op_cf": -20.5, "current_ratio": 1.48, "quick_ratio": 0.63}, {"year": 2021, "total_assets": 1822.4, "total_liabilities": 1141.7, "asset_liability_ratio": 62.65, "operating_revenue": 271.1, "net_profit": 14.9, "roe": 2.19, "ebitda_interest": 2.87, "op_cf": -10.6, "current_ratio": 1.51, "quick_ratio": 0.84}, {"year": 2022, "total_assets": 1894.6, "total_liabilities": 1163.4, "asset_liability_ratio": 61.41, "operating_revenue": 246.3, "net_profit": 16.24, "roe": 2.22, "ebitda_interest": 2.79, "op_cf": 92.8, "current_ratio": 1.46, "quick_ratio": 0.71}, {"year": 2023, "total_assets": 2018.1, "total_liabilities": 1257.7, "asset_liability_ratio": 62.32, "operating_revenue": 297.2, "net_profit": 17.69, "roe": 2.33, "ebitda_interest": 2.61, "op_cf": 80.5, "current_ratio": 1.36, "quick_ratio": 0.41}, {"year": 2024, "total_assets": 2112.8, "total_liabilities": 1347.3, "asset_liability_ratio": 63.77, "operating_revenue": 367.4, "net_profit": 25.23, "roe": 3.3, "ebitda_interest": 3.1, "op_cf": 87.2, "current_ratio": 1.36, "quick_ratio": 0.57}], "risk_flags": ["速动比率<0.6，资产流动性弱"]}, {"id": "tj", "short_name": "滨海建投", "full_name": "天津滨海新区建设投资集团", "province": "天津市", "city": "天津市", "rating": "AA+", "industry": "城市开发与园区建设", "series": [{"year": 2020, "total_assets": 1218.0, "total_liabilities": 713.3, "asset_liability_ratio": 58.56, "operating_revenue": 163.9, "net_profit": 6.78, "roe": 1.34, "ebitda_interest": 2.19, "op_cf": 93.1, "current_ratio": 1.3, "quick_ratio": 0.41}, {"year": 2021, "total_assets": 1293.4, "total_liabilities": 775.0, "asset_liability_ratio": 59.92, "operating_revenue": 194.8, "net_profit": 17.98, "roe": 3.47, "ebitda_interest": 2.81, "op_cf": 6.9, "current_ratio": 1.23, "quick_ratio": 0.5}, {"year": 2022, "total_assets": 1397.9, "total_liabilities": 818.8, "asset_liability_ratio": 58.57, "operating_revenue": 157.9, "net_profit": 10.23, "roe": 1.77, "ebitda_interest": 3.83, "op_cf": 23.3, "current_ratio": 1.17, "quick_ratio": 0.46}, {"year": 2023, "total_assets": 1458.1, "total_liabilities": 867.0, "asset_liability_ratio": 59.46, "operating_revenue": 203.4, "net_profit": 23.08, "roe": 3.9, "ebitda_interest": 4.17, "op_cf": 109.6, "current_ratio": 1.11, "quick_ratio": 0.42}, {"year": 2024, "total_assets": 1507.0, "total_liabilities": 875.7, "asset_liability_ratio": 58.11, "operating_revenue": 349.8, "net_profit": 15.42, "roe": 2.44, "ebitda_interest": 2.67, "op_cf": -3.6, "current_ratio": 1.13, "quick_ratio": 0.43}], "risk_flags": ["经营现金流为负，自我造血能力不足", "流动比率偏低，短债压力较大", "速动比率<0.6，资产流动性弱"]}, {"id": "km", "short_name": "滇中开发", "full_name": "昆明滇中开发投资集团", "province": "云南省", "city": "昆明市", "rating": "AA", "industry": "园区开发与基建", "series": [{"year": 2020, "total_assets": 1103.0, "total_liabilities": 727.1, "asset_liability_ratio": 65.92, "operating_revenue": 72.2, "net_profit": 4.67, "roe": 1.24, "ebitda_interest": 2.15, "op_cf": -10.0, "current_ratio": 1.21, "quick_ratio": 0.5}, {"year": 2021, "total_assets": 1179.9, "total_liabilities": 760.4, "asset_liability_ratio": 64.45, "operating_revenue": 90.8, "net_profit": 10.14, "roe": 2.42, "ebitda_interest": 2.02, "op_cf": -35.1, "current_ratio": 1.29, "quick_ratio": 0.67}, {"year": 2022, "total_assets": 1281.5, "total_liabilities": 823.0, "asset_liability_ratio": 64.22, "operating_revenue": 98.4, "net_profit": 9.42, "roe": 2.06, "ebitda_interest": 1.44, "op_cf": -67.2, "current_ratio": 1.2, "quick_ratio": 0.4}, {"year": 2023, "total_assets": 1335.1, "total_liabilities": 852.5, "asset_liability_ratio": 63.85, "operating_revenue": 222.5, "net_profit": 5.12, "roe": 1.06, "ebitda_interest": 1.9, "op_cf": 9.0, "current_ratio": 1.25, "quick_ratio": 0.38}, {"year": 2024, "total_assets": 1429.6, "total_liabilities": 932.4, "asset_liability_ratio": 65.22, "operating_revenue": 87.3, "net_profit": 10.57, "roe": 2.13, "ebitda_interest": 2.4, "op_cf": -78.1, "current_ratio": 1.23, "quick_ratio": 0.6}], "risk_flags": ["经营现金流为负，自我造血能力不足"]}, {"id": "cs", "short_name": "星城发展", "full_name": "长沙城市发展集团有限责任公司", "province": "湖南省", "city": "长沙市", "rating": "AA", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 749.0, "total_liabilities": 510.1, "asset_liability_ratio": 68.1, "operating_revenue": 77.0, "net_profit": 6.37, "roe": 2.66, "ebitda_interest": 1.65, "op_cf": -26.1, "current_ratio": 0.85, "quick_ratio": 0.29}, {"year": 2021, "total_assets": 814.6, "total_liabilities": 563.6, "asset_liability_ratio": 69.19, "operating_revenue": 168.5, "net_profit": 2.89, "roe": 1.15, "ebitda_interest": 1.64, "op_cf": -65.6, "current_ratio": 0.92, "quick_ratio": 0.55}, {"year": 2022, "total_assets": 870.2, "total_liabilities": 614.7, "asset_liability_ratio": 70.64, "operating_revenue": 150.0, "net_profit": 5.33, "roe": 2.09, "ebitda_interest": 1.67, "op_cf": -89.5, "current_ratio": 0.99, "quick_ratio": 0.34}, {"year": 2023, "total_assets": 954.0, "total_liabilities": 670.2, "asset_liability_ratio": 70.25, "operating_revenue": 116.5, "net_profit": 6.46, "roe": 2.28, "ebitda_interest": 1.97, "op_cf": -62.1, "current_ratio": 1.08, "quick_ratio": 0.54}, {"year": 2024, "total_assets": 1005.8, "total_liabilities": 695.6, "asset_liability_ratio": 69.16, "operating_revenue": 165.4, "net_profit": 8.09, "roe": 2.61, "ebitda_interest": 2.42, "op_cf": -36.5, "current_ratio": 1.17, "quick_ratio": 0.56}], "risk_flags": ["经营现金流为负，自我造血能力不足", "流动比率偏低，短债压力较大", "速动比率<0.6，资产流动性弱"]}, {"id": "lz", "short_name": "金城建发", "full_name": "兰州金城建设发展集团", "province": "甘肃省", "city": "兰州市", "rating": "AA-", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 399.0, "total_liabilities": 285.8, "asset_liability_ratio": 71.62, "operating_revenue": 96.2, "net_profit": 1.79, "roe": 1.58, "ebitda_interest": 1.47, "op_cf": -11.1, "current_ratio": 0.92, "quick_ratio": 0.42}, {"year": 2021, "total_assets": 411.8, "total_liabilities": 297.6, "asset_liability_ratio": 72.27, "operating_revenue": 64.7, "net_profit": 1.36, "roe": 1.19, "ebitda_interest": 1.22, "op_cf": -59.6, "current_ratio": 0.83, "quick_ratio": 0.48}, {"year": 2022, "total_assets": 448.2, "total_liabilities": 318.9, "asset_liability_ratio": 71.16, "operating_revenue": 90.2, "net_profit": 1.44, "roe": 1.11, "ebitda_interest": 1.52, "op_cf": 3.0, "current_ratio": 0.86, "quick_ratio": 0.37}, {"year": 2023, "total_assets": 485.8, "total_liabilities": 343.1, "asset_liability_ratio": 70.63, "operating_revenue": 88.1, "net_profit": 1.42, "roe": 1.0, "ebitda_interest": 1.07, "op_cf": -49.3, "current_ratio": 0.79, "quick_ratio": 0.35}, {"year": 2024, "total_assets": 530.8, "total_liabilities": 373.4, "asset_liability_ratio": 70.35, "operating_revenue": 128.8, "net_profit": 0.5, "roe": 0.32, "ebitda_interest": 1.05, "op_cf": -13.3, "current_ratio": 0.83, "quick_ratio": 0.37}], "risk_flags": ["资产负债率超70%，杠杆偏高", "EBITDA利息保障倍数<1.5，偿债保障偏弱", "经营现金流为负，自我造血能力不足", "ROE低于1%，盈利能力偏弱", "流动比率偏低，短债压力较大", "速动比率<0.6，资产流动性弱"]}]};
-const COLORS = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#65a30d'];
-const YEARS = DATA.meta.years;
-const ENTS = DATA.entities;
-
-const fmt = (n,d=1)=> Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
-const svgOpen = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
-
-function renderNote(){
-  document.getElementById('note').textContent =
-    '说明：' + DATA.meta.note + ' 生成日期 ' + DATA.meta.generated_at +
-    ' · 样本 ' + DATA.meta.entity_count + ' 家 · 年份 ' + YEARS[0] + '–' + YEARS[YEARS.length-1] +
-    '。真实数据按相同 schema 灌入即可复用，详见 README。';
+const links = document.querySelectorAll('.sidebar a');
+const sections = [];
+links.forEach(a => {
+  const id = a.getAttribute('href').slice(1);
+  const el = document.getElementById(id);
+  if (el) sections.push({el, link:a});
+});
+function onScroll(){
+  let cur = sections[0];
+  for (const s of sections) {
+    if (s.el.getBoundingClientRect().top <= 80) cur = s;
+  }
+  links.forEach(a => a.classList.remove('active'));
+  if (cur) cur.link.classList.add('active');
 }
-
-function renderKPI(){
-  const last = ENTS.map(e=>e.series[e.series.length-1]);
-  const totalAssets = last.reduce((s,e)=>s+e.total_assets,0);
-  const avgAL = last.reduce((s,e)=>s+e.asset_liability_ratio,0)/last.length;
-  const aaa = ENTS.filter(e=>e.rating==='AAA').length;
-  const cards = [
-    {l:'纳入主体', v:ENTS.length, s:'家城投公司'},
-    {l:'总资产合计（最新年）', v:fmt(totalAssets,0), s:'亿元'},
-    {l:'平均资产负债率', v:fmt(avgAL,1)+'%', s:'行业参考 <60%'},
-    {l:'AAA 主体占比', v:(aaa/ENTS.length*100).toFixed(0)+'%', s:aaa+' / '+ENTS.length+' 家'},
-  ];
-  document.getElementById('kpis').innerHTML = cards.map(c=>
-    `<div class="kpi"><div class="l">${c.l}</div><div class="v">${c.v}</div><div class="s">${c.s}</div></div>`).join('');
-}
-
-function ratingDist(){
-  const order=['AAA','AA+','AA','AA-'];
-  const counts={}; order.forEach(r=>counts[r]=0);
-  ENTS.forEach(e=>counts[e.rating]++);
-  const max=Math.max(1,...Object.values(counts));
-  const W=680,H=260,pad=30, bw=70, gap=(W-pad*2-order.length*bw)/(order.length+1);
-  let s=svgOpen(W,H);
-  order.forEach((r,i)=>{
-    const bh=counts[r]/max*(H-pad*2);
-    const x=pad+gap+i*(bw+gap), y=H-pad-bh;
-    const col={'AAA':'#15803d','AA+':'#2563eb','AA':'#d97706','AA-':'#dc2626'}[r];
-    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="6" fill="${col}"/>`;
-    s+=`<text x="${x+bw/2}" y="${y-8}" text-anchor="middle" font-size="14" font-weight="700" fill="#374151">${counts[r]}</text>`;
-    s+=`<text x="${x+bw/2}" y="${H-pad+18}" text-anchor="middle" font-size="13" fill="#374151">${r}</text>`;
+window.addEventListener('scroll', onScroll, {passive:true});
+links.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.getElementById(a.getAttribute('href').slice(1));
+    if (el) window.scrollTo({top: el.offsetTop - 20, behavior:'smooth'});
   });
-  s+='</svg>';
-  document.getElementById('chartRating').innerHTML=s;
-}
-
-function leverageBars(){
-  const W=680, rowH=34, padL=92, padR=70, H=ENTS.length*rowH+16;
-  const maxScale=85, innerW=W-padL-padR;
-  let s=svgOpen(W,H);
-  ENTS.forEach((e,i)=>{
-    const al=e.series[e.series.length-1].asset_liability_ratio;
-    const y=8+i*rowH, bh=18;
-    const col= al>70?'#dc2626':(al>55?'#d97706':'#15803d');
-    const bw=Math.max(2, al/maxScale*innerW);
-    s+=`<text x="${padL-10}" y="${y+bh/2+4}" text-anchor="end" font-size="12" fill="#374151">${e.short_name}</text>`;
-    s+=`<rect x="${padL}" y="${y}" width="${innerW}" height="${bh}" rx="4" fill="#eef2f7"/>`;
-    s+=`<rect x="${padL}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="${col}"/>`;
-    s+=`<text x="${padL+bw+8}" y="${y+bh/2+4}" font-size="12" font-weight="700" fill="${col}">${al.toFixed(1)}%</text>`;
-  });
-  s+='</svg>';
-  document.getElementById('chartLeverage').innerHTML=s;
-}
-
-function lineChart(elId, legendId, accessor, yFmt){
-  const W=680,H=320, pad={l:58,r:18,t:16,b:36};
-  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
-  const series=ENTS.map((e,i)=>({name:e.short_name,color:COLORS[i%COLORS.length],
-    points:e.series.map(p=>({v:accessor(p)}))}));
-  let allv=[]; series.forEach(s=>s.points.forEach(p=>allv.push(p.v)));
-  let min=Math.min(...allv), max=Math.max(...allv);
-  if(min===max){min-=1;max+=1;}
-  const x=i=> pad.l + (YEARS.length===1?iw/2: iw*i/(YEARS.length-1));
-  const y=v=> pad.t + ih - ih*(v-min)/(max-min);
-  let s=svgOpen(W,H);
-  for(let g=0;g<=4;g++){ const val=min+(max-min)*g/4, yy=y(val);
-    s+=`<line x1="${pad.l}" y1="${yy.toFixed(1)}" x2="${W-pad.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
-    s+=`<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="10" fill="#9ca3af">${yFmt(val)}</text>`; }
-  YEARS.forEach((yr,i)=> s+=`<text x="${x(i)}" y="${H-pad.b+18}" text-anchor="middle" font-size="10" fill="#9ca3af">${yr}</text>`);
-  series.forEach(se=>{
-    const d=se.points.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
-    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2"/>`;
-    se.points.forEach((p,i)=> s+=`<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6" fill="${se.color}"/>`);
-  });
-  s+='</svg>';
-  document.getElementById(elId).innerHTML=s;
-  document.getElementById(legendId).innerHTML=series.map(se=>
-    `<span><i style="background:${se.color}"></i>${se.name}</span>`).join('');
-}
-
-function riskTable(){
-  const rows=ENTS.map(e=>{
-    const f=e.series[e.series.length-1];
-    const alCls= f.asset_liability_ratio>70?'bad':(f.asset_liability_ratio>55?'warn':'good');
-    const ebiCls= f.ebitda_interest<1.5?'bad':(f.ebitda_interest<2.5?'warn':'good');
-    const opCls= f.op_cf<0?'bad':'good';
-    const roeCls= f.roe<1?'bad':(f.roe<2?'warn':'good');
-    const rcol={'AAA':'#15803d','AA+':'#2563eb','AA':'#d97706','AA-':'#dc2626'}[e.rating];
-    const flags=e.risk_flags.map(x=>`• ${x}`).join('<br>');
-    return `<tr>
-      <td><b>${e.short_name}</b><br><span style="color:#9ca3af;font-size:11px">${e.province}·${e.city}</span></td>
-      <td><span class="pill" style="background:${rcol}1a;color:${rcol}">${e.rating}</span></td>
-      <td class="num ${alCls}">${f.asset_liability_ratio.toFixed(1)}%</td>
-      <td class="num ${ebiCls}">${f.ebitda_interest.toFixed(2)}x</td>
-      <td class="num ${opCls}">${fmt(f.op_cf,1)}</td>
-      <td class="num ${roeCls}">${f.roe.toFixed(2)}%</td>
-      <td style="font-size:11.5px;color:#b45309;min-width:200px">${flags}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('riskTable').innerHTML =
-    `<thead><tr><th>主体</th><th>评级</th><th>资产负债率</th><th>EBITDA利保</th><th>经营现金流(亿)</th><th>ROE</th><th>风险标签</th></tr></thead><tbody>${rows}</tbody>`;
-}
-
-function renderFoot(){
-  document.getElementById('foot').innerHTML =
-    '本页为 <b>'+DATA.meta.entity_count+'</b> 家城投主体的<b>合成模拟数据</b>演示 · 生成于 '+DATA.meta.generated_at+
-    '<br>数据驱动框架：公开披露 PDF → 结构化字段 → 多主体×多年份分析 → 看板/预警。真实数据按相同 schema 灌入即可复用。';
-}
-
-renderNote(); renderKPI(); ratingDist(); leverageBars();
-lineChart('chartRoe','legendRoe', p=>p.roe, v=>fmt(v,1)+'%');
-lineChart('chartAssets','legendAssets', p=>p.total_assets, v=>fmt(v,0));
-riskTable(); renderFoot();
+});
 </script>
 </body>
 </html>
