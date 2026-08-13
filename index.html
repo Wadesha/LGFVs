@@ -7,15 +7,14 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#0a0a14; color:#94a3b8; line-height:1.9; }
-  .layout { display:flex; max-width:1200px; margin:0 auto; gap:0; }
-  .sidebar { width:220px; position:fixed; top:0; left:0; height:100vh; overflow-y:auto; background:#0d0d1a; border-right:1px solid rgba(99,102,241,.1); padding:28px 0; z-index:100; }
-  .sidebar .logo { padding:0 24px 20px; font-size:14px; font-weight:700; color:#a78bfa; border-bottom:1px solid rgba(99,102,241,.08); margin-bottom:12px; }
-  .sidebar a { display:block; padding:8px 24px; font-size:13px; color:#64748b; text-decoration:none; border-left:2px solid transparent; transition:all .15s; }
-  .sidebar a:hover { color:#a78bfa; background:rgba(99,102,241,.04); }
-  .sidebar a.active { color:#a78bfa; border-left-color:#6366f1; background:rgba(99,102,241,.06); }
-  .sidebar a.sub { padding-left:36px; font-size:12px; color:#475569; }
-  .main { margin-left:220px; padding:40px 48px 80px; max-width:760px; width:100%; }
-  @media(max-width:768px){ .sidebar{display:none;} .main{margin-left:0;padding:20px 16px 60px;} }
+  .layout { max-width:760px; margin:0 auto; }
+  .toc { background:#0d0d1a; border:1px solid rgba(99,102,241,.1); border-radius:16px; padding:24px 28px; margin-bottom:32px; }
+  .toc .logo { font-size:14px; font-weight:700; color:#a78bfa; margin-bottom:12px; }
+  .toc-links { display:flex; flex-wrap:wrap; gap:6px 14px; }
+  .toc-links a { font-size:13px; color:#64748b; text-decoration:none; }
+  .toc-links a:hover { color:#a78bfa; }
+  .toc-links a.sub { font-size:12px; color:#475569; }
+  .main { padding:0 16px 60px; }
 
   .hero { text-align:center; padding:60px 20px 48px; }
   .hero h1 { font-size:28px; font-weight:800; color:#e2e8f0; letter-spacing:.5px; line-height:1.4; }
@@ -78,33 +77,35 @@
 </head>
 <body>
 <div class="layout">
-  <nav class="sidebar" id="sidebar">
-    <div class="logo">城投 · 闲置资产<br>· 融资困局</div>
-    <a href="#ch0" class="active">序章</a>
-    <a href="#ch1">一、城投是什么</a>
-    <a href="#ch1a" class="sub">商业模式</a>
-    <a href="#ch1b" class="sub">钱从哪来到哪去</a>
-    <a href="#ch2">二、闲置资产</a>
-    <a href="#ch2a" class="sub">是什么</a>
-    <a href="#ch2b" class="sub">为什么会产生</a>
-    <a href="#ch2c" class="sub">六大场景</a>
-    <a href="#ch3">三、传导机制</a>
-    <a href="#ch3a" class="sub">六层传导</a>
-    <a href="#ch3b" class="sub">三重假象</a>
-    <a href="#ch3c" class="sub">为什么难逆转</a>
-    <a href="#ch4">四、与融资的关系</a>
-    <a href="#ch4a" class="sub">超高层写字楼</a>
-    <a href="#ch4b" class="sub">产业园</a>
-    <a href="#ch4c" class="sub">商业综合体</a>
-    <a href="#ch4d" class="sub">融资工具</a>
-    <a href="#ch5">五、评级冲击</a>
-    <a href="#ch5a" class="sub">五个维度</a>
-    <a href="#ch5b" class="sub">触发与连锁</a>
-    <a href="#ch6">六、怎么办</a>
-    <a href="#ch6a" class="sub">认知</a>
-    <a href="#ch6b" class="sub">四层处置</a>
-    <a href="#ch6c" class="sub">政府角色</a>
-    <a href="#ch7">七、常见问题</a>
+  <nav class="toc">
+    <div class="logo">目录</div>
+    <div class="toc-links">
+      <a href="#ch0">序章</a> ·
+      <a href="#ch1">一、城投是什么</a>
+      <a href="#ch1a" class="sub">商业模式</a>
+      <a href="#ch1b" class="sub">钱从哪来到哪去</a> ·
+      <a href="#ch2">二、闲置资产</a>
+      <a href="#ch2a" class="sub">是什么</a>
+      <a href="#ch2b" class="sub">为什么会产生</a>
+      <a href="#ch2c" class="sub">六大场景</a> ·
+      <a href="#ch3">三、传导机制</a>
+      <a href="#ch3a" class="sub">六层传导</a>
+      <a href="#ch3b" class="sub">三重假象</a>
+      <a href="#ch3c" class="sub">为什么难逆转</a> ·
+      <a href="#ch4">四、与融资的关系</a>
+      <a href="#ch4a" class="sub">超高层写字楼</a>
+      <a href="#ch4b" class="sub">产业园</a>
+      <a href="#ch4c" class="sub">商业综合体</a>
+      <a href="#ch4d" class="sub">融资工具</a> ·
+      <a href="#ch5">五、评级冲击</a>
+      <a href="#ch5a" class="sub">五个维度</a>
+      <a href="#ch5b" class="sub">触发与连锁</a> ·
+      <a href="#ch6">六、怎么办</a>
+      <a href="#ch6a" class="sub">认知</a>
+      <a href="#ch6b" class="sub">四层处置</a>
+      <a href="#ch6c" class="sub">政府角色</a> ·
+      <a href="#ch7">七、常见问题</a>
+    </div>
   </nav>
 
   <div class="main">
@@ -564,23 +565,7 @@
 </div>
 
 <script>
-const links = document.querySelectorAll('.sidebar a');
-const sections = [];
-links.forEach(a => {
-  const id = a.getAttribute('href').slice(1);
-  const el = document.getElementById(id);
-  if (el) sections.push({el, link:a});
-});
-function onScroll(){
-  let cur = sections[0];
-  for (const s of sections) {
-    if (s.el.getBoundingClientRect().top <= 80) cur = s;
-  }
-  links.forEach(a => a.classList.remove('active'));
-  if (cur) cur.link.classList.add('active');
-}
-window.addEventListener('scroll', onScroll, {passive:true});
-links.forEach(a => {
+document.querySelectorAll('.toc-links a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     const el = document.getElementById(a.getAttribute('href').slice(1));
