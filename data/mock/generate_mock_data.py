@@ -34,17 +34,36 @@ BLUEPRINTS = [
     ("lz", "金城建发", "兰州金城建设发展集团",             "甘肃省", "兰州市", "AA-",  "城市基础设施建设"),
 ]
 
+# 闲置资产类型名称
+IDLE_TYPES = ["闲置土地", "空置房产", "未运营设施", "在建停工", "低效股权"]
+
 # 评级基线区间（亿元 / 百分比 / 倍数）
 BASE = {
-    "AAA": {"assets": (2200, 3800), "al": (50, 60), "roe": (2.0, 4.5), "ebi": (3.0, 6.0), "opcf": (20, 180), "rev": (200, 400), "cr": (1.3, 2.2)},
-    "AA+": {"assets": (1100, 2000), "al": (58, 68), "roe": (1.4, 3.5), "ebi": (2.0, 4.0), "opcf": (-40, 120), "rev": (120, 300), "cr": (1.0, 1.8)},
-    "AA":  {"assets": (550, 1200),  "al": (62, 72), "roe": (0.8, 2.6), "ebi": (1.3, 2.6), "opcf": (-90, 40),  "rev": (70, 200),  "cr": (0.8, 1.5)},
-    "AA-": {"assets": (300, 700),   "al": (68, 78), "roe": (0.3, 1.8), "ebi": (0.9, 1.8), "opcf": (-60, 20),  "rev": (40, 120),  "cr": (0.7, 1.3)},
+    "AAA": {"assets": (2200, 3800), "al": (50, 60), "roe": (2.0, 4.5), "ebi": (3.0, 6.0), "opcf": (20, 180), "rev": (200, 400), "cr": (1.3, 2.2), "idle": (3, 10)},
+    "AA+": {"assets": (1100, 2000), "al": (58, 68), "roe": (1.4, 3.5), "ebi": (2.0, 4.0), "opcf": (-40, 120), "rev": (120, 300), "cr": (1.0, 1.8), "idle": (8, 22)},
+    "AA":  {"assets": (550, 1200),  "al": (62, 72), "roe": (0.8, 2.6), "ebi": (1.3, 2.6), "opcf": (-90, 40),  "rev": (70, 200),  "cr": (0.8, 1.5), "idle": (15, 35)},
+    "AA-": {"assets": (300, 700),   "al": (68, 78), "roe": (0.3, 1.8), "ebi": (0.9, 1.8), "opcf": (-60, 20),  "rev": (40, 120),  "cr": (0.7, 1.3), "idle": (25, 50)},
 }
 
 
 def rnd(a, b, nd=2):
     return round(random.uniform(a, b), nd)
+
+
+def gen_idle_breakdown(total_idle):
+    """生成闲置资产构成明细"""
+    n_types = random.randint(2, 4)
+    chosen = random.sample(IDLE_TYPES, n_types)
+    weights = [random.random() for _ in chosen]
+    total_w = sum(weights)
+    breakdown = {}
+    for i, t in enumerate(chosen):
+        if i == n_types - 1:
+            amt = total_idle - sum(breakdown.values())
+        else:
+            amt = round(total_idle * weights[i] / total_w, 1)
+        breakdown[t] = max(0.1, amt)
+    return breakdown
 
 
 def gen_entity(bp):
@@ -68,6 +87,11 @@ def gen_entity(bp):
         liab = round(assets * al / 100.0, 1)
         equity = round(assets - liab, 1)
         net_profit = round(equity * roe / 100.0, 2)
+        # 闲置资产：随年份有一定波动，但总体趋势向差
+        idle_rate = rnd(*b["idle"], 2) / 100.0
+        idle_rate = idle_rate * (1 + 0.06 * i)  # 逐年恶化趋势
+        idle_rate = min(0.55, idle_rate)
+        idle_assets = round(assets * idle_rate, 1)
         series.append({
             "year": yr,
             "total_assets": round(assets, 1),
@@ -80,6 +104,8 @@ def gen_entity(bp):
             "op_cf": opcf,
             "current_ratio": round(cr, 2),
             "quick_ratio": qr,
+            "idle_assets": idle_assets,
+            "idle_asset_ratio": round(idle_rate * 100, 2),
         })
     # 风险标记（基于最新年份）
     last = series[-1]
@@ -96,12 +122,18 @@ def gen_entity(bp):
         flags.append("流动比率偏低，短债压力较大")
     if last["quick_ratio"] < 0.6:
         flags.append("速动比率<0.6，资产流动性弱")
+    if last["idle_asset_ratio"] > 15:
+        flags.append("闲置资产率超15%，资产利用效率低")
+    if last["idle_asset_ratio"] > 30:
+        flags.append("闲置资产率超30%，资产闲置问题严重")
     if not flags:
         flags.append("各项指标处于健康区间")
+    # 闲置资产构成（仅最新年份）
+    idle_breakdown = gen_idle_breakdown(last["idle_assets"])
     return {
         "id": eid, "short_name": short, "full_name": full,
         "province": prov, "city": city, "rating": rating, "industry": ind,
-        "series": series, "risk_flags": flags,
+        "series": series, "risk_flags": flags, "idle_breakdown": idle_breakdown,
     }
 
 
@@ -129,29 +161,34 @@ TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>城投公司研究 · 模拟数据看板（Demo）</title>
+<title>城投闲置资产监测系统 · 模拟数据看板</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f4f6fb; color:#1f2937; line-height:1.6; }
-  .wrap { max-width:1080px; margin:0 auto; padding:24px 16px 48px; }
-  .header { background:linear-gradient(135deg,#0f2557 0%,#1d4ed8 100%); color:#fff; padding:28px 28px 24px; border-radius:14px; }
+  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f0f4f8; color:#1e293b; line-height:1.6; }
+  .wrap { max-width:1200px; margin:0 auto; padding:20px 16px 48px; }
+  .header { background:linear-gradient(135deg,#0f2557 0%,#1d4ed8 100%); color:#fff; padding:28px 30px; border-radius:16px; }
   .header h1 { font-size:24px; font-weight:800; }
   .header .sub { opacity:.85; font-size:13px; margin-top:6px; }
-  .badge { display:inline-block; margin-top:12px; background:rgba(255,255,255,.16); padding:4px 12px; border-radius:20px; font-size:12px; }
-  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:20px 0; }
-  .kpi { background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 2px 10px rgba(15,37,87,.06); border-left:4px solid #2563eb; }
+  .badge { display:inline-block; margin-top:12px; background:rgba(255,255,255,.16); padding:4px 14px; border-radius:20px; font-size:12px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:18px 0; }
+  .kpi { background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 2px 10px rgba(15,37,87,.06); }
   .kpi .l { color:#6b7280; font-size:12px; }
   .kpi .v { font-size:22px; font-weight:800; color:#0f2557; margin-top:4px; }
   .kpi .s { font-size:11px; color:#9ca3af; margin-top:2px; }
+  .kpi.danger { border-left:4px solid #dc2626; }
+  .kpi.warn { border-left:4px solid #d97706; }
+  .kpi.good { border-left:4px solid #16a34a; }
   .card { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 12px rgba(15,37,87,.06); margin-bottom:18px; }
   .card h2 { font-size:16px; color:#0f2557; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
   .card .desc { font-size:12px; color:#6b7280; margin-bottom:12px; }
-  .legend { display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:10px; font-size:12px; color:#374151; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:800px){ .grid2{grid-template-columns:1fr;} }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:10px; font-size:12px; color:#374151; }
   .legend span { display:inline-flex; align-items:center; gap:6px; }
   .legend i { width:11px; height:11px; border-radius:3px; display:inline-block; }
   table { width:100%; border-collapse:collapse; font-size:12.5px; }
-  th { background:#f3f5fb; text-align:left; padding:9px 10px; color:#4b5563; border-bottom:2px solid #e5e7eb; font-weight:600; }
-  td { padding:9px 10px; border-bottom:1px solid #f0f2f7; vertical-align:top; }
+  th { background:#f3f5fb; text-align:left; padding:8px 10px; color:#4b5563; border-bottom:2px solid #e5e7eb; font-weight:600; }
+  td { padding:8px 10px; border-bottom:1px solid #f0f2f7; vertical-align:top; }
   tr:hover td { background:#fafbff; }
   .num { text-align:right; font-variant-numeric:tabular-nums; }
   .pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700; }
@@ -163,177 +200,217 @@ TEMPLATE = r"""<!DOCTYPE html>
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>🏛️ 城投公司信用研究 · 模拟数据看板</h1>
-    <div class="sub">多主体 × 多年份分析框架演示 · 字段与真实披露 schema 对齐</div>
+    <h1>📊 城投闲置资产监测系统</h1>
+    <div class="sub">多主体 × 多年份 闲置资产数据分析 · 闲置率、构成、趋势、风险预警</div>
     <div class="badge">⚠️ 全部为合成模拟数据，非真实披露</div>
   </div>
-
   <div class="note" id="note"></div>
-
   <div class="kpis" id="kpis"></div>
-
-  <div class="card">
-    <h2>📊 主体评级分布</h2>
-    <div class="desc">纳入样本的主体信用等级构成（AAA / AA+ / AA / AA-）。</div>
-    <div id="chartRating"></div>
+  <div class="grid2">
+    <div class="card">
+      <h2>📉 闲置资产率对比（最新年份）</h2>
+      <div class="desc">条形越靠右闲置越严重；&lt;5% 绿 / 5–15% 橙 / &gt;15% 红（警戒）。</div>
+      <div id="chartIdleRate"></div>
+    </div>
+    <div class="card">
+      <h2>💰 闲置资产规模对比（最新年份）</h2>
+      <div class="desc">各公司闲置资产总量，单位：亿元。</div>
+      <div id="chartIdleAmount"></div>
+    </div>
   </div>
-
   <div class="card">
-    <h2>📉 最新年份资产负债率对比</h2>
-    <div class="desc">条形越靠右杠杆越高；&lt;55% 绿 / 55–70% 橙 / &gt;70% 红（警戒）。</div>
-    <div id="chartLeverage"></div>
+    <h2>📈 闲置资产率趋势（2020–2024）</h2>
+    <div class="desc">各公司闲置资产率年度变化趋势，反映资产利用效率的变化。</div>
+    <div id="chartIdleTrend"></div>
+    <div class="legend" id="legendIdleTrend"></div>
   </div>
-
-  <div class="card">
-    <h2>📈 ROE 趋势（2020–2024）</h2>
-    <div class="desc">净资产收益率年度走势，反映盈利能力的演变。</div>
-    <div id="chartRoe"></div>
-    <div class="legend" id="legendRoe"></div>
+  <div class="grid2">
+    <div class="card">
+      <h2>🧩 闲置资产构成明细（最新年份）</h2>
+      <div class="desc">各公司闲置资产按类型拆分（闲置土地、空置房产、未运营设施、在建停工、低效股权）。</div>
+      <div id="chartIdleBreakdown"></div>
+    </div>
+    <div class="card">
+      <h2>🏢 总资产 vs 闲置资产（最新年份）</h2>
+      <div class="desc">总资产规模与闲置资产规模的对比，气泡大小代表闲置率。</div>
+      <div id="chartAssetVsIdle"></div>
+    </div>
   </div>
-
   <div class="card">
-    <h2>💰 总资产规模趋势（2020–2024）</h2>
-    <div class="desc">资产体量年度增长，体现平台扩张节奏。</div>
-    <div id="chartAssets"></div>
-    <div class="legend" id="legendAssets"></div>
-  </div>
-
-  <div class="card">
-    <h2>🚩 风险预警汇总（最新年份）</h2>
-    <div class="desc">关键偿债与盈利指标 + 触发的风险标签。</div>
+    <h2>🚩 风险预警汇总（含闲置资产专项）</h2>
+    <div class="desc">综合财务指标 + 闲置资产风险标签。</div>
     <div style="overflow-x:auto;"><table id="riskTable"></table></div>
   </div>
-
   <div class="foot" id="foot"></div>
 </div>
-
 <script>
 const DATA = __MOCK_DATA__;
 const COLORS = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#65a30d'];
+const IDLE_COLORS = {'闲置土地':'#d97706','空置房产':'#dc2626','未运营设施':'#7c3aed','在建停工':'#0891b2','低效股权':'#65a30d'};
 const YEARS = DATA.meta.years;
 const ENTS = DATA.entities;
-
 const fmt = (n,d=1)=> Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
-const svgOpen = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
-
+const svg = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
 function renderNote(){
-  document.getElementById('note').textContent =
-    '说明：' + DATA.meta.note + ' 生成日期 ' + DATA.meta.generated_at +
-    ' · 样本 ' + DATA.meta.entity_count + ' 家 · 年份 ' + YEARS[0] + '–' + YEARS[YEARS.length-1] +
-    '。真实数据按相同 schema 灌入即可复用，详见 README。';
+  document.getElementById('note').textContent = '说明：' + DATA.meta.note + ' 生成日期 ' + DATA.meta.generated_at + ' · 样本 ' + DATA.meta.entity_count + ' 家 · 年份 ' + YEARS[0] + '\u2013' + YEARS[YEARS.length-1];
 }
-
 function renderKPI(){
   const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const totalIdle = last.reduce((s,e)=>s+e.idle_assets,0);
   const totalAssets = last.reduce((s,e)=>s+e.total_assets,0);
-  const avgAL = last.reduce((s,e)=>s+e.asset_liability_ratio,0)/last.length;
-  const aaa = ENTS.filter(e=>e.rating==='AAA').length;
+  const avgIdleRate = last.reduce((s,e)=>s+e.idle_asset_ratio,0)/last.length;
+  const maxIdle = Math.max(...last.map(e=>e.idle_asset_ratio));
+  const maxName = ENTS[last.findIndex(e=>e.idle_asset_ratio===maxIdle)].short_name;
+  const highRisk = ENTS.filter(e=>e.series[e.series.length-1].idle_asset_ratio>15).length;
   const cards = [
-    {l:'纳入主体', v:ENTS.length, s:'家城投公司'},
-    {l:'总资产合计（最新年）', v:fmt(totalAssets,0), s:'亿元'},
-    {l:'平均资产负债率', v:fmt(avgAL,1)+'%', s:'行业参考 <60%'},
-    {l:'AAA 主体占比', v:(aaa/ENTS.length*100).toFixed(0)+'%', s:aaa+' / '+ENTS.length+' 家'},
+    {l:'闲置资产合计', v:fmt(totalIdle,0)+'亿', s:'占全部资产 '+((totalIdle/totalAssets)*100).toFixed(1)+'%', cls:'danger'},
+    {l:'平均闲置资产率', v:fmt(avgIdleRate,1)+'%', s:'行业参考 <5%', cls: avgIdleRate>15?'danger':(avgIdleRate>5?'warn':'good')},
+    {l:'最高闲置率', v:fmt(maxIdle,1)+'%', s:maxName, cls:'danger'},
+    {l:'闲置高风险主体', v:highRisk+'家', s:'闲置率>15%', cls:highRisk>0?'danger':'good'},
   ];
-  document.getElementById('kpis').innerHTML = cards.map(c=>
-    `<div class="kpi"><div class="l">${c.l}</div><div class="v">${c.v}</div><div class="s">${c.s}</div></div>`).join('');
+  document.getElementById('kpis').innerHTML = cards.map(c=>'<div class="kpi '+(c.cls||'')+'"><div class="l">'+c.l+'</div><div class="v">'+c.v+'</div><div class="s">'+c.s+'</div></div>').join('');
 }
-
-function ratingDist(){
-  const order=['AAA','AA+','AA','AA-'];
-  const counts={}; order.forEach(r=>counts[r]=0);
-  ENTS.forEach(e=>counts[e.rating]++);
-  const max=Math.max(1,...Object.values(counts));
-  const W=680,H=260,pad=30, bw=70, gap=(W-pad*2-order.length*bw)/(order.length+1);
-  let s=svgOpen(W,H);
-  order.forEach((r,i)=>{
-    const bh=counts[r]/max*(H-pad*2);
-    const x=pad+gap+i*(bw+gap), y=H-pad-bh;
-    const col={'AAA':'#15803d','AA+':'#2563eb','AA':'#d97706','AA-':'#dc2626'}[r];
-    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="6" fill="${col}"/>`;
-    s+=`<text x="${x+bw/2}" y="${y-8}" text-anchor="middle" font-size="14" font-weight="700" fill="#374151">${counts[r]}</text>`;
-    s+=`<text x="${x+bw/2}" y="${H-pad+18}" text-anchor="middle" font-size="13" fill="#374151">${r}</text>`;
-  });
-  s+='</svg>';
-  document.getElementById('chartRating').innerHTML=s;
-}
-
-function leverageBars(){
-  const W=680, rowH=34, padL=92, padR=70, H=ENTS.length*rowH+16;
-  const maxScale=85, innerW=W-padL-padR;
-  let s=svgOpen(W,H);
+function idleRateBars(){
+  const W=600, rowH=36, padL=82, padR=60, H=ENTS.length*rowH+16;
+  const maxScale=55, innerW=W-padL-padR;
+  let s=svg(W,H);
   ENTS.forEach((e,i)=>{
-    const al=e.series[e.series.length-1].asset_liability_ratio;
-    const y=8+i*rowH, bh=18;
-    const col= al>70?'#dc2626':(al>55?'#d97706':'#15803d');
-    const bw=Math.max(2, al/maxScale*innerW);
-    s+=`<text x="${padL-10}" y="${y+bh/2+4}" text-anchor="end" font-size="12" fill="#374151">${e.short_name}</text>`;
-    s+=`<rect x="${padL}" y="${y}" width="${innerW}" height="${bh}" rx="4" fill="#eef2f7"/>`;
-    s+=`<rect x="${padL}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="${col}"/>`;
-    s+=`<text x="${padL+bw+8}" y="${y+bh/2+4}" font-size="12" font-weight="700" fill="${col}">${al.toFixed(1)}%</text>`;
+    const ir=e.series[e.series.length-1].idle_asset_ratio;
+    const y=8+i*rowH, bh=20;
+    const col= ir>15?'#dc2626':(ir>5?'#d97706':'#15803d');
+    const bw=Math.max(2, ir/maxScale*innerW);
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2+4)+'" text-anchor="end" font-size="12" fill="#374151">'+e.short_name+'</text>';
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2-7)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+e.rating+'</text>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+innerW+'" height="'+bh+'" rx="4" fill="#eef2f7"/>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+col+'" opacity="0.85"/>';
+    s+='<text x="'+(padL+bw+8)+'" y="'+(y+bh/2+4)+'" font-size="12" font-weight="700" fill="'+col+'">'+ir.toFixed(1)+'%</text>';
+  });
+  const warnX = padL + 15/maxScale*innerW;
+  const dangerX = padL + 5/maxScale*innerW;
+  s+='<line x1="'+warnX+'" y1="0" x2="'+warnX+'" y2="'+H+'" stroke="#dc2626" stroke-dasharray="4,3" stroke-width="1.5"/>';
+  s+='<text x="'+(warnX+4)+'" y="12" font-size="10" fill="#dc2626">15%警戒</text>';
+  s+='<line x1="'+dangerX+'" y1="0" x2="'+dangerX+'" y2="'+H+'" stroke="#d97706" stroke-dasharray="4,3" stroke-width="1.5"/>';
+  s+='<text x="'+(dangerX+4)+'" y="12" font-size="10" fill="#d97706">5%参考</text>';
+  s+='</svg>';
+  document.getElementById('chartIdleRate').innerHTML=s;
+}
+function idleAmountBars(){
+  const W=600, rowH=36, padL=82, padR=70, H=ENTS.length*rowH+16;
+  const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const maxAmt = Math.max(...last.map(e=>e.idle_assets));
+  const innerW=W-padL-padR;
+  let s=svg(W,H);
+  ENTS.forEach((e,i)=>{
+    const ia = e.series[e.series.length-1].idle_assets;
+    const y=8+i*rowH, bh=20;
+    const col=COLORS[i%COLORS.length];
+    const bw=Math.max(2, ia/maxAmt*innerW);
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2+4)+'" text-anchor="end" font-size="12" fill="#374151">'+e.short_name+'</text>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+innerW+'" height="'+bh+'" rx="4" fill="#eef2f7"/>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+col+'" opacity="0.85"/>';
+    s+='<text x="'+(padL+bw+8)+'" y="'+(y+bh/2+4)+'" font-size="12" font-weight="700" fill="'+col+'">'+fmt(ia,1)+'</text>';
   });
   s+='</svg>';
-  document.getElementById('chartLeverage').innerHTML=s;
+  document.getElementById('chartIdleAmount').innerHTML=s;
 }
-
-function lineChart(elId, legendId, accessor, yFmt){
-  const W=680,H=320, pad={l:58,r:18,t:16,b:36};
+function idleTrendLine(){
+  const W=700,H=340, pad={l:58,r:18,t:16,b:36};
   const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
-  const series=ENTS.map((e,i)=>({name:e.short_name,color:COLORS[i%COLORS.length],
-    points:e.series.map(p=>({v:accessor(p)}))}));
+  const series = ENTS.map((e,i)=>({name:e.short_name, color:COLORS[i%COLORS.length], points:e.series.map(p=>({v:p.idle_asset_ratio}))}));
   let allv=[]; series.forEach(s=>s.points.forEach(p=>allv.push(p.v)));
   let min=Math.min(...allv), max=Math.max(...allv);
-  if(min===max){min-=1;max+=1;}
+  min=Math.max(0,min-2); max+=5;
   const x=i=> pad.l + (YEARS.length===1?iw/2: iw*i/(YEARS.length-1));
   const y=v=> pad.t + ih - ih*(v-min)/(max-min);
-  let s=svgOpen(W,H);
+  let s=svg(W,H);
   for(let g=0;g<=4;g++){ const val=min+(max-min)*g/4, yy=y(val);
-    s+=`<line x1="${pad.l}" y1="${yy.toFixed(1)}" x2="${W-pad.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
-    s+=`<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="10" fill="#9ca3af">${yFmt(val)}</text>`; }
-  YEARS.forEach((yr,i)=> s+=`<text x="${x(i)}" y="${H-pad.b+18}" text-anchor="middle" font-size="10" fill="#9ca3af">${yr}</text>`);
+    s+='<line x1="'+pad.l+'" y1="'+yy.toFixed(1)+'" x2="'+(W-pad.r)+'" y2="'+yy.toFixed(1)+'" stroke="#eef2f7"/>';
+    s+='<text x="'+(pad.l-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+val.toFixed(1)+'%</text>'; }
+  YEARS.forEach((yr,i)=> s+='<text x="'+x(i)+'" y="'+(H-pad.b+18)+'" text-anchor="middle" font-size="10" fill="#9ca3af">'+yr+'</text>');
+  const warnY = y(15); s+='<line x1="'+pad.l+'" y1="'+warnY+'" x2="'+(W-pad.r)+'" y2="'+warnY+'" stroke="#dc2626" stroke-dasharray="4,3" stroke-width="1.2"/>';
+  s+='<text x="'+(W-pad.r-50)+'" y="'+(warnY-4)+'" font-size="10" fill="#dc2626">15%警戒</text>';
   series.forEach(se=>{
-    const d=se.points.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
-    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2"/>`;
-    se.points.forEach((p,i)=> s+=`<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6" fill="${se.color}"/>`);
+    const d=se.points.map((p,i)=>''+(i?'L':'M')+x(i).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+    s+='<path d="'+d+'" fill="none" stroke="'+se.color+'" stroke-width="2"/>';
+    se.points.forEach((p,i)=> s+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(p.v).toFixed(1)+'" r="2.6" fill="'+se.color+'"/>');
   });
   s+='</svg>';
-  document.getElementById(elId).innerHTML=s;
-  document.getElementById(legendId).innerHTML=series.map(se=>
-    `<span><i style="background:${se.color}"></i>${se.name}</span>`).join('');
+  document.getElementById('chartIdleTrend').innerHTML=s;
+  document.getElementById('legendIdleTrend').innerHTML=series.map(se=>'<span><i style="background:'+se.color+'"></i>'+se.name+'</span>').join('');
 }
-
+function idleBreakdown(){
+  const W=700,H=ENTS.length*28+30, padL=82, barW=W-padL-140;
+  let s=svg(W,H);
+  const types = Object.keys(IDLE_COLORS);
+  ENTS.forEach((e,i)=>{
+    const y=10+i*28;
+    s+='<text x="'+(padL-10)+'" y="'+(y+14)+'" text-anchor="end" font-size="11" fill="#374151">'+e.short_name+'</text>';
+    const bd = e.idle_breakdown||{};
+    const total = Object.values(bd).reduce((a,b)=>a+b,0)||1;
+    let cx=padL;
+    const rate = e.series[e.series.length-1].idle_asset_ratio;
+    types.forEach(t=>{
+      const val = bd[t]||0;
+      const w = (val/total)*barW;
+      if(w>1){ s+='<rect x="'+cx+'" y="'+(y+4)+'" width="'+w+'" height="16" rx="3" fill="'+IDLE_COLORS[t]+'" opacity="0.85"/>'; cx+=w; }
+    });
+    s+='<text x="'+(padL+barW+8)+'" y="'+(y+14)+'" font-size="11" fill="#64748b">'+fmt(rate,1)+'%</text>';
+  });
+  let lx=padL, ly=H-10;
+  types.forEach((t,j)=>{
+    s+='<rect x="'+lx+'" y="'+(ly-8)+'" width="12" height="12" rx="2" fill="'+IDLE_COLORS[t]+'"/>';
+    s+='<text x="'+(lx+16)+'" y="'+(ly+2)+'" font-size="10" fill="#475569">'+t+'</text>';
+    lx += 16 + t.length*12 + 12;
+  });
+  s+='</svg>';
+  document.getElementById('chartIdleBreakdown').innerHTML=s;
+}
+function assetVsIdle(){
+  const W=660,H=400, pad={l:60,r:30,t:24,b:44};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const maxA = Math.max(...last.map(e=>e.total_assets));
+  const maxI = Math.max(...last.map(e=>e.idle_assets));
+  let s=svg(W,H);
+  for(let g=0;g<=4;g++){
+    const x=pad.l+iw*g/4, y=pad.t+ih*g/4;
+    s+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(W-pad.r)+'" y2="'+y+'" stroke="#eef2f7"/>';
+    s+='<line x1="'+x+'" y1="'+pad.t+'" x2="'+x+'" y2="'+(H-pad.b)+'" stroke="#eef2f7"/>';
+    s+='<text x="'+x+'" y="'+(H-pad.b+18)+'" text-anchor="middle" font-size="9" fill="#9ca3af">'+(maxA*g/4).toFixed(0)+'</text>';
+    s+='<text x="'+(pad.l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="#9ca3af">'+(maxI*g/4).toFixed(0)+'</text>';
+  }
+  s+='<text x="'+(W/2)+'" y="'+(H-6)+'" text-anchor="middle" font-size="11" fill="#64748b">总资产（亿元）</text>';
+  s+='<text x="10" y="'+(H/2)+'" text-anchor="middle" font-size="11" fill="#64748b" transform="rotate(-90,10,'+(H/2)+')">闲置资产（亿元）</text>';
+  ENTS.forEach((e,i)=>{
+    const f = e.series[e.series.length-1];
+    const cx = pad.l + (f.total_assets/maxA)*iw;
+    const cy = pad.t + ih - (f.idle_assets/maxI)*ih;
+    const r = 6 + (f.idle_asset_ratio/30)*20;
+    const col = f.idle_asset_ratio>15?'#dc2626':(f.idle_asset_ratio>5?'#d97706':'#16a34a');
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+col+'" opacity="0.7" stroke="#fff" stroke-width="1.5"/>';
+    s+='<text x="'+cx+'" y="'+(cy-r-8)+'" text-anchor="middle" font-size="10" fill="#374151">'+e.short_name+'</text>';
+  });
+  s+='</svg>';
+  document.getElementById('chartAssetVsIdle').innerHTML=s;
+}
 function riskTable(){
   const rows=ENTS.map(e=>{
     const f=e.series[e.series.length-1];
+    const irCls= f.idle_asset_ratio>15?'bad':(f.idle_asset_ratio>5?'warn':'good');
     const alCls= f.asset_liability_ratio>70?'bad':(f.asset_liability_ratio>55?'warn':'good');
-    const ebiCls= f.ebitda_interest<1.5?'bad':(f.ebitda_interest<2.5?'warn':'good');
     const opCls= f.op_cf<0?'bad':'good';
-    const roeCls= f.roe<1?'bad':(f.roe<2?'warn':'good');
     const rcol={'AAA':'#15803d','AA+':'#2563eb','AA':'#d97706','AA-':'#dc2626'}[e.rating];
-    const flags=e.risk_flags.map(x=>`• ${x}`).join('<br>');
-    return `<tr>
-      <td><b>${e.short_name}</b><br><span style="color:#9ca3af;font-size:11px">${e.province}·${e.city}</span></td>
-      <td><span class="pill" style="background:${rcol}1a;color:${rcol}">${e.rating}</span></td>
-      <td class="num ${alCls}">${f.asset_liability_ratio.toFixed(1)}%</td>
-      <td class="num ${ebiCls}">${f.ebitda_interest.toFixed(2)}x</td>
-      <td class="num ${opCls}">${fmt(f.op_cf,1)}</td>
-      <td class="num ${roeCls}">${f.roe.toFixed(2)}%</td>
-      <td style="font-size:11.5px;color:#b45309;min-width:200px">${flags}</td>
-    </tr>`;
+    const flags=e.risk_flags.map(x=>'• '+x).join('<br>');
+    const bd = e.idle_breakdown||{};
+    const idleTypes = Object.entries(bd).filter(([k,v])=>v>0).map(([k,v])=>k+' '+fmt(v,1)+'亿').join(' · ');
+    return '<tr><td><b>'+e.short_name+'</b><br><span style="color:#9ca3af;font-size:11px">'+e.city+'</span></td><td><span class="pill" style="background:'+rcol+'1a;color:'+rcol+'">'+e.rating+'</span></td><td class="num '+irCls+'">'+f.idle_asset_ratio.toFixed(1)+'%</td><td class="num '+irCls+'">'+fmt(f.idle_assets,1)+'</td><td style="font-size:11px;color:#64748b;max-width:200px">'+idleTypes+'</td><td class="num '+alCls+'">'+f.asset_liability_ratio.toFixed(1)+'%</td><td class="num '+opCls+'">'+fmt(f.op_cf,1)+'</td><td style="font-size:11.5px;color:#b45309;min-width:160px">'+flags+'</td></tr>';
   }).join('');
-  document.getElementById('riskTable').innerHTML =
-    `<thead><tr><th>主体</th><th>评级</th><th>资产负债率</th><th>EBITDA利保</th><th>经营现金流(亿)</th><th>ROE</th><th>风险标签</th></tr></thead><tbody>${rows}</tbody>`;
+  document.getElementById('riskTable').innerHTML = '<thead><tr><th>主体</th><th>评级</th><th>闲置率</th><th>闲置规模(亿)</th><th>闲置构成</th><th>负债率</th><th>经营现金流</th><th>风险标签</th></tr></thead><tbody>'+rows+'</tbody>';
 }
-
 function renderFoot(){
-  document.getElementById('foot').innerHTML =
-    '本页为 <b>'+DATA.meta.entity_count+'</b> 家城投主体的<b>合成模拟数据</b>演示 · 生成于 '+DATA.meta.generated_at+
-    '<br>数据驱动框架：公开披露 PDF → 结构化字段 → 多主体×多年份分析 → 看板/预警。真实数据按相同 schema 灌入即可复用。';
+  document.getElementById('foot').innerHTML = '本页为 <b>'+DATA.meta.entity_count+'</b> 家城投主体的<b>合成模拟数据</b>演示 · 生成于 '+DATA.meta.generated_at+'<br>闲置资产监测系统：分析城投公司资产闲置比例、构成、趋势与风险预警。';
 }
-
-renderNote(); renderKPI(); ratingDist(); leverageBars();
-lineChart('chartRoe','legendRoe', p=>p.roe, v=>fmt(v,1)+'%');
-lineChart('chartAssets','legendAssets', p=>p.total_assets, v=>fmt(v,0));
-riskTable(); renderFoot();
+renderNote(); renderKPI(); idleRateBars(); idleAmountBars(); idleTrendLine(); idleBreakdown(); assetVsIdle(); riskTable(); renderFoot();
 </script>
 </body>
 </html>

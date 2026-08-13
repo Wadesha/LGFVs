@@ -3,361 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>城投公司 · 小白入门指南</title>
+<title>城投闲置资产监测系统 · 模拟数据看板</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-    background: #f0f4f8;
-    color: #1e293b;
-    line-height: 1.8;
-  }
-  .wrap { max-width: 800px; margin: 0 auto; padding: 20px 16px 60px; }
-
-  /* 顶部大标题 */
-  .hero {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #0891b2 100%);
-    color: #fff;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    margin-bottom: 24px;
-    box-shadow: 0 8px 30px rgba(30,58,95,0.2);
-  }
-  .hero h1 { font-size: 28px; font-weight: 800; letter-spacing: 1px; }
-  .hero .sub { font-size: 15px; opacity: 0.85; margin-top: 8px; }
-  .hero .tag {
-    display: inline-block;
-    margin-top: 14px;
-    background: rgba(255,255,255,0.15);
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-size: 13px;
-    backdrop-filter: blur(4px);
-  }
-
-  /* 卡片通用 */
-  .card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 24px 26px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.03);
-  }
-  .card h2 {
-    font-size: 18px;
-    color: #1e3a5f;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card h2 .icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  /* 故事板 */
-  .story {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 18px 20px;
-    border-left: 4px solid #2563eb;
-    margin: 14px 0;
-    font-size: 15px;
-  }
-  .story .name {
-    display: inline-block;
-    background: #2563eb;
-    color: #fff;
-    font-size: 12px;
-    padding: 2px 12px;
-    border-radius: 12px;
-    font-weight: 700;
-    margin-right: 6px;
-  }
-
-  /* 比喻卡片 */
-  .analogy {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin: 12px 0;
-  }
-  .analogy .emoji-big { font-size: 36px; flex-shrink: 0; }
-  .analogy .text { font-size: 14px; color: #92400e; }
-  .analogy .text strong { color: #78350f; }
-
-  /* 步骤流程 */
-  .steps { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
-  .step {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 14px 16px;
-    border: 1px solid #e2e8f0;
-  }
-  .step .num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #2563eb;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-  .step .content { font-size: 14px; }
-  .step .content strong { color: #1e3a5f; }
-
-  /* 关键词高亮 */
-  .highlight { background: #dbeafe; padding: 0 4px; border-radius: 4px; font-weight: 600; color: #1e40af; }
-  .keyword {
-    display: inline-block;
-    background: #eef2ff;
-    color: #4338ca;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 2px 0;
-  }
-
-  /* 风险三色标签 */
-  .risk-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-  .risk-tag {
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .risk-green { background: #dcfce7; color: #166534; }
-  .risk-yellow { background: #fef9c3; color: #854d0e; }
-  .risk-red { background: #fee2e2; color: #991b1b; }
-
-  /* 数据展示 */
-  .data-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin: 14px 0;
-  }
-  .data-item {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 14px;
-    text-align: center;
-    border: 1px solid #e2e8f0;
-  }
-  .data-item .label { font-size: 12px; color: #64748b; }
-  .data-item .value { font-size: 20px; font-weight: 800; color: #1e3a5f; margin-top: 4px; }
-  .data-item .note { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-
-  .glossary dt { font-weight: 700; color: #1e3a5f; margin-top: 12px; font-size: 15px; }
-  .glossary dd { font-size: 14px; color: #475569; margin-left: 0; margin-top: 4px; padding-left: 12px; border-left: 3px solid #bfdbfe; }
-
-  .foot {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 12px;
-    margin-top: 30px;
-    padding-top: 16px;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  @media (max-width: 500px) {
-    .hero h1 { font-size: 22px; }
-    .card { padding: 18px; }
-  }
+  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#f0f4f8; color:#1e293b; line-height:1.6; }
+  .wrap { max-width:1200px; margin:0 auto; padding:20px 16px 48px; }
+  .header { background:linear-gradient(135deg,#0f2557 0%,#1d4ed8 100%); color:#fff; padding:28px 30px; border-radius:16px; }
+  .header h1 { font-size:24px; font-weight:800; }
+  .header .sub { opacity:.85; font-size:13px; margin-top:6px; }
+  .badge { display:inline-block; margin-top:12px; background:rgba(255,255,255,.16); padding:4px 14px; border-radius:20px; font-size:12px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:18px 0; }
+  .kpi { background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 2px 10px rgba(15,37,87,.06); }
+  .kpi .l { color:#6b7280; font-size:12px; }
+  .kpi .v { font-size:22px; font-weight:800; color:#0f2557; margin-top:4px; }
+  .kpi .s { font-size:11px; color:#9ca3af; margin-top:2px; }
+  .kpi.danger { border-left:4px solid #dc2626; }
+  .kpi.warn { border-left:4px solid #d97706; }
+  .kpi.good { border-left:4px solid #16a34a; }
+  .card { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 12px rgba(15,37,87,.06); margin-bottom:18px; }
+  .card h2 { font-size:16px; color:#0f2557; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .card .desc { font-size:12px; color:#6b7280; margin-bottom:12px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:800px){ .grid2{grid-template-columns:1fr;} }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:10px; font-size:12px; color:#374151; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .legend i { width:11px; height:11px; border-radius:3px; display:inline-block; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th { background:#f3f5fb; text-align:left; padding:8px 10px; color:#4b5563; border-bottom:2px solid #e5e7eb; font-weight:600; }
+  td { padding:8px 10px; border-bottom:1px solid #f0f2f7; vertical-align:top; }
+  tr:hover td { background:#fafbff; }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  .pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700; }
+  .good { color:#15803d; font-weight:700; } .bad { color:#b91c1c; font-weight:700; } .warn { color:#b45309; font-weight:700; }
+  .foot { text-align:center; color:#9ca3af; font-size:12px; margin-top:24px; padding-top:16px; border-top:1px solid #e5e7eb; }
+  .note { background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; font-size:12px; padding:10px 14px; border-radius:10px; margin-bottom:18px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- 顶部 -->
-  <div class="hero">
-    <h1>城投公司 · 小白入门指南</h1>
-    <div class="sub">用大白话讲清楚：城投公司是干什么的？这个项目在研究什么？</div>
-    <div class="tag">一个 "借钱修路，卖地还钱" 的故事</div>
+  <div class="header">
+    <h1>📊 城投闲置资产监测系统</h1>
+    <div class="sub">多主体 × 多年份 闲置资产数据分析 · 闲置率、构成、趋势、风险预警</div>
+    <div class="badge">⚠️ 全部为合成模拟数据，非真实披露</div>
   </div>
-
-  <!-- 第一章：什么是城投公司 -->
-  <div class="card">
-    <h2><span class="icon" style="background:#dbeafe;">🏗️</span> 城投公司到底是个啥？</h2>
-    <div class="story">
-      <span class="name">打个比方</span>
-      假设你们村想修一条路，但村里没钱。于是村长成立了一家 <strong>"xx村基础设施建设公司"</strong>，
-      这家公司去找银行借钱、去市场上发债券，把路修好了。路修好后，路边的地升值了，公司把地卖掉赚钱还债。
-      <br><br>
-      <strong>这家公司，就是"城投公司"。</strong>
+  <div class="note" id="note"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid2">
+    <div class="card">
+      <h2>📉 闲置资产率对比（最新年份）</h2>
+      <div class="desc">条形越靠右闲置越严重；&lt;5% 绿 / 5–15% 橙 / &gt;15% 红（警戒）。</div>
+      <div id="chartIdleRate"></div>
     </div>
-    <p style="font-size:14px;color:#475569;">
-      全称叫 <span class="keyword">城市建设投资公司</span> 或 <span class="keyword">地方政府融资平台</span>（英文叫 LGFV）。
-      简单说就是：<span class="highlight">地方政府自己不方便直接借钱，所以成立一家公司来帮政府借钱搞建设。</span>
-    </p>
-  </div>
-
-  <!-- 第二章：城投公司做什么 -->
-  <div class="card">
-    <h2><span class="icon" style="background:#dcfce7;">🏙️</span> 城投公司具体干什么？</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <div class="content"><strong>修路搭桥盖学校</strong> — 城市里那些公路、地铁、学校、医院、污水处理厂，很多都是城投公司建的。</div>
-      </div>
-      <div class="step">
-        <div class="num">2</div>
-        <div class="content"><strong>土地整理与开发</strong> — 把荒地变成"熟地"（通路、通电、通水），然后卖掉，地价涨了就有钱还债。</div>
-      </div>
-      <div class="step">
-        <div class="num">3</div>
-        <div class="content"><strong>发债借钱</strong> — 城投公司在市场上发行债券（就是"城投债"），大家买债券，城投公司拿到钱去搞建设。</div>
-      </div>
-      <div class="step">
-        <div class="num">4</div>
-        <div class="content"><strong>运营城市资产</strong> — 比如自来水公司、公交公司、停车场、收费公路，这些也归城投管。</div>
-      </div>
+    <div class="card">
+      <h2>💰 闲置资产规模对比（最新年份）</h2>
+      <div class="desc">各公司闲置资产总量，单位：亿元。</div>
+      <div id="chartIdleAmount"></div>
     </div>
   </div>
-
-  <!-- 第三章：什么是闲置资产 -->
   <div class="card">
-    <h2><span class="icon" style="background:#fef3c7;">❓</span> 那"闲置资产"又是什么？</h2>
-    <div class="analogy">
-      <div class="emoji-big">🏚️</div>
-      <div class="text">
-        <strong>闲置资产 = 你买了但从来不用的东西</strong><br><br>
-        比如你买了一台跑步机，买回来就挂衣服，三年没用过一次——这台跑步机就是你的"闲置资产"。<br><br>
-        城投公司也一样：修好了厂房没人租、建好了商铺空着、囤了地没开发……这些花了钱但没产生收益的，就叫 <strong>闲置资产</strong>。
-        这是城投公司面临的 <strong>大问题</strong>，因为资产闲置 = 钱白花了 = 还不上债的风险。
-      </div>
-    </div>
-    <div class="risk-tags" style="margin-top:12px;">
-      <span class="risk-tag risk-red">⚠️ 闲置资产越多，风险越大</span>
-      <span class="risk-tag risk-yellow">💰 资产不能"晒太阳"，得运转起来</span>
-      <span class="risk-tag risk-green">✅ 这个项目就是帮你看清这些风险</span>
-    </div>
+    <h2>📈 闲置资产率趋势（2020–2024）</h2>
+    <div class="desc">各公司闲置资产率年度变化趋势，反映资产利用效率的变化。</div>
+    <div id="chartIdleTrend"></div>
+    <div class="legend" id="legendIdleTrend"></div>
   </div>
-
-  <!-- 第四章：这个项目在做什么 -->
-  <div class="card">
-    <h2><span class="icon" style="background:#e0e7ff;">📊</span> 所以这个项目到底在研究什么？</h2>
-    <p style="font-size:14px;color:#475569;margin-bottom:12px;">
-      一句话：<span class="highlight">把城投公司公开的财务报告（PDF文件）里的数据扒出来，做成表格和图表，方便比较和判断风险。</span>
-    </p>
-    <div class="steps">
-      <div class="step">
-        <div class="num">①</div>
-        <div class="content"><strong>收数据</strong> — 从网上收集城投公司公开的财务报告（PDF 文件），比如山东 28 个城市、100 多家公司的报告。</div>
-      </div>
-      <div class="step">
-        <div class="num">②</div>
-        <div class="content"><strong>转成表格</strong> — 把 PDF 里的数字（总资产、负债、利润等）提取出来，变成结构化的数据，就像 Excel 表格一样。</div>
-      </div>
-      <div class="step">
-        <div class="num">③</div>
-        <div class="content"><strong>分析风险</strong> — 看哪些公司负债太高、哪些公司赚钱太少、哪些公司现金流为负（入不敷出），自动打上风险标签。</div>
-      </div>
-      <div class="step">
-        <div class="num">④</div>
-        <div class="content"><strong>展示看板</strong> — 用图表把结果展示出来，一目了然，方便投资者做判断。</div>
-      </div>
+  <div class="grid2">
+    <div class="card">
+      <h2>🧩 闲置资产构成明细（最新年份）</h2>
+      <div class="desc">各公司闲置资产按类型拆分（闲置土地、空置房产、未运营设施、在建停工、低效股权）。</div>
+      <div id="chartIdleBreakdown"></div>
+    </div>
+    <div class="card">
+      <h2>🏢 总资产 vs 闲置资产（最新年份）</h2>
+      <div class="desc">总资产规模与闲置资产规模的对比，气泡大小代表闲置率。</div>
+      <div id="chartAssetVsIdle"></div>
     </div>
   </div>
-
-  <!-- 第五章：看几个关键指标（大白话版） -->
   <div class="card">
-    <h2><span class="icon" style="background:#fce7f3;">📌</span> 重点看哪些数字？（小白版）</h2>
-    <div class="data-grid">
-      <div class="data-item">
-        <div class="label">总资产</div>
-        <div class="value">💰</div>
-        <div class="note">公司有多少家底，越大越好</div>
-      </div>
-      <div class="data-item">
-        <div class="label">资产负债率</div>
-        <div class="value">⚖️</div>
-        <div class="note">借钱占资产的比重，<span style="color:#dc2626;">超过70%要小心</span></div>
-      </div>
-      <div class="data-item">
-        <div class="label">净利润</div>
-        <div class="value">📈</div>
-        <div class="note">一年赚了多少钱，正数才健康</div>
-      </div>
-      <div class="data-item">
-        <div class="label">经营现金流</div>
-        <div class="value">💧</div>
-        <div class="note">靠业务赚到的现金，<span style="color:#dc2626;">负数=入不敷出</span></div>
-      </div>
-    </div>
-    <div class="analogy" style="margin-top:14px;">
-      <div class="emoji-big">🧠</div>
-      <div class="text">
-        <strong>简单判断法：</strong><br>
-        🔴 资产负债率 > 70% = 借钱太多，危险<br>
-        🔴 经营现金流 < 0 = 赚的钱不够花，危险<br>
-        🔴 EBITDA 利保 < 1.5倍 = 赚的钱不够还利息，危险<br>
-        🟢 以上都正常 = 这家公司目前比较健康
-      </div>
-    </div>
+    <h2>🚩 风险预警汇总（含闲置资产专项）</h2>
+    <div class="desc">综合财务指标 + 闲置资产风险标签。</div>
+    <div style="overflow-x:auto;"><table id="riskTable"></table></div>
   </div>
-
-  <!-- 第六章：常见词解释 -->
-  <div class="card">
-    <h2><span class="icon" style="background:#e0f2fe;">📖</span> 常见词解释（看不懂随时回来看）</h2>
-    <dl class="glossary">
-      <dt>🏛️ 城投公司 / LGFV</dt>
-      <dd>地方政府融资平台，帮政府借钱搞建设的公司。</dd>
-      <dt>📄 城投债</dt>
-      <dd>城投公司发行的债券，你买债券 = 借钱给城投公司，它给你利息。</dd>
-      <dt>📊 资产负债率</dt>
-      <dd>总负债 ÷ 总资产。好比你有 100 万资产，其中 70 万是借的，那你的资产负债率就是 70%。</dd>
-      <dt>💧 经营现金流</dt>
-      <dd>公司靠正常业务收进来的现金，减去花出去的现金。正数 = 有造血能力，负数 = 在吃老本。</dd>
-      <dt>🏚️ 闲置资产</dt>
-      <dd>建好了但没用起来、没产生收益的资产（空厂房、烂尾楼、未开发的土地等）。</dd>
-      <dt>⭐ 主体评级</dt>
-      <dd>评级公司给城投公司打的信用分。AAA 最高（最安全），AA、A 依次降低。</dd>
-      <dt>📋 募集说明书</dt>
-      <dd>城投公司发债时写的说明书，里面详细介绍了公司情况、财务数据、募集资金用途等。</dd>
-    </dl>
-  </div>
-
-  <!-- 第七章：数据来源 -->
-  <div class="card">
-    <h2><span class="icon" style="background:#f0fdf4;">🔍</span> 这些数据从哪来的？</h2>
-    <p style="font-size:14px;color:#475569;">
-      所有数据都来自 <strong>公开披露</strong> 的 PDF 文件，任何人都可以在中国债券信息网（chinamoney.com.cn）、
-      巨潮资讯网（cninfo.com.cn）等网站上免费看到。这个项目只是把这些公开信息收集起来，
-      整理成更容易分析的格式。<br><br>
-      <span style="background:#fef3c7;padding:2px 8px;border-radius:6px;font-size:13px;">
-        ⚠️ 本页面展示的是模拟数据，不是真实数据，仅用于演示。
-      </span>
-    </p>
-  </div>
-
-  <!-- 底部 -->
-  <div class="foot">
-    城投公司信用研究框架 · 数据驱动 · 公开披露信息整理<br>
-    页面内数据为合成模拟数据，仅用于演示，不构成投资建议。
-  </div>
-
+  <div class="foot" id="foot"></div>
 </div>
+<script>
+const DATA = {"meta": {"note": "合成模拟数据，非真实披露；仅用于演示本项目分析框架。", "seed": 20260802, "generated_at": "2026-08-13", "years": [2020, 2021, 2022, 2023, 2024], "entity_count": 8, "source": "data/mock/generate_mock_data.py"}, "entities": [{"id": "sh", "short_name": "沪城投", "full_name": "上海示范城投(集团)有限公司", "province": "上海市", "city": "上海市", "rating": "AAA", "industry": "城市基础设施建设与公用事业", "series": [{"year": 2020, "total_assets": 3466.0, "total_liabilities": 1936.8, "asset_liability_ratio": 55.88, "operating_revenue": 251.1, "net_profit": 37.2, "roe": 2.43, "ebitda_interest": 5.33, "op_cf": 54.5, "current_ratio": 1.46, "quick_ratio": 0.52, "idle_assets": 197.9, "idle_asset_ratio": 5.71}, {"year": 2021, "total_assets": 3771.1, "total_liabilities": 2061.6, "asset_liability_ratio": 54.67, "operating_revenue": 263.3, "net_profit": 57.47, "roe": 3.36, "ebitda_interest": 3.98, "op_cf": 107.1, "current_ratio": 1.56, "quick_ratio": 0.78, "idle_assets": 159.9, "idle_asset_ratio": 4.24}, {"year": 2022, "total_assets": 4031.5, "total_liabilities": 2148.0, "asset_liability_ratio": 53.28, "operating_revenue": 435.8, "net_profit": 48.06, "roe": 2.55, "ebitda_interest": 5.02, "op_cf": 118.5, "current_ratio": 1.61, "quick_ratio": 0.52, "idle_assets": 328.3, "idle_asset_ratio": 8.14}, {"year": 2023, "total_assets": 4354.2, "total_liabilities": 2366.5, "asset_liability_ratio": 54.35, "operating_revenue": 316.8, "net_profit": 42.52, "roe": 2.14, "ebitda_interest": 4.77, "op_cf": 116.2, "current_ratio": 1.56, "quick_ratio": 0.65, "idle_assets": 481.4, "idle_asset_ratio": 11.06}, {"year": 2024, "total_assets": 4772.2, "total_liabilities": 2552.6, "asset_liability_ratio": 53.49, "operating_revenue": 323.4, "net_profit": 84.95, "roe": 3.83, "ebitda_interest": 4.04, "op_cf": 124.0, "current_ratio": 1.46, "quick_ratio": 0.68, "idle_assets": 276.3, "idle_asset_ratio": 5.79}], "risk_flags": ["各项指标处于健康区间"], "idle_breakdown": {"未运营设施": 110.6, "空置房产": 93.7, "低效股权": 33.4, "在建停工": 38.60000000000002}}, {"id": "cd", "short_name": "蓉城建设", "full_name": "成都城市建设投资集团有限责任公司", "province": "四川省", "city": "成都市", "rating": "AAA", "industry": "城市基础设施与运营", "series": [{"year": 2020, "total_assets": 3592.0, "total_liabilities": 2064.0, "asset_liability_ratio": 57.46, "operating_revenue": 321.4, "net_profit": 33.78, "roe": 2.21, "ebitda_interest": 5.83, "op_cf": 146.4, "current_ratio": 1.57, "quick_ratio": 0.57, "idle_assets": 354.9, "idle_asset_ratio": 9.88}, {"year": 2021, "total_assets": 3948.3, "total_liabilities": 2278.1, "asset_liability_ratio": 57.7, "operating_revenue": 393.2, "net_profit": 55.2, "roe": 3.3, "ebitda_interest": 4.75, "op_cf": 97.5, "current_ratio": 1.53, "quick_ratio": 0.76, "idle_assets": 149.0, "idle_asset_ratio": 3.77}, {"year": 2022, "total_assets": 4316.1, "total_liabilities": 2517.6, "asset_liability_ratio": 58.33, "operating_revenue": 414.4, "net_profit": 40.62, "roe": 2.26, "ebitda_interest": 4.62, "op_cf": 175.7, "current_ratio": 1.62, "quick_ratio": 0.95, "idle_assets": 264.4, "idle_asset_ratio": 6.13}, {"year": 2023, "total_assets": 4547.1, "total_liabilities": 2628.2, "asset_liability_ratio": 57.8, "operating_revenue": 300.4, "net_profit": 82.09, "roe": 4.28, "ebitda_interest": 4.5, "op_cf": 43.8, "current_ratio": 1.74, "quick_ratio": 0.93, "idle_assets": 205.0, "idle_asset_ratio": 4.51}, {"year": 2024, "total_assets": 4759.4, "total_liabilities": 2813.3, "asset_liability_ratio": 59.11, "operating_revenue": 448.3, "net_profit": 56.84, "roe": 2.92, "ebitda_interest": 3.48, "op_cf": 86.4, "current_ratio": 1.77, "quick_ratio": 1.01, "idle_assets": 263.2, "idle_asset_ratio": 5.53}], "risk_flags": ["各项指标处于健康区间"], "idle_breakdown": {"闲置土地": 74.0, "未运营设施": 69.4, "低效股权": 18.3, "空置房产": 101.49999999999997}}, {"id": "gz", "short_name": "穗城建设", "full_name": "广州城投集团有限公司", "province": "广东省", "city": "广州市", "rating": "AAA", "industry": "城市基建与土地开发", "series": [{"year": 2020, "total_assets": 2757.0, "total_liabilities": 1570.7, "asset_liability_ratio": 56.97, "operating_revenue": 399.3, "net_profit": 46.81, "roe": 3.95, "ebitda_interest": 3.39, "op_cf": 125.6, "current_ratio": 1.54, "quick_ratio": 0.54, "idle_assets": 185.8, "idle_asset_ratio": 6.74}, {"year": 2021, "total_assets": 2886.0, "total_liabilities": 1675.3, "asset_liability_ratio": 58.05, "operating_revenue": 341.3, "net_profit": 25.89, "roe": 2.14, "ebitda_interest": 4.89, "op_cf": 166.6, "current_ratio": 1.52, "quick_ratio": 0.88, "idle_assets": 109.5, "idle_asset_ratio": 3.79}, {"year": 2022, "total_assets": 3145.7, "total_liabilities": 1786.5, "asset_liability_ratio": 56.79, "operating_revenue": 369.4, "net_profit": 47.3, "roe": 3.48, "ebitda_interest": 5.29, "op_cf": 25.7, "current_ratio": 1.53, "quick_ratio": 0.57, "idle_assets": 285.4, "idle_asset_ratio": 9.07}, {"year": 2023, "total_assets": 3357.8, "total_liabilities": 1931.4, "asset_liability_ratio": 57.52, "operating_revenue": 389.9, "net_profit": 46.13, "roe": 3.23, "ebitda_interest": 4.28, "op_cf": 71.5, "current_ratio": 1.46, "quick_ratio": 0.79, "idle_assets": 191.0, "idle_asset_ratio": 5.69}, {"year": 2024, "total_assets": 3479.5, "total_liabilities": 2039.7, "asset_liability_ratio": 58.62, "operating_revenue": 405.4, "net_profit": 36.03, "roe": 2.5, "ebitda_interest": 3.99, "op_cf": 54.4, "current_ratio": 1.53, "quick_ratio": 0.79, "idle_assets": 286.9, "idle_asset_ratio": 8.25}], "risk_flags": ["各项指标处于健康区间"], "idle_breakdown": {"低效股权": 150.2, "未运营设施": 136.7}}, {"id": "wh", "short_name": "江城投资", "full_name": "武汉城市发展投资集团有限责任公司", "province": "湖北省", "city": "武汉市", "rating": "AA+", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 1464.0, "total_liabilities": 954.1, "asset_liability_ratio": 65.17, "operating_revenue": 137.3, "net_profit": 6.84, "roe": 1.34, "ebitda_interest": 4.35, "op_cf": 99.8, "current_ratio": 1.32, "quick_ratio": 0.66, "idle_assets": 155.3, "idle_asset_ratio": 10.61}, {"year": 2021, "total_assets": 1589.4, "total_liabilities": 1036.1, "asset_liability_ratio": 65.19, "operating_revenue": 202.9, "net_profit": 8.25, "roe": 1.49, "ebitda_interest": 2.26, "op_cf": 40.9, "current_ratio": 1.26, "quick_ratio": 0.38, "idle_assets": 193.7, "idle_asset_ratio": 12.19}, {"year": 2022, "total_assets": 1651.9, "total_liabilities": 1068.4, "asset_liability_ratio": 64.68, "operating_revenue": 302.1, "net_profit": 18.11, "roe": 3.1, "ebitda_interest": 3.18, "op_cf": 16.7, "current_ratio": 1.38, "quick_ratio": 0.62, "idle_assets": 288.4, "idle_asset_ratio": 17.46}, {"year": 2023, "total_assets": 1707.4, "total_liabilities": 1093.7, "asset_liability_ratio": 64.06, "operating_revenue": 187.7, "net_profit": 14.04, "roe": 2.29, "ebitda_interest": 1.94, "op_cf": -13.3, "current_ratio": 1.39, "quick_ratio": 0.75, "idle_assets": 395.1, "idle_asset_ratio": 23.14}, {"year": 2024, "total_assets": 1805.8, "total_liabilities": 1144.2, "asset_liability_ratio": 63.36, "operating_revenue": 216.4, "net_profit": 12.69, "roe": 1.92, "ebitda_interest": 2.84, "op_cf": 119.2, "current_ratio": 1.5, "quick_ratio": 0.81, "idle_assets": 472.3, "idle_asset_ratio": 26.15}], "risk_flags": ["闲置资产率超15%，资产利用效率低"], "idle_breakdown": {"在建停工": 23.6, "未运营设施": 23.4, "低效股权": 425.3}}, {"id": "tj", "short_name": "滨海建投", "full_name": "天津滨海新区建设投资集团", "province": "天津市", "city": "天津市", "rating": "AA+", "industry": "城市开发与园区建设", "series": [{"year": 2020, "total_assets": 1611.0, "total_liabilities": 963.4, "asset_liability_ratio": 59.8, "operating_revenue": 222.0, "net_profit": 13.76, "roe": 2.13, "ebitda_interest": 2.87, "op_cf": 118.6, "current_ratio": 1.19, "quick_ratio": 0.36, "idle_assets": 182.2, "idle_asset_ratio": 11.31}, {"year": 2021, "total_assets": 1720.4, "total_liabilities": 1040.2, "asset_liability_ratio": 60.46, "operating_revenue": 187.1, "net_profit": 16.56, "roe": 2.43, "ebitda_interest": 2.78, "op_cf": -38.6, "current_ratio": 1.1, "quick_ratio": 0.6, "idle_assets": 337.6, "idle_asset_ratio": 19.62}, {"year": 2022, "total_assets": 1824.7, "total_liabilities": 1125.7, "asset_liability_ratio": 61.69, "operating_revenue": 219.6, "net_profit": 23.35, "roe": 3.34, "ebitda_interest": 3.55, "op_cf": -17.9, "current_ratio": 1.12, "quick_ratio": 0.67, "idle_assets": 218.1, "idle_asset_ratio": 11.95}, {"year": 2023, "total_assets": 1899.6, "total_liabilities": 1153.4, "asset_liability_ratio": 60.72, "operating_revenue": 165.1, "net_profit": 11.4, "roe": 1.53, "ebitda_interest": 2.98, "op_cf": -22.8, "current_ratio": 1.19, "quick_ratio": 0.49, "idle_assets": 436.9, "idle_asset_ratio": 23.0}, {"year": 2024, "total_assets": 2057.8, "total_liabilities": 1262.5, "asset_liability_ratio": 61.35, "operating_revenue": 151.0, "net_profit": 23.12, "roe": 2.91, "ebitda_interest": 2.07, "op_cf": 85.5, "current_ratio": 1.3, "quick_ratio": 0.46, "idle_assets": 236.8, "idle_asset_ratio": 11.51}], "risk_flags": ["速动比率<0.6，资产流动性弱"], "idle_breakdown": {"空置房产": 175.0, "未运营设施": 33.3, "闲置土地": 28.5}}, {"id": "km", "short_name": "滇中开发", "full_name": "昆明滇中开发投资集团", "province": "云南省", "city": "昆明市", "rating": "AA", "industry": "园区开发与基建", "series": [{"year": 2020, "total_assets": 812.0, "total_liabilities": 500.8, "asset_liability_ratio": 61.67, "operating_revenue": 165.8, "net_profit": 5.06, "roe": 1.63, "ebitda_interest": 1.58, "op_cf": 22.4, "current_ratio": 1.5, "quick_ratio": 0.56, "idle_assets": 149.1, "idle_asset_ratio": 18.36}, {"year": 2021, "total_assets": 846.9, "total_liabilities": 530.2, "asset_liability_ratio": 62.61, "operating_revenue": 100.1, "net_profit": 7.88, "roe": 2.49, "ebitda_interest": 2.21, "op_cf": -26.1, "current_ratio": 1.58, "quick_ratio": 0.54, "idle_assets": 174.0, "idle_asset_ratio": 20.54}, {"year": 2022, "total_assets": 918.5, "total_liabilities": 561.4, "asset_liability_ratio": 61.12, "operating_revenue": 192.6, "net_profit": 4.23, "roe": 1.18, "ebitda_interest": 1.68, "op_cf": 34.5, "current_ratio": 1.48, "quick_ratio": 0.62, "idle_assets": 347.2, "idle_asset_ratio": 37.8}, {"year": 2023, "total_assets": 959.8, "total_liabilities": 597.8, "asset_liability_ratio": 62.28, "operating_revenue": 184.7, "net_profit": 4.72, "roe": 1.3, "ebitda_interest": 2.11, "op_cf": -1.6, "current_ratio": 1.59, "quick_ratio": 0.59, "idle_assets": 263.2, "idle_asset_ratio": 27.42}, {"year": 2024, "total_assets": 1047.0, "total_liabilities": 655.1, "asset_liability_ratio": 62.57, "operating_revenue": 126.6, "net_profit": 5.44, "roe": 1.39, "ebitda_interest": 2.14, "op_cf": 1.4, "current_ratio": 1.69, "quick_ratio": 0.62, "idle_assets": 392.5, "idle_asset_ratio": 37.49}], "risk_flags": ["闲置资产率超15%，资产利用效率低", "闲置资产率超30%，资产闲置问题严重"], "idle_breakdown": {"空置房产": 149.3, "低效股权": 243.2}}, {"id": "cs", "short_name": "星城发展", "full_name": "长沙城市发展集团有限责任公司", "province": "湖南省", "city": "长沙市", "rating": "AA", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 570.0, "total_liabilities": 399.9, "asset_liability_ratio": 70.16, "operating_revenue": 118.7, "net_profit": 2.38, "roe": 1.4, "ebitda_interest": 1.61, "op_cf": 18.2, "current_ratio": 0.89, "quick_ratio": 0.4, "idle_assets": 138.6, "idle_asset_ratio": 24.32}, {"year": 2021, "total_assets": 625.8, "total_liabilities": 445.0, "asset_liability_ratio": 71.11, "operating_revenue": 96.1, "net_profit": 4.14, "roe": 2.29, "ebitda_interest": 1.95, "op_cf": -47.8, "current_ratio": 0.87, "quick_ratio": 0.38, "idle_assets": 180.3, "idle_asset_ratio": 28.81}, {"year": 2022, "total_assets": 648.3, "total_liabilities": 470.0, "asset_liability_ratio": 72.5, "operating_revenue": 97.9, "net_profit": 2.06, "roe": 1.16, "ebitda_interest": 2.41, "op_cf": 13.8, "current_ratio": 0.76, "quick_ratio": 0.23, "idle_assets": 133.2, "idle_asset_ratio": 20.55}, {"year": 2023, "total_assets": 691.0, "total_liabilities": 502.7, "asset_liability_ratio": 72.75, "operating_revenue": 184.4, "net_profit": 3.56, "roe": 1.89, "ebitda_interest": 2.53, "op_cf": -77.2, "current_ratio": 0.75, "quick_ratio": 0.24, "idle_assets": 278.5, "idle_asset_ratio": 40.3}, {"year": 2024, "total_assets": 739.3, "total_liabilities": 527.1, "asset_liability_ratio": 71.3, "operating_revenue": 183.0, "net_profit": 3.76, "roe": 1.77, "ebitda_interest": 1.5, "op_cf": 12.6, "current_ratio": 0.66, "quick_ratio": 0.37, "idle_assets": 248.8, "idle_asset_ratio": 33.65}], "risk_flags": ["资产负债率超70%，杠杆偏高", "流动比率偏低，短债压力较大", "速动比率<0.6，资产流动性弱", "闲置资产率超15%，资产利用效率低", "闲置资产率超30%，资产闲置问题严重"], "idle_breakdown": {"在建停工": 91.9, "低效股权": 62.2, "未运营设施": 94.69999999999999}}, {"id": "lz", "short_name": "金城建发", "full_name": "兰州金城建设发展集团", "province": "甘肃省", "city": "兰州市", "rating": "AA-", "industry": "城市基础设施建设", "series": [{"year": 2020, "total_assets": 637.0, "total_liabilities": 431.0, "asset_liability_ratio": 67.66, "operating_revenue": 42.6, "net_profit": 2.8, "roe": 1.36, "ebitda_interest": 1.13, "op_cf": -20.9, "current_ratio": 0.95, "quick_ratio": 0.46, "idle_assets": 211.4, "idle_asset_ratio": 33.18}, {"year": 2021, "total_assets": 681.0, "total_liabilities": 461.0, "asset_liability_ratio": 67.69, "operating_revenue": 118.8, "net_profit": 2.85, "roe": 1.3, "ebitda_interest": 1.54, "op_cf": -3.0, "current_ratio": 0.86, "quick_ratio": 0.5, "idle_assets": 274.2, "idle_asset_ratio": 40.27}, {"year": 2022, "total_assets": 716.1, "total_liabilities": 476.0, "asset_liability_ratio": 66.48, "operating_revenue": 72.1, "net_profit": 2.52, "roe": 1.05, "ebitda_interest": 1.6, "op_cf": -31.9, "current_ratio": 0.76, "quick_ratio": 0.35, "idle_assets": 344.9, "idle_asset_ratio": 48.16}, {"year": 2023, "total_assets": 745.8, "total_liabilities": 487.1, "asset_liability_ratio": 65.31, "operating_revenue": 63.8, "net_profit": 2.6, "roe": 1.0, "ebitda_interest": 1.25, "op_cf": -25.2, "current_ratio": 0.67, "quick_ratio": 0.28, "idle_assets": 402.0, "idle_asset_ratio": 53.9}, {"year": 2024, "total_assets": 783.4, "total_liabilities": 500.8, "asset_liability_ratio": 63.93, "operating_revenue": 117.4, "net_profit": 3.0, "roe": 1.06, "ebitda_interest": 1.5, "op_cf": 14.8, "current_ratio": 0.63, "quick_ratio": 0.21, "idle_assets": 247.7, "idle_asset_ratio": 31.62}], "risk_flags": ["流动比率偏低，短债压力较大", "速动比率<0.6，资产流动性弱", "闲置资产率超15%，资产利用效率低", "闲置资产率超30%，资产闲置问题严重"], "idle_breakdown": {"低效股权": 77.7, "空置房产": 170.0}}]};
+const COLORS = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#65a30d'];
+const IDLE_COLORS = {'闲置土地':'#d97706','空置房产':'#dc2626','未运营设施':'#7c3aed','在建停工':'#0891b2','低效股权':'#65a30d'};
+const YEARS = DATA.meta.years;
+const ENTS = DATA.entities;
+const fmt = (n,d=1)=> Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const svg = (w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block">`;
+function renderNote(){
+  document.getElementById('note').textContent = '说明：' + DATA.meta.note + ' 生成日期 ' + DATA.meta.generated_at + ' · 样本 ' + DATA.meta.entity_count + ' 家 · 年份 ' + YEARS[0] + '\u2013' + YEARS[YEARS.length-1];
+}
+function renderKPI(){
+  const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const totalIdle = last.reduce((s,e)=>s+e.idle_assets,0);
+  const totalAssets = last.reduce((s,e)=>s+e.total_assets,0);
+  const avgIdleRate = last.reduce((s,e)=>s+e.idle_asset_ratio,0)/last.length;
+  const maxIdle = Math.max(...last.map(e=>e.idle_asset_ratio));
+  const maxName = ENTS[last.findIndex(e=>e.idle_asset_ratio===maxIdle)].short_name;
+  const highRisk = ENTS.filter(e=>e.series[e.series.length-1].idle_asset_ratio>15).length;
+  const cards = [
+    {l:'闲置资产合计', v:fmt(totalIdle,0)+'亿', s:'占全部资产 '+((totalIdle/totalAssets)*100).toFixed(1)+'%', cls:'danger'},
+    {l:'平均闲置资产率', v:fmt(avgIdleRate,1)+'%', s:'行业参考 <5%', cls: avgIdleRate>15?'danger':(avgIdleRate>5?'warn':'good')},
+    {l:'最高闲置率', v:fmt(maxIdle,1)+'%', s:maxName, cls:'danger'},
+    {l:'闲置高风险主体', v:highRisk+'家', s:'闲置率>15%', cls:highRisk>0?'danger':'good'},
+  ];
+  document.getElementById('kpis').innerHTML = cards.map(c=>'<div class="kpi '+(c.cls||'')+'"><div class="l">'+c.l+'</div><div class="v">'+c.v+'</div><div class="s">'+c.s+'</div></div>').join('');
+}
+function idleRateBars(){
+  const W=600, rowH=36, padL=82, padR=60, H=ENTS.length*rowH+16;
+  const maxScale=55, innerW=W-padL-padR;
+  let s=svg(W,H);
+  ENTS.forEach((e,i)=>{
+    const ir=e.series[e.series.length-1].idle_asset_ratio;
+    const y=8+i*rowH, bh=20;
+    const col= ir>15?'#dc2626':(ir>5?'#d97706':'#15803d');
+    const bw=Math.max(2, ir/maxScale*innerW);
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2+4)+'" text-anchor="end" font-size="12" fill="#374151">'+e.short_name+'</text>';
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2-7)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+e.rating+'</text>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+innerW+'" height="'+bh+'" rx="4" fill="#eef2f7"/>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+col+'" opacity="0.85"/>';
+    s+='<text x="'+(padL+bw+8)+'" y="'+(y+bh/2+4)+'" font-size="12" font-weight="700" fill="'+col+'">'+ir.toFixed(1)+'%</text>';
+  });
+  const warnX = padL + 15/maxScale*innerW;
+  const dangerX = padL + 5/maxScale*innerW;
+  s+='<line x1="'+warnX+'" y1="0" x2="'+warnX+'" y2="'+H+'" stroke="#dc2626" stroke-dasharray="4,3" stroke-width="1.5"/>';
+  s+='<text x="'+(warnX+4)+'" y="12" font-size="10" fill="#dc2626">15%警戒</text>';
+  s+='<line x1="'+dangerX+'" y1="0" x2="'+dangerX+'" y2="'+H+'" stroke="#d97706" stroke-dasharray="4,3" stroke-width="1.5"/>';
+  s+='<text x="'+(dangerX+4)+'" y="12" font-size="10" fill="#d97706">5%参考</text>';
+  s+='</svg>';
+  document.getElementById('chartIdleRate').innerHTML=s;
+}
+function idleAmountBars(){
+  const W=600, rowH=36, padL=82, padR=70, H=ENTS.length*rowH+16;
+  const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const maxAmt = Math.max(...last.map(e=>e.idle_assets));
+  const innerW=W-padL-padR;
+  let s=svg(W,H);
+  ENTS.forEach((e,i)=>{
+    const ia = e.series[e.series.length-1].idle_assets;
+    const y=8+i*rowH, bh=20;
+    const col=COLORS[i%COLORS.length];
+    const bw=Math.max(2, ia/maxAmt*innerW);
+    s+='<text x="'+(padL-10)+'" y="'+(y+bh/2+4)+'" text-anchor="end" font-size="12" fill="#374151">'+e.short_name+'</text>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+innerW+'" height="'+bh+'" rx="4" fill="#eef2f7"/>';
+    s+='<rect x="'+padL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+col+'" opacity="0.85"/>';
+    s+='<text x="'+(padL+bw+8)+'" y="'+(y+bh/2+4)+'" font-size="12" font-weight="700" fill="'+col+'">'+fmt(ia,1)+'</text>';
+  });
+  s+='</svg>';
+  document.getElementById('chartIdleAmount').innerHTML=s;
+}
+function idleTrendLine(){
+  const W=700,H=340, pad={l:58,r:18,t:16,b:36};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const series = ENTS.map((e,i)=>({name:e.short_name, color:COLORS[i%COLORS.length], points:e.series.map(p=>({v:p.idle_asset_ratio}))}));
+  let allv=[]; series.forEach(s=>s.points.forEach(p=>allv.push(p.v)));
+  let min=Math.min(...allv), max=Math.max(...allv);
+  min=Math.max(0,min-2); max+=5;
+  const x=i=> pad.l + (YEARS.length===1?iw/2: iw*i/(YEARS.length-1));
+  const y=v=> pad.t + ih - ih*(v-min)/(max-min);
+  let s=svg(W,H);
+  for(let g=0;g<=4;g++){ const val=min+(max-min)*g/4, yy=y(val);
+    s+='<line x1="'+pad.l+'" y1="'+yy.toFixed(1)+'" x2="'+(W-pad.r)+'" y2="'+yy.toFixed(1)+'" stroke="#eef2f7"/>';
+    s+='<text x="'+(pad.l-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+val.toFixed(1)+'%</text>'; }
+  YEARS.forEach((yr,i)=> s+='<text x="'+x(i)+'" y="'+(H-pad.b+18)+'" text-anchor="middle" font-size="10" fill="#9ca3af">'+yr+'</text>');
+  const warnY = y(15); s+='<line x1="'+pad.l+'" y1="'+warnY+'" x2="'+(W-pad.r)+'" y2="'+warnY+'" stroke="#dc2626" stroke-dasharray="4,3" stroke-width="1.2"/>';
+  s+='<text x="'+(W-pad.r-50)+'" y="'+(warnY-4)+'" font-size="10" fill="#dc2626">15%警戒</text>';
+  series.forEach(se=>{
+    const d=se.points.map((p,i)=>''+(i?'L':'M')+x(i).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+    s+='<path d="'+d+'" fill="none" stroke="'+se.color+'" stroke-width="2"/>';
+    se.points.forEach((p,i)=> s+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(p.v).toFixed(1)+'" r="2.6" fill="'+se.color+'"/>');
+  });
+  s+='</svg>';
+  document.getElementById('chartIdleTrend').innerHTML=s;
+  document.getElementById('legendIdleTrend').innerHTML=series.map(se=>'<span><i style="background:'+se.color+'"></i>'+se.name+'</span>').join('');
+}
+function idleBreakdown(){
+  const W=700,H=ENTS.length*28+30, padL=82, barW=W-padL-140;
+  let s=svg(W,H);
+  const types = Object.keys(IDLE_COLORS);
+  ENTS.forEach((e,i)=>{
+    const y=10+i*28;
+    s+='<text x="'+(padL-10)+'" y="'+(y+14)+'" text-anchor="end" font-size="11" fill="#374151">'+e.short_name+'</text>';
+    const bd = e.idle_breakdown||{};
+    const total = Object.values(bd).reduce((a,b)=>a+b,0)||1;
+    let cx=padL;
+    const rate = e.series[e.series.length-1].idle_asset_ratio;
+    types.forEach(t=>{
+      const val = bd[t]||0;
+      const w = (val/total)*barW;
+      if(w>1){ s+='<rect x="'+cx+'" y="'+(y+4)+'" width="'+w+'" height="16" rx="3" fill="'+IDLE_COLORS[t]+'" opacity="0.85"/>'; cx+=w; }
+    });
+    s+='<text x="'+(padL+barW+8)+'" y="'+(y+14)+'" font-size="11" fill="#64748b">'+fmt(rate,1)+'%</text>';
+  });
+  let lx=padL, ly=H-10;
+  types.forEach((t,j)=>{
+    s+='<rect x="'+lx+'" y="'+(ly-8)+'" width="12" height="12" rx="2" fill="'+IDLE_COLORS[t]+'"/>';
+    s+='<text x="'+(lx+16)+'" y="'+(ly+2)+'" font-size="10" fill="#475569">'+t+'</text>';
+    lx += 16 + t.length*12 + 12;
+  });
+  s+='</svg>';
+  document.getElementById('chartIdleBreakdown').innerHTML=s;
+}
+function assetVsIdle(){
+  const W=660,H=400, pad={l:60,r:30,t:24,b:44};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const last = ENTS.map(e=>e.series[e.series.length-1]);
+  const maxA = Math.max(...last.map(e=>e.total_assets));
+  const maxI = Math.max(...last.map(e=>e.idle_assets));
+  let s=svg(W,H);
+  for(let g=0;g<=4;g++){
+    const x=pad.l+iw*g/4, y=pad.t+ih*g/4;
+    s+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(W-pad.r)+'" y2="'+y+'" stroke="#eef2f7"/>';
+    s+='<line x1="'+x+'" y1="'+pad.t+'" x2="'+x+'" y2="'+(H-pad.b)+'" stroke="#eef2f7"/>';
+    s+='<text x="'+x+'" y="'+(H-pad.b+18)+'" text-anchor="middle" font-size="9" fill="#9ca3af">'+(maxA*g/4).toFixed(0)+'</text>';
+    s+='<text x="'+(pad.l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="#9ca3af">'+(maxI*g/4).toFixed(0)+'</text>';
+  }
+  s+='<text x="'+(W/2)+'" y="'+(H-6)+'" text-anchor="middle" font-size="11" fill="#64748b">总资产（亿元）</text>';
+  s+='<text x="10" y="'+(H/2)+'" text-anchor="middle" font-size="11" fill="#64748b" transform="rotate(-90,10,'+(H/2)+')">闲置资产（亿元）</text>';
+  ENTS.forEach((e,i)=>{
+    const f = e.series[e.series.length-1];
+    const cx = pad.l + (f.total_assets/maxA)*iw;
+    const cy = pad.t + ih - (f.idle_assets/maxI)*ih;
+    const r = 6 + (f.idle_asset_ratio/30)*20;
+    const col = f.idle_asset_ratio>15?'#dc2626':(f.idle_asset_ratio>5?'#d97706':'#16a34a');
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+col+'" opacity="0.7" stroke="#fff" stroke-width="1.5"/>';
+    s+='<text x="'+cx+'" y="'+(cy-r-8)+'" text-anchor="middle" font-size="10" fill="#374151">'+e.short_name+'</text>';
+  });
+  s+='</svg>';
+  document.getElementById('chartAssetVsIdle').innerHTML=s;
+}
+function riskTable(){
+  const rows=ENTS.map(e=>{
+    const f=e.series[e.series.length-1];
+    const irCls= f.idle_asset_ratio>15?'bad':(f.idle_asset_ratio>5?'warn':'good');
+    const alCls= f.asset_liability_ratio>70?'bad':(f.asset_liability_ratio>55?'warn':'good');
+    const opCls= f.op_cf<0?'bad':'good';
+    const rcol={'AAA':'#15803d','AA+':'#2563eb','AA':'#d97706','AA-':'#dc2626'}[e.rating];
+    const flags=e.risk_flags.map(x=>'• '+x).join('<br>');
+    const bd = e.idle_breakdown||{};
+    const idleTypes = Object.entries(bd).filter(([k,v])=>v>0).map(([k,v])=>k+' '+fmt(v,1)+'亿').join(' · ');
+    return '<tr><td><b>'+e.short_name+'</b><br><span style="color:#9ca3af;font-size:11px">'+e.city+'</span></td><td><span class="pill" style="background:'+rcol+'1a;color:'+rcol+'">'+e.rating+'</span></td><td class="num '+irCls+'">'+f.idle_asset_ratio.toFixed(1)+'%</td><td class="num '+irCls+'">'+fmt(f.idle_assets,1)+'</td><td style="font-size:11px;color:#64748b;max-width:200px">'+idleTypes+'</td><td class="num '+alCls+'">'+f.asset_liability_ratio.toFixed(1)+'%</td><td class="num '+opCls+'">'+fmt(f.op_cf,1)+'</td><td style="font-size:11.5px;color:#b45309;min-width:160px">'+flags+'</td></tr>';
+  }).join('');
+  document.getElementById('riskTable').innerHTML = '<thead><tr><th>主体</th><th>评级</th><th>闲置率</th><th>闲置规模(亿)</th><th>闲置构成</th><th>负债率</th><th>经营现金流</th><th>风险标签</th></tr></thead><tbody>'+rows+'</tbody>';
+}
+function renderFoot(){
+  document.getElementById('foot').innerHTML = '本页为 <b>'+DATA.meta.entity_count+'</b> 家城投主体的<b>合成模拟数据</b>演示 · 生成于 '+DATA.meta.generated_at+'<br>闲置资产监测系统：分析城投公司资产闲置比例、构成、趋势与风险预警。';
+}
+renderNote(); renderKPI(); idleRateBars(); idleAmountBars(); idleTrendLine(); idleBreakdown(); assetVsIdle(); riskTable(); renderFoot();
+</script>
 </body>
 </html>
