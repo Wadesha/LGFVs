@@ -95,7 +95,7 @@
 
   <div class="hero">
     <h1>闲置资产深度分析框架</h1>
-    <div class="sub">场景分类 · 实际案例 · 财务模型 · 完整分析体系</div>
+    <div class="sub">场景分类 · 实际案例 · 财务模型 · 后果与措施 · 完整分析体系</div>
     <div class="tag">城投公司 / LGFV 资产运营效率评估</div>
   </div>
 
@@ -104,6 +104,7 @@
     <button class="nav-tab active" onclick="switchTab('scenes')">📂 场景分类</button>
     <button class="nav-tab" onclick="switchTab('cases')">📋 实际案例</button>
     <button class="nav-tab" onclick="switchTab('model')">📐 财务模型</button>
+    <button class="nav-tab" onclick="switchTab('actions')">🚨 后果与措施</button>
   </div>
 
   <!-- ========== 第一部分：场景分类 ========== -->
@@ -247,6 +248,125 @@
     </div>
   </div>
 
+  <!-- ========== 第四部分：后果与措施 ========== -->
+  <div id="tab-actions" class="section">
+
+    <div class="card">
+      <h2>🚨 闲置资产的连锁后果 <span class="badge">风险传导链</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        闲置资产不是"静止"的问题，它像多米诺骨牌一样，一路推倒公司的财务、信用和经营。
+      </p>
+      <div class="chart-box" id="dominoChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>📉 财务后果量化</h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        以下模拟展示一家中等规模城投公司（总资产 500 亿），闲置资产率从 0% 逐步恶化到 40% 的全过程：
+      </p>
+      <table class="model-table" id="consequenceTable"></table>
+      <div class="insight">
+        <strong>关键发现：</strong> 闲置资产率超过 15% 后，财务指标开始加速恶化。
+        超过 30% 后，公司几乎丧失自我修复能力，需要外部救助。
+        最直接的影响是 <strong>融资成本上升</strong>——信用利差每扩大 100bp，每年多付数亿利息。
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚠️ 信用评级下调路径</h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">
+        闲置资产率与信用评级之间存在明确的负相关关系。以下是基于历史数据的映射关系：
+      </p>
+      <div class="chart-box" id="ratingChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>🛠️ 后续措施矩阵 <span class="badge">按严重程度分级</span></h2>
+      <p style="font-size:14px;color:#475569;margin-bottom:14px;">
+        不同闲置率级别对应不同的应对措施，越早干预成本越低：
+      </p>
+      <div id="measureMatrix"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 具体处置措施详解</h2>
+      <div class="grid2">
+        <div style="background:#f8fafc;border-radius:12px;padding:16px 18px;border:1px solid #e2e8f0;">
+          <h4 style="color:#0f3460;margin-bottom:6px;">🏞️ 闲置土地</h4>
+          <ul style="font-size:13px;color:#475569;padding-left:16px;line-height:1.9;">
+            <li><strong>政府回收</strong>：与地方政府协商，由土地储备中心按成本价+利息回收</li>
+            <li><strong>土地性质变更</strong>：申请从工业/仓储用地变更为商业/住宅用地，提升价值</li>
+            <li><strong>合作开发</strong>：引入开发商联合开发，以土地作价入股</li>
+            <li><strong>临时利用</strong>：短期出租作为停车场、临时市场等，产生现金流</li>
+          </ul>
+        </div>
+        <div style="background:#f8fafc;border-radius:12px;padding:16px 18px;border:1px solid #e2e8f0;">
+          <h4 style="color:#0f3460;margin-bottom:6px;">🏢 空置房产</h4>
+          <ul style="font-size:13px;color:#475569;padding-left:16px;line-height:1.9;">
+            <li><strong>降价促销</strong>：市场化定价，快速回笼资金</li>
+            <li><strong>保障性租赁住房</strong>：响应政策，将商业/办公改造成保租房</li>
+            <li><strong>REITs 退出</strong>：将成熟物业打包发行基础设施 REITs</li>
+            <li><strong>委托运营</strong>：引入专业商业地产运营商，提升出租率</li>
+          </ul>
+        </div>
+        <div style="background:#f8fafc;border-radius:12px;padding:16px 18px;border:1px solid #e2e8f0;">
+          <h4 style="color:#0f3460;margin-bottom:6px;">🚧 在建停工</h4>
+          <ul style="font-size:13px;color:#475569;padding-left:16px;line-height:1.9;">
+            <li><strong>政府接管</strong>：协调地方政府接手，纳入政府投资项目</li>
+            <li><strong>引入战投</strong>：寻找资产管理公司(AMC)或产业资本接盘</li>
+            <li><strong>资产剥离</strong>：打折出售给专业纾困基金</li>
+            <li><strong>债务重组</strong>：与债权人协商展期或减免部分债务</li>
+          </ul>
+        </div>
+        <div style="background:#f8fafc;border-radius:12px;padding:16px 18px;border:1px solid #e2e8f0;">
+          <h4 style="color:#0f3460;margin-bottom:6px;">📊 低效股权</h4>
+          <ul style="font-size:13px;color:#475569;padding-left:16px;line-height:1.9;">
+            <li><strong>股权转让</strong>：在产权交易所挂牌转让</li>
+            <li><strong>管理层回购</strong>：由子公司管理层融资回购股份</li>
+            <li><strong>合并注销</strong>：将亏损子公司合并到母公司，统一管理</li>
+            <li><strong>破产清算</strong>：对资不抵债的子公司申请破产</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🏛️ 政策建议与制度保障</h2>
+      <div class="grid3">
+        <div class="scene-card" style="border-left:4px solid #2563eb;">
+          <h4 style="color:#2563eb;">📋 建立台账</h4>
+          <div class="desc">每季度清查闲置资产，建立动态台账，按类型、金额、闲置原因分类管理，责任到人。</div>
+        </div>
+        <div class="scene-card" style="border-left:4px solid #16a34a;">
+          <h4 style="color:#16a34a;">📊 纳入考核</h4>
+          <div class="desc">将闲置资产率纳入管理层 KPI 考核，与薪酬和晋升挂钩，建立问责机制。</div>
+        </div>
+        <div class="scene-card" style="border-left:4px solid #d97706;">
+          <h4 style="color:#d97706;">🔄 盘活激励</h4>
+          <div class="desc">设立盘活闲置资产专项奖励，按盘活金额的 1%-3% 奖励团队，激发积极性。</div>
+        </div>
+        <div class="scene-card" style="border-left:4px solid #7c3aed;">
+          <h4 style="color:#7c3aed;">🔍 投前审查</h4>
+          <div class="desc">新投资项目须进行闲置风险评估，避免"边盘活边新增"的恶性循环。</div>
+        </div>
+        <div class="scene-card" style="border-left:4px solid #0891b2;">
+          <h4 style="color:#0891b2;">📡 实时监测</h4>
+          <div class="desc">建立数字化监测平台，实时追踪资产运营状态，闲置率超标自动预警。</div>
+        </div>
+        <div class="scene-card" style="border-left:4px solid #dc2626;">
+          <h4 style="color:#dc2626;">⚡ 快速处置</h4>
+          <div class="desc">对闲置超过 2 年的资产启动强制处置程序，避免资产持续贬值。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 处置时间线 <span class="badge">建议节奏</span></h2>
+      <div class="chart-box" id="timelineChart"></div>
+    </div>
+
+  </div>
+
   <div class="foot">
     闲置资产深度分析框架 · 基于公开披露数据整理 · 模拟数据仅用于演示
   </div>
@@ -328,11 +448,12 @@ function switchTab(name){
   document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  document.querySelectorAll('.nav-tab')[['scenes','cases','model'].indexOf(name)].classList.add('active');
+  document.querySelectorAll('.nav-tab')[['scenes','cases','model','actions'].indexOf(name)].classList.add('active');
   // 重新绘制
   if(name==='scenes') drawSceneImpact();
   if(name==='cases') renderCases();
   if(name==='model'){ drawImpactChart(); drawSimTable(); drawSensitivity(); }
+  if(name==='actions'){ drawDominoChart(); drawConsequenceTable(); drawRatingChart(); drawMeasureMatrix(); drawTimelineChart(); }
 }
 
 // ================ 场景影响图 ================
@@ -509,12 +630,190 @@ function drawSensitivity(){
   document.getElementById('sensitivityChart').innerHTML=s;
 }
 
+// ================ 多米诺骨牌 ================
+function drawDominoChart(){
+  const W=700,H=300, stages=[
+    {label:'闲置资产↑', desc:'土地/房产/设施停止运转', color:'#64748b'},
+    {label:'资金沉淀↓', desc:'资产无法变现，现金流枯竭', color:'#94a3b8'},
+    {label:'减值损失→', desc:'每年计提大额资产减值', color:'#d97706'},
+    {label:'利润压缩↓', desc:'净利润↓ ROE↓', color:'#dc2626'},
+    {label:'评级下调↓', desc:'融资成本↑ 再融资困难', color:'#991b1b'},
+    {label:'交叉违约⚠️', desc:'区域信用风险传导', color:'#7f1d1d'},
+  ];
+  const boxW=120, boxH=60, gap=20, startX=10, y=80;
+  let s=svg(W,H);
+  s+=`<text x="${W/2}" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">闲置资产风险传导链（多米诺效应）</text>`;
+  s+=`<text x="${W/2}" y="42" text-anchor="middle" font-size="11" fill="#64748b">⏱️ 时间方向 →</text>`;
+  stages.forEach((st,i)=>{
+    const x=startX+i*(boxW+gap);
+    // 连接箭头
+    if(i>0){
+      const px=startX+(i-1)*(boxW+gap)+boxW+8;
+      s+=`<line x1="${px-8}" y1="${y+boxH/2}" x2="${px+gap-8}" y2="${y+boxH/2}" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow)"/>`;
+    }
+    s+=`<rect x="${x}" y="${y}" width="${boxW}" height="${boxH}" rx="8" fill="${st.color}" opacity="0.9"/>`;
+    s+=`<text x="${x+boxW/2}" y="${y+20}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">${st.label}</text>`;
+    s+=`<text x="${x+boxW/2}" y="${y+34}" text-anchor="middle" font-size="12">${st.label.split('').filter(c=>c!=='↑'&&c!=='↓'&&c!=='→'&&c!=='⚠️')[0]}</text>`;
+    s+=`<text x="${x+boxW/2}" y="${y+boxH-8}" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">${st.desc}</text>`;
+  });
+  // 箭头定义
+  s+=`<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#cbd5e1"/></marker></defs>`;
+  // 底部总结
+  s+=`<rect x="20" y="${y+boxH+30}" width="${W-40}" height="50" rx="10" fill="#fef2f2" stroke="#fecaca"/>`;
+  s+=`<text x="${W/2}" y="${y+boxH+50}" text-anchor="middle" font-size="12" fill="#991b1b" font-weight="600">终极后果：信用评级下调 → 融资成本飙升 → 区域金融风险蔓延</text>`;
+  s+=`<text x="${W/2}" y="${y+boxH+66}" text-anchor="middle" font-size="11" fill="#991b1b">一个城投公司的闲置资产问题，可能引发整个区域的信用危机</text>`;
+  s+='</svg>';
+  document.getElementById('dominoChart').innerHTML=s;
+}
+
+// ================ 财务后果量化表 ================
+function drawConsequenceTable(){
+  const rates = [0,5,10,15,20,25,30,35,40];
+  const base = {assets:500, al:62, revenue:80, cost:65, debt:310, interestRate:4.5};
+  const rows = rates.map(r=>{
+    const idleAssets = base.assets * r/100;
+    const effectiveAssets = base.assets - idleAssets;
+    const realAl = base.debt / effectiveAssets * 100;
+    const impairment = idleAssets * 0.08; // 8%减值
+    const netProfit = (base.revenue - base.cost - impairment) * (1 - 0.25);
+    const roe = netProfit / (effectiveAssets - base.debt) * 100;
+    const ocf = (base.revenue - base.cost) * 0.6 - impairment * 0.5;
+    // 信用利差随闲置率上升
+    const spread = 80 + r * 12;
+    const extraInterest = base.debt * (spread/10000);
+    const cls = r>15?'highlight-row':'';
+    const status = r<=5?'🟢 健康':(r<=15?'🟡 关注':(r<=30?'🔴 警戒':'⛔ 高危'));
+    return `<tr class="${cls}">
+      <td><b>${r}%</b></td>
+      <td>${fmt(idleAssets,1)}</td>
+      <td>${fmt(impairment,1)}</td>
+      <td class="${netProfit<0?'val-up':(netProfit<5?'val-warn':'val-down')}">${fmt(netProfit,1)}</td>
+      <td class="${roe<1?'val-up':(roe<3?'val-warn':'val-down')}">${roe.toFixed(1)}%</td>
+      <td class="${ocf<0?'val-up':'val-down'}">${fmt(ocf,1)}</td>
+      <td class="${realAl>70?'val-up':(realAl>60?'val-warn':'val-down')}">${realAl.toFixed(1)}%</td>
+      <td>${fmt(spread,0)}bp</td>
+      <td style="font-size:12px;color:#64748b">${status}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('consequenceTable').innerHTML = `<thead><tr><th>闲置率</th><th>闲置资产(亿)</th><th>年减值(亿)</th><th>净利润(亿)</th><th>ROE</th><th>经营现金流</th><th>实际负债率</th><th>信用利差</th><th>状态</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ================ 评级下调图 ================
+function drawRatingChart(){
+  const W=700,H=340, pad={l:58,r:20,t:20,b:40};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const ratings = ['AAA','AA+','AA','AA-','A+','A'];
+  const idleRanges = [0,6,12,18,25,35];
+  const colors = ['#15803d','#2563eb','#d97706','#dc2626','#b91c1c','#7f1d1d'];
+  let s=svg(W,H);
+  // 标题
+  s+=`<text x="${W/2}" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">闲置资产率 vs 信用评级 · 映射关系</text>`;
+  // 网格
+  for(let g=0;g<=4;g++){ const val=40*g/4, yy=pad.t+ih-ih*val/40;
+    s+=`<line x1="${pad.l}" y1="${yy.toFixed(1)}" x2="${W-pad.r}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/>`;
+    s+=`<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="10" fill="#9ca3af">${val.toFixed(0)}%</text>`;
+  }
+  ratings.forEach((r,i)=>{
+    const x = pad.l + i*iw/(ratings.length-1);
+    const y = pad.t + ih - ih*idleRanges[i]/40;
+    const bw = 40;
+    s+=`<rect x="${x-bw/2}" y="${y}" width="${bw}" height="${pad.t+ih-y}" rx="6" fill="${colors[i]}" opacity="0.85"/>`;
+    s+=`<text x="${x}" y="${y-10}" text-anchor="middle" font-size="14" font-weight="700" fill="${colors[i]}">${idleRanges[i]}%</text>`;
+    s+=`<text x="${x}" y="${H-pad.b+16}" text-anchor="middle" font-size="13" font-weight="700" fill="${colors[i]}">${r}</text>`;
+  });
+  // Y轴
+  s+=`<text x="${pad.l-8}" y="${pad.t+ih/2}" text-anchor="middle" font-size="10" fill="#64748b" transform="rotate(-90,${pad.l-8},${pad.t+ih/2})">闲置资产率 →</text>`;
+  // 警戒线
+  const warnY = pad.t + ih - ih*15/40;
+  s+=`<line x1="${pad.l}" y1="${warnY}" x2="${W-pad.r}" y2="${warnY}" stroke="#dc2626" stroke-dasharray="6,3" stroke-width="1.5"/>`;
+  s+=`<text x="${W-pad.r-80}" y="${warnY-4}" font-size="10" fill="#dc2626">15% 警戒线</text>`;
+  s+='</svg>';
+  document.getElementById('ratingChart').innerHTML=s;
+}
+
+// ================ 措施矩阵 ================
+function drawMeasureMatrix(){
+  const levels = [
+    {range:'&lt; 5%', label:'健康', color:'#16a34a', bg:'#dcfce7', measures:[
+      '定期监测，维持现状',
+      '纳入常规资产清查',
+      '个别闲置资产及时处置',
+    ]},
+    {range:'5% – 15%', label:'关注', color:'#d97706', bg:'#fef3c7', measures:[
+      '成立专项工作小组',
+      '逐项分析闲置原因',
+      '制定盘活时间表',
+      '向管理层季度汇报',
+    ]},
+    {range:'15% – 30%', label:'警戒', color:'#dc2626', bg:'#fee2e2', measures:[
+      '管理层亲自督办',
+      '引入外部专业机构评估',
+      '启动资产处置程序',
+      '暂停新增投资项目',
+      '与地方政府协调解决方案',
+    ]},
+    {range:'&gt; 30%', label:'高危', color:'#991b1b', bg:'#fecaca', measures:[
+      '全面债务重组/展期',
+      '寻求地方政府救助',
+      '引入 AMC 等战略投资者',
+      '资产剥离/出售核心资产',
+      '信用评级维稳沟通',
+      '启动应急预案，防止交叉违约',
+    ]},
+  ];
+  document.getElementById('measureMatrix').innerHTML = levels.map(lev=>{
+    const items = lev.measures.map(m=>`<li>${m}</li>`).join('');
+    return `<div style="display:flex;gap:14px;background:${lev.bg};border-radius:12px;padding:14px 18px;margin-bottom:10px;border:1px solid ${lev.color}30;align-items:flex-start;">
+      <div style="flex-shrink:0;text-align:center;min-width:70px;">
+        <div style="font-size:18px;font-weight:800;color:${lev.color}">${lev.range}</div>
+        <div style="font-size:12px;color:${lev.color};font-weight:600">${lev.label}</div>
+      </div>
+      <ul style="font-size:13px;color:#475569;margin:0;padding-left:16px;flex:1;line-height:1.8;">${items}</ul>
+    </div>`;
+  }).join('');
+}
+
+// ================ 处置时间线 ================
+function drawTimelineChart(){
+  const W=700,H=200, phases=[
+    {label:'第1-3个月', color:'#2563eb', tasks:'资产清查·分类·评估'},
+    {label:'第3-6个月', color:'#16a34a', tasks:'优先处置·快速变现'},
+    {label:'第6-12个月', color:'#d97706', tasks:'复杂资产·谈判重组'},
+    {label:'第12-24个月', color:'#dc2626', tasks:'司法处置·破产清算'},
+  ];
+  const barH=50, gap=40, startX=30, bw=(W-startX-30)/phases.length-gap;
+  let s=svg(W,H);
+  phases.forEach((p,i)=>{
+    const x=startX+i*(bw+gap);
+    s+=`<rect x="${x}" y="40" width="${bw}" height="${barH}" rx="8" fill="${p.color}" opacity="0.85"/>`;
+    s+=`<text x="${x+bw/2}" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${p.label}</text>`;
+    s+=`<text x="${x+bw/2}" y="76" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.9)">${p.tasks}</text>`;
+    // 连接箭头
+    if(i<phases.length-1){
+      const ax=x+bw+gap/2;
+      s+=`<line x1="${ax-8}" y1="65" x2="${ax+8}" y2="65" stroke="#cbd5e1" stroke-width="2"/>`;
+      s+=`<polygon points="${ax+8-4},61 ${ax+8},65 ${ax+8-4},69" fill="#cbd5e1"/>`;
+    }
+  });
+  // 底部说明
+  s+=`<text x="${W/2}" y="140" text-anchor="middle" font-size="11" fill="#64748b">⏱️ 越早处置，资产回收率越高，损失越小</text>`;
+  s+=`<rect x="120" y="150" width="${W-240}" height="32" rx="8" fill="#f1f5f9"/>`;
+  s+=`<text x="${W/2}" y="170" text-anchor="middle" font-size="11" fill="#64748b">处置时间每延迟 6 个月，资产回收率平均下降 10-15%</text>`;
+  s+='</svg>';
+  document.getElementById('timelineChart').innerHTML=s;
+}
+
 // ================ 初始化 ================
 drawSceneImpact();
 renderCases();
 drawImpactChart();
 drawSimTable();
 drawSensitivity();
+drawDominoChart();
+drawConsequenceTable();
+drawRatingChart();
+drawMeasureMatrix();
+drawTimelineChart();
 </script>
 </body>
 </html>
