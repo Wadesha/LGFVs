@@ -1,12 +1,27 @@
-# 城投公司研究（LGFV Credit Research）· 在线演示
+https://wadesha.github.io/LGFVs/
 
-> **GitHub Pages 演示（模拟数据）：https://wadesha.github.io/LGFVs/**
+---
+
+# 城投公司研究（LGFV Credit Research）· 在线演示
 
 城投公司（地方政府融资平台，LGFV）信用研究的数据驱动框架：把分散在公开披露 PDF 中的非结构化信息，
 转化为**多主体 × 多年份**的可分析结构化数据，支撑横向对比、趋势观察、区域聚合与风险预警。
 
 > **核心思路（数据驱动、模拟先行）**：不纠结 PDF 解析细节，先定义清楚"结构化字段"；
-> 用**合成模拟数据**把整套分析框架（看板）跑通，再按相同 schema 灌入真实、易获取的数据。
+> 用**合成模拟数据**把整套分析框架跑通，再按相同 schema 灌入真实、易获取的数据。
+
+---
+
+## 在线演示页面
+
+以下所有页面均为**自包含 HTML**，无需联网、无需后端，双击即可在浏览器打开。
+
+| 页面 | 链接 | 内容说明 |
+|------|------|----------|
+| 📊 **闲置资产监测系统** | [index.html](https://wadesha.github.io/LGFVs/) | 城投公司闲置资产数据分析看板，含 KPI 指标卡、闲置率对比图、5年趋势图、闲置构成明细、气泡图、风险预警表。适合快速了解城投闲置资产全貌。 |
+| 📂 **闲置资产深度分析** | [idle_assets_analysis.html](https://wadesha.github.io/LGFVs/idle_assets_analysis.html) | 4 个 Tab 完整分析体系：<br>① **场景分类**—闲置土地/空置房产/在建停工等 6 种场景的评分和影响说明<br>② **实际案例**—4 家典型城投公司的 5 年财务数据 + 趋势图 + 分析结论<br>③ **财务模型**—不同闲置率对 ROE、现金流、EBITDA 的冲击模拟 + 敏感性分析 + 盘活路径<br>④ **后果与措施**—风险传导链、信用评级映射、分级措施矩阵（责任人+时限+KPI）、应急处置预案、早行动 vs 晚行动案例对比 |
+| 🏢 **超高层写字楼融资风险** | [tower_financing.html](https://wadesha.github.io/LGFVs/tower_financing.html) | 聚焦超高层写字楼这一最危险的闲置资产场景：空置率 vs 融资能力量化表、抵押融资影响分析、信用评级传导、三类典型城市场景对比、7 大风险监测指标、城投公司和投资者的应对建议。 |
+| 🏗️ **项目前期融资策划指南** | [project_financing_guide.html](https://wadesha.github.io/LGFVs/project_financing_guide.html) | 5 个 Tab 完整覆盖三类项目的前期融资策划：<br>① **全景对比**—三类项目 9 维对比 + 2026 年融资工具箱 + 资金拼盘四层结构<br>② **超高层写字楼**—前期策划 4 步法 + 融资渠道对比表 + 2026 年政策利好<br>③ **产业园**—专项债+银行贷款最佳组合 + 运营模式设计 + REITs 退出路径<br>④ **商业综合体**—主力店招商前置 + 三大陷阱预警 + 轻资产合作模式<br>⑤ **全流程操作**—12-18 个月时间线 + 28 项工作清单 + 常见失败原因 + 真实案例 |
 
 ---
 
@@ -15,7 +30,10 @@
 ```
 LGFVs/
 ├── README.md                  # 本文件（首行为 Pages 链接）
-├── index.html                 # 模拟数据展示看板（GitHub Pages 入口，自包含无 CDN）
+├── index.html                 # 闲置资产监测系统看板
+├── idle_assets_analysis.html  # 闲置资产深度分析（场景/案例/模型/措施）
+├── tower_financing.html       # 超高层写字楼融资风险专题
+├── project_financing_guide.html # 项目前期融资策划全流程指南
 ├── docs/
 │   ├── architecture.md        # 项目架构与数据 schema
 │   └── methodology.md         # 采集方法、字段定义、风险逻辑、数据保护
@@ -49,7 +67,7 @@ python generate_mock_data.py
 #   → 生成 chengtou_mock.json 与仓库根目录 index.html（内嵌数据）
 
 # 2) 预览看板
-#    浏览器直接打开仓库根目录的 index.html
+#    浏览器直接打开仓库根目录的 index.html 或其他任意 .html 文件
 
 # 3) （可选）接入真实 PDF 解析
 #    将 PDF 放入本地 raw_files/，运行 scripts/parse_report.py
@@ -67,7 +85,7 @@ python generate_mock_data.py
 | 样本 PDF（公开披露） | `raw_files/` | ✅ 进仓库 |
 | 真实采集数据（山东·公开披露） | `shandong_reports/` | ✅ 进仓库 |
 | 合成模拟数据 | `data/mock/` | ✅ 进仓库 |
-| 展示看板（仅模拟数据） | `index.html` | ✅ 进仓库 |
+| 展示看板（仅模拟数据） | 所有 `.html` 文件 | ✅ 进仓库 |
 | 真实数据解析报告（可再生） | `reports/` | ❌ 本地（gitignore） |
 | 私密 / 涉密 / 凭证数据 | 任意 | ❌ 绝不入库 |
 
@@ -83,7 +101,7 @@ python generate_mock_data.py
 
 - **指标维度**：规模（总资产/负债/资产负债率）、盈利（营收/净利/ROE）、偿债（EBITDA 利息保障倍数/经营现金流）、流动性（流动/速动比率）。
 - **风险预警**：基于阈值自动触发标签（资产负债率>70%、EBITDA 利保<1.5x、经营现金流<0、ROE<1% 等）。
-- **可视化**：KPI 卡片、评级分布、杠杆对比、ROE/资产趋势、风险预警表（均见 `index.html`）。
+- **可视化**：KPI 卡片、评级分布、杠杆对比、ROE/资产趋势、风险预警表（均见各 HTML 页面）。
 
 完整字段定义见 `docs/architecture.md`，采集与解析方法见 `docs/methodology.md`。
 
