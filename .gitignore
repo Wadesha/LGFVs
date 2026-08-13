@@ -59,3 +59,4 @@ Thumbs.db
 
 # ===== 产物（可选，由脚本再生）=====
 # 注意：index.html 与 data/mock/chengtou_mock.json 是仓库内容，勿在此排除
+.trae-html-share-packages/
