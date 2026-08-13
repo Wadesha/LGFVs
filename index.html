@@ -9,15 +9,13 @@
   :root {
     --bg: #faf8f5;
     --card: #ffffff;
-    --text: #1a1a1a;
-    --text-2: #1a1a1a;
-    --text-3: #1a1a1a;
+    --text: #333333;
+    --text-2: #666666;
     --accent: #c2410c;
-    --accent-2: #ea580c;
     --accent-bg: #fff7ed;
-    --border: #ede9e3;
-    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow-lg: 0 4px 20px rgba(0,0,0,.06);
+    --border: #e8e4de;
+    --shadow: 0 1px 3px rgba(0,0,0,.05);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,.05);
     --radius: 14px;
     --radius-sm: 10px;
   }
@@ -37,11 +35,11 @@
 
   /* TOC */
   .toc { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px 26px; margin:20px 16px 12px; box-shadow:var(--shadow); }
-  .toc .logo { font-size:13px; font-weight:600; color:var(--accent); margin-bottom:10px; }
+  .toc .logo { font-size:13px; font-weight:600; color:var(--text); margin-bottom:10px; }
   .toc-links { display:flex; flex-wrap:wrap; gap:5px 10px; }
   .toc-links a { font-size:13px; color:var(--text-2); text-decoration:none; transition:color .15s; }
   .toc-links a:hover { color:var(--accent); }
-  .toc-links a.sub { font-size:12px; color:var(--text-3); }
+  .toc-links a.sub { font-size:12px; color:var(--text-2); }
 
   .main { padding:0 16px 60px; }
 
@@ -51,7 +49,7 @@
     font-size:28px; font-weight:700; color:var(--text); letter-spacing:-.3px; line-height:1.35;
     font-family: Georgia, "Songti SC", "SimSun", serif;
   }
-  .hero .sub { font-size:14px; color:var(--text-3); margin-top:12px; }
+  .hero .sub { font-size:14px; color:var(--text-2); margin-top:12px; }
   .hero .quote {
     margin-top:32px; font-size:15px; color:var(--text-2); font-style:italic;
     max-width:500px; margin-left:auto; margin-right:auto; line-height:1.8;
@@ -75,29 +73,25 @@
     font-size:16px; color:var(--text); margin:32px 0 14px; font-weight:600;
     padding-bottom:8px; border-bottom:2px solid var(--border);
   }
-  .chapter h4 { font-size:14px; color:var(--accent); margin:20px 0 8px; font-weight:600; }
-  .chapter p { font-size:15px; color:var(--text-2); margin-bottom:16px; text-align:justify; }
+  .chapter h4 { font-size:14px; color:var(--text); margin:20px 0 8px; font-weight:600; }
+  .chapter p { font-size:15px; color:var(--text); margin-bottom:16px; text-align:justify; }
   .chapter p strong { color:var(--text); font-weight:600; }
   .chapter p em { color:var(--accent); font-style:normal; font-weight:500; }
   .chapter ul { padding-left:22px; margin:12px 0 20px; }
-  .chapter ul li { font-size:15px; color:var(--text-2); margin-bottom:10px; line-height:1.8; }
+  .chapter ul li { font-size:15px; color:var(--text); margin-bottom:10px; line-height:1.8; }
   .chapter ul li strong { color:var(--text); font-weight:600; }
   .chapter ol { padding-left:22px; margin:12px 0 20px; }
-  .chapter ol li { font-size:15px; color:var(--text-2); margin-bottom:10px; line-height:1.8; }
+  .chapter ol li { font-size:15px; color:var(--text); margin-bottom:10px; line-height:1.8; }
 
   /* Callout */
   .callout {
     border-radius:var(--radius-sm); padding:16px 22px; margin:18px 0;
     font-size:14px; line-height:1.85; position:relative;
-    border:1px solid var(--border); background:var(--card);
+    border:1px solid var(--border); background:var(--accent-bg);
   }
-  .callout::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:var(--radius-sm) 0 0 var(--radius-sm); }
-  .callout.warn { background:#fef5f3; border-color:#fed7d3; } .callout.warn::before { background:#e0392b; }
-  .callout.warn strong { color:#c41e1e; }
-  .callout.key { background:var(--accent-bg); border-color:#fde0c4; } .callout.key::before { background:var(--accent); }
-  .callout.key strong { color:var(--accent); }
-  .callout.danger { background:#fff8f0; border-color:#fde0c4; } .callout.danger::before { background:#d97706; }
-  .callout.danger strong { color:#b45309; }
+  .callout::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:var(--radius-sm) 0 0 var(--radius-sm); background:var(--accent); }
+  .callout strong { color:var(--text); }
+  .callout.warn, .callout.danger { background:var(--accent-bg); }
 
   /* Flow */
   .flow { display:flex; align-items:stretch; gap:6px; margin:24px 0; flex-wrap:wrap; }
@@ -109,17 +103,17 @@
   .flow-step:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
   .flow-step .step-num { font-size:10px; color:var(--accent); font-weight:600; margin-bottom:6px; letter-spacing:.5px; }
   .flow-step .step-text { color:var(--text); font-size:13px; line-height:1.5; font-weight:500; }
-  .flow-arrow { display:flex; align-items:center; color:var(--text-3); font-size:14px; }
+  .flow-arrow { display:flex; align-items:center; color:#ccc; font-size:14px; }
   @media(max-width:640px){ .flow-step{min-width:100%;} .flow-arrow{transform:rotate(90deg);padding:4px 0;} }
 
   /* Compare */
   .compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0; }
   @media(max-width:640px){ .compare{grid-template-columns:1fr;} }
   .compare-item { background:var(--card); border-radius:var(--radius-sm); padding:18px 20px; border:1px solid var(--border); box-shadow:var(--shadow); }
-  .compare-item h4 { margin:0 0 8px; font-size:14px; display:flex; align-items:center; gap:6px; }
-  .compare-item.good h4 { color:#059669; } .compare-item.good h4::before { content:"\2713"; }
-  .compare-item.bad h4 { color:#dc2626; } .compare-item.bad h4::before { content:"\2717"; }
-  .compare-item p { font-size:13px; color:var(--text-3); margin:0; line-height:1.7; }
+  .compare-item h4 { margin:0 0 8px; font-size:14px; display:flex; align-items:center; gap:6px; color:var(--text); }
+  .compare-item.good h4::before { content:"\2713"; color:var(--accent); }
+  .compare-item.bad h4::before { content:"\2717"; color:var(--accent); }
+  .compare-item p { font-size:13px; color:var(--text-2); margin:0; line-height:1.7; }
 
   /* Scene grid */
   .scene-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0; }
@@ -127,34 +121,26 @@
   .scene-item { background:var(--card); border-radius:var(--radius-sm); padding:20px; border:1px solid var(--border); box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s; }
   .scene-item:hover { transform:translateY(-1px); box-shadow:var(--shadow-lg); }
   .scene-item h4 { font-size:15px; color:var(--text); margin-bottom:6px; font-weight:600; }
-  .scene-item .scene-cause { font-size:12px; color:var(--accent); margin-bottom:8px; font-weight:500; }
-  .scene-item .scene-desc { font-size:13px; color:var(--text-3); line-height:1.7; }
+  .scene-item .scene-cause { font-size:12px; color:var(--text-2); margin-bottom:8px; font-weight:500; }
+  .scene-item .scene-desc { font-size:13px; color:var(--text-2); line-height:1.7; }
 
   /* Layer */
   .layer { border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:16px 22px; margin:14px 0; background:var(--card); box-shadow:var(--shadow); position:relative; padding-left:26px; }
-  .layer::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px 0 0 4px; }
-  .layer.l1::before { background:linear-gradient(180deg,#10b981,#059669); } .layer.l1 h4 { color:#059669; }
-  .layer.l2::before { background:linear-gradient(180deg,#fbbf24,#f59e0b); } .layer.l2 h4 { color:#d97706; }
-  .layer.l3::before { background:linear-gradient(180deg,#f87171,#ef4444); } .layer.l3 h4 { color:#dc2626; }
-  .layer.l4::before { background:linear-gradient(180deg,#f87171,#991b1b); } .layer.l4 h4 { color:#991b1b; }
-  .layer h4 { font-size:14px; margin-bottom:6px; font-weight:600; }
-  .layer p { font-size:13px; color:var(--text-3); margin:0; line-height:1.7; }
+  .layer::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px 0 0 4px; background:var(--accent); }
+  .layer h4 { font-size:14px; margin-bottom:6px; font-weight:600; color:var(--text); }
+  .layer p { font-size:13px; color:var(--text-2); margin:0; line-height:1.7; }
 
   /* Divider */
   .divider { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:44px 0; }
 
   /* Footer */
-  .foot { text-align:center; color:var(--text-3); font-size:12px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); line-height:1.8; }
+  .foot { text-align:center; color:var(--text-2); font-size:12px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); line-height:1.8; }
 
   /* Case card */
   .case-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin:20px 0; box-shadow:var(--shadow-lg); }
   .case-card h3 { margin-top:0; }
-  .case-card .case-tag { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:4px 12px; border-radius:6px; margin-bottom:12px; letter-spacing:.3px; }
-  .case-card .case-tag.red { background:#fef5f3; color:#dc2626; }
-  .case-card .case-tag.orange { background:#fff8f0; color:#d97706; }
-  .case-card .case-tag.blue { background:#eef2ff; color:#4f46e5; }
-  .case-card .case-tag.green { background:#ecfdf5; color:#059669; }
-  .case-card .case-source { font-size:12px; color:var(--text-3); margin-bottom:16px; padding-bottom:12px; border-bottom:1px dashed var(--border); }
+  .case-card .case-tag { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:4px 12px; border-radius:6px; margin-bottom:12px; letter-spacing:.3px; background:var(--accent-bg); color:var(--accent); }
+  .case-card .case-source { font-size:12px; color:var(--text-2); margin-bottom:16px; padding-bottom:12px; border-bottom:1px dashed var(--border); }
 
   /* Smooth scroll */
   html { scroll-behavior:smooth; }
@@ -633,7 +619,7 @@
 
       <h3 id="ch7a">案例一：潍坊城投——唯一被审计署点名"土地闲置超两年"</h3>
       <div class="case-card">
-      <span class="case-tag red">闲置土地 · 审计署点名</span>
+      <span class="case-tag">闲置土地 · 审计署点名</span>
       <p class="case-source">数据来源：2026 年度第一期中期票据募集说明书 + 2025 年年度报告</p>
       <p>潍坊城投是五家城投中<strong>唯一在公开报告中明确被审计署指出"土地闲置时间较长，超过两年规定时间"</strong>的公司。报告原文还引用了《闲置土地处置办法》中"满四年未动工可无偿收回土地使用权"的规定，并称"闲置土地问题也在逐年解决中"。这是最直接的闲置资产硬证据。</p>
       <p>用底层逻辑逐项对照：</p>
@@ -650,7 +636,7 @@
 
       <h3 id="ch7b">案例二：成都城投——存货占近六成，减值三年暴增三百倍</h3>
       <div class="case-card">
-      <span class="case-tag orange">存货沉淀 · 减值暴增</span>
+      <span class="case-tag">存货沉淀 · 减值暴增</span>
       <p class="case-source">数据来源：2024 年公司债券募集说明书</p>
       <p>成都城投的主体评级为 AAA，看起来很健康。但用底层逻辑拆开看，闲置资产的信号非常明显：</p>
       <ul>
@@ -667,7 +653,7 @@
 
       <h3 id="ch7c">案例三：湖州城投——存货占六成，现金流连年大负</h3>
       <div class="case-card">
-      <span class="case-tag orange">资产虚增 · 现金流为负</span>
+      <span class="case-tag">资产虚增 · 现金流为负</span>
       <p class="case-source">数据来源：2024 年公司债券募集说明书摘要</p>
       <p>湖州城投同样评级 AAA，但财务状况比成都城投更弱：</p>
       <ul>
@@ -684,7 +670,7 @@
 
       <h3 id="ch7d">案例四：济南城投——在建工程占总资产近一半</h3>
       <div class="case-card">
-      <span class="case-tag red">在建沉淀 · 最高风险</span>
+      <span class="case-tag">在建沉淀 · 最高风险</span>
       <p class="case-source">数据来源：2025 年公司债募集说明书摘要</p>
       <p>济南城投的案例最特殊，因为它的闲置资产不是存货（土地），而是<strong>在建工程</strong>：</p>
       <ul>
@@ -701,7 +687,7 @@
 
       <h3 id="ch7e">案例五：临沂城投——投资性房地产公允价值连年下跌</h3>
       <div class="case-card">
-      <span class="case-tag blue">低效房产 · 隐蔽信号</span>
+      <span class="case-tag">低效房产 · 隐蔽信号</span>
       <p class="case-source">数据来源：2026 年度第一期短期融资券募集说明书 + 2025 年年度报告</p>
       <p>临沂城投的闲置信号比较隐蔽，体现在<strong>投资性房地产</strong>上：</p>
       <ul>
