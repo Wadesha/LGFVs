@@ -6,73 +6,82 @@
 <title>城投 · 闲置资产 · 融资困局 —— 从底层逻辑讲起</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif; background:#0a0a14; color:#94a3b8; line-height:1.9; }
-  .layout { max-width:760px; margin:0 auto; }
-  .toc { background:#0d0d1a; border:1px solid rgba(99,102,241,.1); border-radius:16px; padding:24px 28px; margin-bottom:32px; }
-  .toc .logo { font-size:14px; font-weight:700; color:#a78bfa; margin-bottom:12px; }
-  .toc-links { display:flex; flex-wrap:wrap; gap:6px 14px; }
-  .toc-links a { font-size:13px; color:#64748b; text-decoration:none; }
-  .toc-links a:hover { color:#a78bfa; }
-  .toc-links a.sub { font-size:12px; color:#475569; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif; background:#f5f6fa; color:#3a3a4a; line-height:1.9; }
+  .layout { max-width:820px; margin:0 auto; }
+  .toc { background:#fff; border:1px solid #e4e7ed; border-radius:14px; padding:22px 28px; margin:24px 16px 16px; box-shadow:0 2px 12px rgba(0,0,0,.04); }
+  .toc .logo { font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px; }
+  .toc-links { display:flex; flex-wrap:wrap; gap:6px 12px; }
+  .toc-links a { font-size:13px; color:#6b7280; text-decoration:none; }
+  .toc-links a:hover { color:#4f46e5; text-decoration:underline; }
+  .toc-links a.sub { font-size:12px; color:#9ca3af; }
   .main { padding:0 16px 60px; }
 
-  .hero { text-align:center; padding:60px 20px 48px; }
-  .hero h1 { font-size:28px; font-weight:800; color:#e2e8f0; letter-spacing:.5px; line-height:1.4; }
-  .hero .sub { font-size:14px; color:#64748b; margin-top:16px; }
-  .hero .quote { margin-top:32px; font-size:14px; color:#475569; font-style:italic; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.8; }
+  .hero { text-align:center; padding:48px 20px 40px; }
+  .hero h1 { font-size:26px; font-weight:800; color:#1e1e2e; letter-spacing:.5px; line-height:1.4; }
+  .hero .sub { font-size:14px; color:#6b7280; margin-top:14px; }
+  .hero .quote { margin-top:28px; font-size:14px; color:#9ca3af; font-style:italic; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.8; padding:16px 24px; background:#fff; border-radius:12px; border:1px solid #e4e7ed; }
 
-  .chapter { margin-bottom:56px; scroll-margin-top:20px; }
-  .chapter-label { font-size:12px; color:#6366f1; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
-  .chapter h2 { font-size:22px; color:#e2e8f0; margin-bottom:20px; font-weight:700; }
-  .chapter h3 { font-size:17px; color:#c4b5fd; margin:28px 0 12px; padding-left:14px; border-left:3px solid #6366f1; }
-  .chapter h4 { font-size:15px; color:#a5b4fc; margin:20px 0 8px; }
-  .chapter p { font-size:14px; color:#94a3b8; margin-bottom:14px; text-align:justify; }
-  .chapter p strong { color:#c4b5fd; }
-  .chapter p em { color:#fbbf24; font-style:normal; }
+  .chapter { margin-bottom:48px; scroll-margin-top:20px; }
+  .chapter-label { display:inline-block; font-size:11px; color:#fff; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; background:#4f46e5; padding:3px 12px; border-radius:20px; }
+  .chapter h2 { font-size:21px; color:#1e1e2e; margin-bottom:20px; font-weight:700; }
+  .chapter h3 { font-size:16px; color:#312e81; margin:28px 0 12px; padding:8px 16px; background:#eef2ff; border-radius:8px; }
+  .chapter h4 { font-size:14px; color:#4f46e5; margin:18px 0 8px; }
+  .chapter p { font-size:14px; color:#4a4a5a; margin-bottom:14px; text-align:justify; }
+  .chapter p strong { color:#312e81; }
+  .chapter p em { color:#d97706; font-style:normal; font-weight:600; }
   .chapter ul { padding-left:20px; margin:10px 0 18px; }
-  .chapter ul li { font-size:14px; color:#94a3b8; margin-bottom:8px; line-height:1.8; }
-  .chapter ul li strong { color:#c4b5fd; }
+  .chapter ul li { font-size:14px; color:#4a4a5a; margin-bottom:8px; line-height:1.8; }
+  .chapter ul li strong { color:#312e81; }
   .chapter ol { padding-left:20px; margin:10px 0 18px; }
-  .chapter ol li { font-size:14px; color:#94a3b8; margin-bottom:8px; line-height:1.8; }
+  .chapter ol li { font-size:14px; color:#4a4a5a; margin-bottom:8px; line-height:1.8; }
 
-  .callout { border-radius:12px; padding:16px 22px; margin:18px 0; font-size:14px; line-height:1.85; }
-  .callout.warn { background:rgba(220,38,38,.06); border:1px solid rgba(220,38,38,.15); color:#fca5a5; }
-  .callout.key { background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.15); color:#a5b4fc; }
-  .callout.danger { background:rgba(217,119,6,.06); border:1px solid rgba(217,119,6,.15); color:#fcd34d; }
-  .callout strong { color:#f8fafc; }
+  .callout { border-radius:10px; padding:14px 20px; margin:16px 0; font-size:14px; line-height:1.85; border-left:4px solid; }
+  .callout.warn { background:#fef2f2; border-color:#ef4444; color:#991b1b; }
+  .callout.key { background:#eef2ff; border-color:#4f46e5; color:#3730a3; }
+  .callout.danger { background:#fffbeb; border-color:#f59e0b; color:#92400e; }
+  .callout strong { color:#1e1e2e; }
 
   .flow { display:flex; align-items:stretch; gap:0; margin:20px 0; flex-wrap:wrap; }
-  .flow-step { flex:1; min-width:110px; background:#12121f; border:1px solid rgba(99,102,241,.15); border-radius:10px; padding:14px 10px; text-align:center; font-size:12px; }
-  .flow-step .step-num { font-size:10px; color:#6366f1; font-weight:700; margin-bottom:4px; }
-  .flow-step .step-text { color:#cbd5e1; font-size:12px; line-height:1.5; }
-  .flow-arrow { display:flex; align-items:center; color:#334155; padding:0 2px; font-size:16px; }
+  .flow-step { flex:1; min-width:110px; background:#fff; border:1px solid #e4e7ed; border-radius:10px; padding:14px 10px; text-align:center; font-size:12px; box-shadow:0 1px 4px rgba(0,0,0,.03); }
+  .flow-step .step-num { font-size:10px; color:#4f46e5; font-weight:700; margin-bottom:4px; }
+  .flow-step .step-text { color:#4a4a5a; font-size:12px; line-height:1.5; }
+  .flow-arrow { display:flex; align-items:center; color:#c4c7cf; padding:0 2px; font-size:16px; }
   @media(max-width:640px){ .flow-step{min-width:100%;} .flow-arrow{transform:rotate(90deg);padding:6px 0;} }
 
   .compare { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
   @media(max-width:640px){ .compare{grid-template-columns:1fr;} }
-  .compare-item { background:#12121f; border-radius:12px; padding:16px 18px; border:1px solid rgba(99,102,241,.1); }
+  .compare-item { background:#fff; border-radius:10px; padding:16px 18px; border:1px solid #e4e7ed; box-shadow:0 1px 4px rgba(0,0,0,.03); }
   .compare-item h4 { margin:0 0 8px; font-size:14px; }
-  .compare-item.good h4 { color:#34d399; }
-  .compare-item.bad h4 { color:#f87171; }
-  .compare-item p { font-size:13px; color:#94a3b8; margin:0; }
+  .compare-item.good h4 { color:#059669; }
+  .compare-item.bad h4 { color:#dc2626; }
+  .compare-item p { font-size:13px; color:#6b7280; margin:0; }
 
   .scene-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
   @media(max-width:640px){ .scene-grid{grid-template-columns:1fr;} }
-  .scene-item { background:#12121f; border-radius:12px; padding:18px; border:1px solid rgba(99,102,241,.1); }
-  .scene-item h4 { font-size:15px; color:#e2e8f0; margin-bottom:6px; }
-  .scene-item .scene-cause { font-size:12px; color:#818cf8; margin-bottom:6px; }
-  .scene-item .scene-desc { font-size:13px; color:#94a3b8; }
+  .scene-item { background:#fff; border-radius:10px; padding:18px; border:1px solid #e4e7ed; box-shadow:0 1px 4px rgba(0,0,0,.03); }
+  .scene-item h4 { font-size:15px; color:#1e1e2e; margin-bottom:6px; }
+  .scene-item .scene-cause { font-size:12px; color:#4f46e5; margin-bottom:6px; }
+  .scene-item .scene-desc { font-size:13px; color:#6b7280; }
 
-  .layer { border-left:3px solid; border-radius:0 12px 12px 0; padding:14px 20px; margin:12px 0; background:#12121f; }
-  .layer.l1 { border-color:#34d399; } .layer.l1 h4 { color:#34d399; }
-  .layer.l2 { border-color:#fbbf24; } .layer.l2 h4 { color:#fbbf24; }
-  .layer.l3 { border-color:#f87171; } .layer.l3 h4 { color:#f87171; }
-  .layer.l4 { border-color:#dc2626; } .layer.l4 h4 { color:#dc2626; }
+  .layer { border-left:4px solid; border-radius:0 10px 10px 0; padding:14px 20px; margin:12px 0; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.03); }
+  .layer.l1 { border-color:#059669; } .layer.l1 h4 { color:#059669; }
+  .layer.l2 { border-color:#f59e0b; } .layer.l2 h4 { color:#d97706; }
+  .layer.l3 { border-color:#ef4444; } .layer.l3 h4 { color:#dc2626; }
+  .layer.l4 { border-color:#991b1b; } .layer.l4 h4 { color:#991b1b; }
   .layer h4 { font-size:14px; margin-bottom:6px; }
-  .layer p { font-size:13px; color:#94a3b8; margin:0; }
+  .layer p { font-size:13px; color:#6b7280; margin:0; }
 
-  .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(99,102,241,.15),transparent); margin:48px 0; }
-  .foot { text-align:center; color:#334155; font-size:12px; margin-top:48px; padding-top:24px; border-top:1px solid rgba(99,102,241,.08); }
+  .divider { height:1px; background:linear-gradient(90deg,transparent,#d1d5db,transparent); margin:40px 0; }
+  .foot { text-align:center; color:#9ca3af; font-size:12px; margin-top:48px; padding-top:24px; border-top:1px solid #e4e7ed; }
+
+  .case-card { background:#fff; border:1px solid #e4e7ed; border-radius:12px; padding:24px; margin:16px 0; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .case-card h3 { margin-top:0; }
+  .case-card .case-tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 10px; border-radius:20px; margin-bottom:8px; }
+  .case-card .case-tag.red { background:#fef2f2; color:#dc2626; }
+  .case-card .case-tag.orange { background:#fffbeb; color:#d97706; }
+  .case-card .case-tag.blue { background:#eef2ff; color:#4f46e5; }
+  .case-card .case-tag.green { background:#ecfdf5; color:#059669; }
+  .case-card .case-source { font-size:12px; color:#9ca3af; margin-bottom:12px; }
 </style>
 </head>
 <body>
@@ -545,7 +554,9 @@
       </div>
 
       <h3 id="ch7a">案例一：潍坊城投——唯一被审计署点名"土地闲置超两年"</h3>
-      <p><strong>数据来源：</strong>2026 年度第一期中期票据募集说明书 + 2025 年年度报告</p>
+      <div class="case-card">
+      <span class="case-tag red">闲置土地 · 审计署点名</span>
+      <p class="case-source">数据来源：2026 年度第一期中期票据募集说明书 + 2025 年年度报告</p>
       <p>潍坊城投是五家城投中<strong>唯一在公开报告中明确被审计署指出"土地闲置时间较长，超过两年规定时间"</strong>的公司。报告原文还引用了《闲置土地处置办法》中"满四年未动工可无偿收回土地使用权"的规定，并称"闲置土地问题也在逐年解决中"。这是最直接的闲置资产硬证据。</p>
       <p>用底层逻辑逐项对照：</p>
       <ul>
@@ -557,9 +568,12 @@
       <div class="callout warn">
         <strong>底层逻辑判断：</strong>潍坊城投的闲置资产问题已经从"隐性"变为"显性"——被审计署点名意味着问题严重到无法再掩盖。虽然公司声称在"逐年解决"，但土地闲置的根本原因（市场下行导致出让困难）不是公司单方面能解决的。这家公司的处境，就是前面讲的"根因三：土地财政副产品"的真实写照。
       </div>
+      </div>
 
       <h3 id="ch7b">案例二：成都城投——存货占近六成，减值三年暴增三百倍</h3>
-      <p><strong>数据来源：</strong>2024 年公司债券募集说明书</p>
+      <div class="case-card">
+      <span class="case-tag orange">存货沉淀 · 减值暴增</span>
+      <p class="case-source">数据来源：2024 年公司债券募集说明书</p>
       <p>成都城投的主体评级为 AAA，看起来很健康。但用底层逻辑拆开看，闲置资产的信号非常明显：</p>
       <ul>
         <li><strong>存货占比畸高：</strong>存货超过一千亿，占总资产近六成。城投的存货主要是土地和开发成本。这么大的存货盘子，如果周转不动，就是闲置资产的温床。</li>
@@ -571,9 +585,12 @@
       <div class="callout danger">
         <strong>底层逻辑判断：</strong>成都城投是"三重假象"的典型案例。AAA 评级 + 一千多亿总资产，表面光鲜。但存货占比近六成 + 减值暴增 + 现金流为负 + 利息保障不足——<strong>每一个信号都指向同一个结论：大量资产不产生回报，闲置问题正在从"隐性"走向"显性"</strong>。减值暴增就是拐点信号。
       </div>
+      </div>
 
       <h3 id="ch7c">案例三：湖州城投——存货占六成，现金流连年大负</h3>
-      <p><strong>数据来源：</strong>2024 年公司债券募集说明书摘要</p>
+      <div class="case-card">
+      <span class="case-tag orange">资产虚增 · 现金流为负</span>
+      <p class="case-source">数据来源：2024 年公司债券募集说明书摘要</p>
       <p>湖州城投同样评级 AAA，但财务状况比成都城投更弱：</p>
       <ul>
         <li><strong>存货占比更高：</strong>存货约八百多亿，占总资产约六成。同样是土地和开发成本沉淀。</li>
@@ -585,9 +602,12 @@
       <div class="callout warn">
         <strong>底层逻辑判断：</strong>湖州城投虽然报告里没有"闲置"二字，但它的资产负债结构就是一本闲置资产教科书——存货占比六成、现金流连年大负、利息保障不足、盈利接近零。<strong>这些资产记在账上让公司"看起来很大"，但实际不产生任何回报</strong>。这就是"假象一：资产规模虚增"的活样本。
       </div>
+      </div>
 
       <h3 id="ch7d">案例四：济南城投——在建工程占总资产近一半</h3>
-      <p><strong>数据来源：</strong>2025 年公司债募集说明书摘要</p>
+      <div class="case-card">
+      <span class="case-tag red">在建沉淀 · 最高风险</span>
+      <p class="case-source">数据来源：2025 年公司债募集说明书摘要</p>
       <p>济南城投的案例最特殊，因为它的闲置资产不是存货（土地），而是<strong>在建工程</strong>：</p>
       <ul>
         <li><strong>在建工程占总资产近一半：</strong>在建工程超过一千二百亿，是资产端最大项。这么大的在建工程，意味着<strong>海量资金沉淀在"建到一半"的项目里</strong>——既不能使用产生收入，也不能轻易处置。</li>
@@ -599,9 +619,12 @@
       <div class="callout danger">
         <strong>底层逻辑判断：</strong>济南城投是"在建停工/在建沉淀"场景的典型代表。一千二百亿在建工程，是六种闲置场景中<strong>最危险的一类</strong>——已投入巨额资金但项目尚未完成，既不能产生收入也不能处置。如果这些在建工程长期不转固（转为固定资产开始运营/折旧），就说明项目可能遇到了困难——要么资金跟不上停工了，要么建好了但无法投入运营。报告里明确提到"违反闲置用地规定"，印证了这一判断。
       </div>
+      </div>
 
       <h3 id="ch7e">案例五：临沂城投——投资性房地产公允价值连年下跌</h3>
-      <p><strong>数据来源：</strong>2026 年度第一期短期融资券募集说明书 + 2025 年年度报告</p>
+      <div class="case-card">
+      <span class="case-tag blue">低效房产 · 隐蔽信号</span>
+      <p class="case-source">数据来源：2026 年度第一期短期融资券募集说明书 + 2025 年年度报告</p>
       <p>临沂城投的闲置信号比较隐蔽，体现在<strong>投资性房地产</strong>上：</p>
       <ul>
         <li><strong>投资性房地产公允价值连续下跌：</strong>公允价值变动损失连续多年为负，且在扩大。投资性房地产是城投持有的用于出租或升值的房产。公允价值持续下跌意味着<em>市场认为这些房产的价值在缩水</em>——要么出租率低，要么租金下降，要么位置不好。</li>
@@ -612,6 +635,7 @@
       </ul>
       <div class="callout key">
         <strong>底层逻辑判断：</strong>临沂城投的案例展示了一个重要的隐蔽信号——<strong>投资性房地产公允价值下跌</strong>。这不叫"闲置"，但本质一样：持有房产的目的是出租获利，但公允价值持续下跌说明市场不认可这些房产的收益能力。<strong>它不是"闲置"的房产，而是"低效"的房产</strong>——可能有部分出租了，但租金覆盖不了资金成本。这是"空置房产"场景的变体。
+      </div>
       </div>
 
       <h3 id="ch7f">五家城投横向对比：同一个问题的不同表现</h3>
